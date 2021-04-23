@@ -37,6 +37,7 @@ public class FieldOfView : MonoBehaviour
         {
             yield return new WaitForSeconds(delay);
             FindVisibleTargets();
+            DebugRayToClosestFoodOrPoison();
         }
     }
 
@@ -62,6 +63,29 @@ public class FieldOfView : MonoBehaviour
                     visibleTargets.Add(target);
                 }
             }
+        }
+    }
+
+    void DebugRayToClosestFoodOrPoison()
+    {
+        Transform closestTarget = null;
+        float closestTargetDst = float.PositiveInfinity;
+
+        foreach (var visibleTarget in visibleTargets)
+        {
+            float visibleTargetDst = Vector3.Distance(transform.position, visibleTarget.transform.position);
+            if (visibleTargetDst < closestTargetDst)
+            {
+                closestTargetDst = visibleTargetDst;
+                closestTarget = visibleTarget;
+            }
+        }
+
+        if (closestTarget != null)
+        {
+            var position = transform.position;
+            Vector3 dir = closestTarget.transform.position - position;
+            Debug.DrawRay(position, dir, Color.magenta, .2f);
         }
     }
 
