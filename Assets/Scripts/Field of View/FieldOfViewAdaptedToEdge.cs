@@ -1,11 +1,11 @@
-// https://github.com/SebLague/Field-of-View
-// https://youtu.be/73Dc5JTCmKI
+// Adapted from: Field of view visualisation - Sebastian Lague - https://youtu.be/rQG9aUWarwE
 
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 
-public class FieldOfView : MonoBehaviour
+public class FieldOfViewAdaptedToEdge : MonoBehaviour
 {
     public float viewRadius;
     [Range(0, 360)] public float viewAngle;
@@ -15,39 +15,40 @@ public class FieldOfView : MonoBehaviour
 
     //[HideInInspector]
     public List<Transform> visibleTargets = new List<Transform>();
+    public float minimumEdgeDistance;
 
     public float meshResolution;
     public int edgeResolveIterations;
     public float edgeDstThreshold;
 
     public MeshFilter viewMeshFilter;
-    Mesh viewMesh;
+    private Mesh _viewMesh;
 
-    void Start()
+    private void Start()
     {
-        viewMesh = new Mesh();
-        viewMesh.name = "View Mesh";
-        viewMeshFilter.mesh = viewMesh;
+        _viewMesh = new Mesh {name = "View Mesh"};
+        viewMeshFilter.mesh = _viewMesh;
 
-        StartCoroutine("FindTargetsWithDelay", .2f);
+        StartCoroutine(nameof(FindTargetsWithDelay), .2f);
     }
 
 
-    IEnumerator FindTargetsWithDelay(float delay)
+    private IEnumerator FindTargetsWithDelay(float delay)
     {
         while (true)
         {
             yield return new WaitForSeconds(delay);
             FindVisibleTargets();
+            minimumEdgeDistance = FindVisibleTargetsMinimumDistance();
         }
     }
 
-    void LateUpdate()
+    private void LateUpdate()
     {
         DrawFieldOfView();
     }
 
-    void FindVisibleTargets2()
+    private void FindVisibleTargets()
     {
         visibleTargets.Clear();
         Collider[] targetsInViewRadius = Physics.OverlapSphere(transform.position, viewRadius, targetMask);
@@ -64,55 +65,124 @@ public class FieldOfView : MonoBehaviour
                     visibleTargets.Add(target);
                 }
             }
-        }
-    }
-    
-    void FindVisibleTargets()
-    {
-        visibleTargets.Clear();
-        Collider[] targetsInViewRadius = Physics.OverlapSphere(transform.position, viewRadius, targetMask);
-
-        for (int i = 0; i < targetsInViewRadius.Length; i++)
-        {
-            Transform target = targetsInViewRadius[i].transform;
-            Vector3 dirToTarget = (target.position - transform.position).normalized;
-            if (Vector3.Angle(transform.forward, dirToTarget) < viewAngle / 2)
-            {
-                float dstToTarget = Vector3.Distance(transform.position, target.position);
-                if (!Physics.Raycast(transform.position, dirToTarget, dstToTarget, obstacleMask))
-                {
-                    visibleTargets.Add(target);
-                }
-            }
+            // Check other points of the Collider other than the transform.position
             else
             {
-                RaycastHit raycastHit = default;
                 float angle = transform.eulerAngles.y - viewAngle / 2;
-                float angle2 = transform.eulerAngles.y + viewAngle / 2;
                 Vector3 dir = DirFromAngle(angle, true).normalized;
-                Vector3 dir2 = DirFromAngle(angle2, true).normalized;
-                Debug.DrawRay(transform.position, dir*viewRadius, Color.magenta, 1f);
-                Debug.DrawRay(transform.position, dir2*viewRadius, Color.magenta, 1f);
-                if (Physics.Raycast(transform.position, dir, out raycastHit, viewRadius, targetMask))
+
+                if (Physics.Raycast(transform.position, dir, viewRadius, targetMask))
                 {
                     visibleTargets.Add(target);
                 }
                 else
                 {
                     angle = transform.eulerAngles.y + viewAngle / 2;
-                    dir = DirFromAngle(angle2, true).normalized;
-                    if (Physics.Raycast(transform.position, dir, out raycastHit, viewRadius, targetMask))
+                    dir = DirFromAngle(angle, true).normalized;
+                    if (Physics.Raycast(transform.position, dir, viewRadius, targetMask))
                     {
                         visibleTargets.Add(target);
                     }
-                    // TODO consegui fazer a visao detectar a parede sem precisar do ponto central (transform)
-                    // TODO o proximo passo é encontrar a menor distancia (só há 3 possibilidades)
-                    // primeira: ponto de colisão do raycast da esquerda
-                    // segunda: ponto de colisao do raycast da direita
-                    // terceira: ponto de colisão com a normal da parede (se estiver dentro do fov)
                 }
             }
         }
+    }
+
+    private float FindVisibleTargetsMinimumDistance()
+    {
+        Vector3 globalClosestPoint = default;
+        float globalClosestPointDst = float.PositiveInfinity;
+        foreach (var visibleTarget in visibleTargets)
+        {
+            Vector3 localClosestPoint;
+            float localClosestPointDst = float.PositiveInfinity;
+
+            Vector3 leftPoint = default;
+            Vector3 rightPoint = default;
+            Vector3 normalPoint = default;
+
+            float leftDst = float.PositiveInfinity;
+            float rightDst = float.PositiveInfinity;
+            float normalDst = float.PositiveInfinity;
+
+            // left distance
+
+            float leftAngle = transform.eulerAngles.y - viewAngle / 2;
+            Vector3 leftDir = DirFromAngle(leftAngle, true).normalized;
+
+            if (Physics.Raycast(transform.position, leftDir, out var leftRaycastHit, viewRadius, targetMask))
+            {
+                leftDst = leftRaycastHit.distance;
+                leftPoint = leftRaycastHit.point;
+            }
+
+            // right distance
+
+            float rightAngle = transform.eulerAngles.y + viewAngle / 2;
+            Vector3 rightDir = DirFromAngle(rightAngle, true).normalized;
+
+            if (Physics.Raycast(transform.position, rightDir, out var rightRaycastHit, viewRadius, targetMask))
+            {
+                rightDst = rightRaycastHit.distance;
+                rightPoint = rightRaycastHit.point;
+            }
+
+            // normal distance
+
+            Collider fenceCollider = visibleTarget.GetComponent<Collider>();
+            Vector3 closestPoint = fenceCollider.ClosestPoint(transform.position);
+
+            if (IsPointVisible(closestPoint))
+            {
+                normalDst = Vector3.Distance(transform.position, closestPoint);
+                normalPoint = closestPoint;
+            }
+
+            if (normalDst < leftDst && normalDst < rightDst)
+            {
+                localClosestPointDst = normalDst;
+                localClosestPoint = normalPoint;
+            }
+            else if (leftDst < rightDst)
+            {
+                localClosestPointDst = leftDst;
+                localClosestPoint = leftPoint;
+            }
+            else
+            {
+                localClosestPointDst = rightDst;
+                localClosestPoint = rightPoint;
+            }
+
+            if (localClosestPointDst < globalClosestPointDst)
+            {
+                globalClosestPointDst = localClosestPointDst;
+                globalClosestPoint = localClosestPoint;
+            }
+        }
+
+        if (!float.IsPositiveInfinity(globalClosestPointDst))
+        {
+            var position = transform.position;
+            Debug.DrawRay(position, globalClosestPoint - position, Color.magenta, 0.2f);
+        }
+
+        return globalClosestPointDst;
+    }
+
+    private bool IsPointVisible(Vector3 point)
+    {
+        Vector3 dirToPoint = (point - transform.position).normalized;
+        if (Vector3.Angle(transform.forward, dirToPoint) < viewAngle / 2)
+        {
+            float dstToPoint = Vector3.Distance(transform.position, point);
+            if (!Physics.Raycast(transform.position, dirToPoint, dstToPoint, obstacleMask))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     void DrawFieldOfView()
@@ -167,11 +237,11 @@ public class FieldOfView : MonoBehaviour
             }
         }
 
-        viewMesh.Clear();
+        _viewMesh.Clear();
 
-        viewMesh.vertices = vertices;
-        viewMesh.triangles = triangles;
-        viewMesh.RecalculateNormals();
+        _viewMesh.vertices = vertices;
+        _viewMesh.triangles = triangles;
+        _viewMesh.RecalculateNormals();
     }
 
 
@@ -229,31 +299,5 @@ public class FieldOfView : MonoBehaviour
         return new Vector3(Mathf.Sin(angleInDegrees * Mathf.Deg2Rad), 0, Mathf.Cos(angleInDegrees * Mathf.Deg2Rad));
     }
 
-    public struct ViewCastInfo
-    {
-        public bool hit;
-        public Vector3 point;
-        public float dst;
-        public float angle;
-
-        public ViewCastInfo(bool _hit, Vector3 _point, float _dst, float _angle)
-        {
-            hit = _hit;
-            point = _point;
-            dst = _dst;
-            angle = _angle;
-        }
-    }
-
-    public struct EdgeInfo
-    {
-        public Vector3 pointA;
-        public Vector3 pointB;
-
-        public EdgeInfo(Vector3 _pointA, Vector3 _pointB)
-        {
-            pointA = _pointA;
-            pointB = _pointB;
-        }
-    }
+    
 }
