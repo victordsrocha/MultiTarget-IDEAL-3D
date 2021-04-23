@@ -53,36 +53,17 @@ public class FieldOfViewAdaptedToEdge : MonoBehaviour
         visibleTargets.Clear();
         Collider[] targetsInViewRadius = Physics.OverlapSphere(transform.position, viewRadius, targetMask);
 
-        for (int i = 0; i < targetsInViewRadius.Length; i++)
+        foreach (var targetCollider in targetsInViewRadius)
         {
-            Transform target = targetsInViewRadius[i].transform;
-            Vector3 dirToTarget = (target.position - transform.position).normalized;
-            if (Vector3.Angle(transform.forward, dirToTarget) < viewAngle / 2)
+            for (int i = 0; i < 7; i++)
             {
-                float dstToTarget = Vector3.Distance(transform.position, target.position);
-                if (!Physics.Raycast(transform.position, dirToTarget, dstToTarget, obstacleMask))
-                {
-                    visibleTargets.Add(target);
-                }
-            }
-            // Check other points of the Collider other than the transform.position
-            else
-            {
-                float angle = transform.eulerAngles.y - viewAngle / 2;
+                float angle = transform.eulerAngles.y - (viewAngle / 2) + ((viewAngle * i) / 6);
                 Vector3 dir = DirFromAngle(angle, true).normalized;
 
                 if (Physics.Raycast(transform.position, dir, viewRadius, targetMask))
                 {
-                    visibleTargets.Add(target);
-                }
-                else
-                {
-                    angle = transform.eulerAngles.y + viewAngle / 2;
-                    dir = DirFromAngle(angle, true).normalized;
-                    if (Physics.Raycast(transform.position, dir, viewRadius, targetMask))
-                    {
-                        visibleTargets.Add(target);
-                    }
+                    visibleTargets.Add(targetCollider.transform);
+                    break;
                 }
             }
         }
@@ -298,6 +279,4 @@ public class FieldOfViewAdaptedToEdge : MonoBehaviour
 
         return new Vector3(Mathf.Sin(angleInDegrees * Mathf.Deg2Rad), 0, Mathf.Cos(angleInDegrees * Mathf.Deg2Rad));
     }
-
-    
 }

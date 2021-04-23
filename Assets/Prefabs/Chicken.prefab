@@ -129,10 +129,10 @@ MonoBehaviour:
   viewAngle: 120
   targetMask:
     serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 1024
   obstacleMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
   visibleTargets: []
   minimumEdgeDistance: 0
   meshResolution: 1
