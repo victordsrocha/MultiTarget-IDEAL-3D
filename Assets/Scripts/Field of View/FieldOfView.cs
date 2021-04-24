@@ -6,13 +6,20 @@ using System.Collections.Generic;
 
 public class FieldOfView : MonoBehaviour
 {
+    public float testAngle;
+    
     public float viewRadius;
     [Range(0, 360)] public float viewAngle;
 
     public LayerMask targetMask;
     public LayerMask obstacleMask;
 
-    [HideInInspector] public List<Transform> visibleTargets = new List<Transform>();
+    //[HideInInspector] 
+    public List<Transform> visibleTargets = new List<Transform>();
+
+    public Transform closestTarget;
+    public float closestTargetDst;
+    public float closestTargetDstNormalized;
 
     public float meshResolution;
     public int edgeResolveIterations;
@@ -37,7 +44,7 @@ public class FieldOfView : MonoBehaviour
         {
             yield return new WaitForSeconds(delay);
             FindVisibleTargets();
-            DebugRayToClosestFoodOrPoison();
+            UpdateClosestTarget();
         }
     }
 
@@ -54,10 +61,14 @@ public class FieldOfView : MonoBehaviour
         for (int i = 0; i < targetsInViewRadius.Length; i++)
         {
             Transform target = targetsInViewRadius[i].transform;
-            Vector3 dirToTarget = (target.position - transform.position).normalized;
+            Vector3 targetInThePlane = new Vector3(target.position.x, transform.position.y, target.position.z);
+            
+            Vector3 dirToTarget = (targetInThePlane - transform.position).normalized;
+
             if (Vector3.Angle(transform.forward, dirToTarget) < viewAngle / 2)
             {
-                float dstToTarget = Vector3.Distance(transform.position, target.position);
+                float dstToTarget = Vector3.Distance(transform.position, targetInThePlane);
+                
                 if (!Physics.Raycast(transform.position, dirToTarget, dstToTarget, obstacleMask))
                 {
                     visibleTargets.Add(target);
@@ -66,28 +77,35 @@ public class FieldOfView : MonoBehaviour
         }
     }
 
-    void DebugRayToClosestFoodOrPoison()
+
+    void UpdateClosestTarget()
     {
-        Transform closestTarget = null;
-        float closestTargetDst = float.PositiveInfinity;
+        closestTarget = null;
+        closestTargetDst = float.PositiveInfinity;
+        closestTargetDstNormalized = float.PositiveInfinity;
 
         foreach (var visibleTarget in visibleTargets)
         {
-            float visibleTargetDst = Vector3.Distance(transform.position, visibleTarget.transform.position);
+            Vector3 targetInThePlane = new Vector3(visibleTarget.position.x, transform.position.y, visibleTarget.position.z);
+            float visibleTargetDst = Vector3.Distance(transform.position, targetInThePlane);
             if (visibleTargetDst < closestTargetDst)
             {
                 closestTargetDst = visibleTargetDst;
+                closestTargetDstNormalized = closestTargetDst / viewRadius;
                 closestTarget = visibleTarget;
             }
         }
 
+        /*
         if (closestTarget != null)
         {
             var position = transform.position;
             Vector3 dir = closestTarget.transform.position - position;
             Debug.DrawRay(position, dir, Color.magenta, .2f);
         }
+        */
     }
+
 
     void DrawFieldOfView()
     {
