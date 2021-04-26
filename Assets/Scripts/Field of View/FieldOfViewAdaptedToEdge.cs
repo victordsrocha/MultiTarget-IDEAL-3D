@@ -7,6 +7,9 @@ using System.ComponentModel;
 
 public class FieldOfViewAdaptedToEdge : MonoBehaviour
 {
+    [HideInInspector] public bool isTargetVisible;
+    [HideInInspector] public Vector3 targetPosition;
+    
     public float viewRadius;
     [Range(0, 360)] public float viewAngle;
 
@@ -29,7 +32,7 @@ public class FieldOfViewAdaptedToEdge : MonoBehaviour
         _viewMesh = new Mesh {name = "View Mesh"};
         viewMeshFilter.mesh = _viewMesh;
 
-        StartCoroutine(nameof(FindTargetsWithDelay), .2f);
+        StartCoroutine(nameof(FindTargetsWithDelay), .02f);
     }
 
 
@@ -144,8 +147,15 @@ public class FieldOfViewAdaptedToEdge : MonoBehaviour
 
         if (!float.IsPositiveInfinity(globalClosestPointDst))
         {
-            var position = transform.position;
-            Debug.DrawRay(position, globalClosestPoint - position, Color.magenta, 0.2f);
+            //var position = transform.position;
+            //Debug.DrawRay(position, globalClosestPoint - position, Color.magenta, 0.2f);
+
+            isTargetVisible = true;
+            targetPosition = globalClosestPoint;
+        }
+        else
+        {
+            isTargetVisible = false;
         }
 
         return globalClosestPointDst;

@@ -3,11 +3,14 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using Gizmos = Popcron.Gizmos;
 
 public class FieldOfView : MonoBehaviour
 {
-    public float testAngle;
-    
+    [HideInInspector] public bool isTargetVisible;
+    [HideInInspector] public Vector3 targetPosition;
+
+
     public float viewRadius;
     [Range(0, 360)] public float viewAngle;
 
@@ -34,7 +37,7 @@ public class FieldOfView : MonoBehaviour
         viewMesh.name = "View Mesh";
         viewMeshFilter.mesh = viewMesh;
 
-        StartCoroutine("FindTargetsWithDelay", .2f);
+        StartCoroutine("FindTargetsWithDelay", .02f);
     }
 
 
@@ -62,13 +65,13 @@ public class FieldOfView : MonoBehaviour
         {
             Transform target = targetsInViewRadius[i].transform;
             Vector3 targetInThePlane = new Vector3(target.position.x, transform.position.y, target.position.z);
-            
+
             Vector3 dirToTarget = (targetInThePlane - transform.position).normalized;
 
             if (Vector3.Angle(transform.forward, dirToTarget) < viewAngle / 2)
             {
                 float dstToTarget = Vector3.Distance(transform.position, targetInThePlane);
-                
+
                 if (!Physics.Raycast(transform.position, dirToTarget, dstToTarget, obstacleMask))
                 {
                     visibleTargets.Add(target);
@@ -86,7 +89,8 @@ public class FieldOfView : MonoBehaviour
 
         foreach (var visibleTarget in visibleTargets)
         {
-            Vector3 targetInThePlane = new Vector3(visibleTarget.position.x, transform.position.y, visibleTarget.position.z);
+            Vector3 targetInThePlane =
+                new Vector3(visibleTarget.position.x, transform.position.y, visibleTarget.position.z);
             float visibleTargetDst = Vector3.Distance(transform.position, targetInThePlane);
             if (visibleTargetDst < closestTargetDst)
             {
@@ -96,14 +100,16 @@ public class FieldOfView : MonoBehaviour
             }
         }
 
-        /*
+
         if (closestTarget != null)
         {
-            var position = transform.position;
-            Vector3 dir = closestTarget.transform.position - position;
-            Debug.DrawRay(position, dir, Color.magenta, .2f);
+            isTargetVisible = true;
+            targetPosition = closestTarget.position;
         }
-        */
+        else
+        {
+            isTargetVisible = false;
+        }
     }
 
 
