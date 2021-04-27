@@ -9,7 +9,7 @@ public class FieldOfViewAdaptedToEdge : MonoBehaviour
 {
     [HideInInspector] public bool isTargetVisible;
     [HideInInspector] public Vector3 targetPosition;
-    
+
     public float viewRadius;
     [Range(0, 360)] public float viewAngle;
 
@@ -18,7 +18,10 @@ public class FieldOfViewAdaptedToEdge : MonoBehaviour
 
     //[HideInInspector]
     public List<Transform> visibleTargets = new List<Transform>();
-    public float minimumEdgeDistance;
+
+    //public float minimumEdgeDistance;
+    public float closestTargetDst;
+    public float closestTargetDstNormalized;
 
     public float meshResolution;
     public int edgeResolveIterations;
@@ -42,7 +45,7 @@ public class FieldOfViewAdaptedToEdge : MonoBehaviour
         {
             yield return new WaitForSeconds(delay);
             FindVisibleTargets();
-            minimumEdgeDistance = FindVisibleTargetsMinimumDistance();
+            FindVisibleTargetsMinimumDistance();
         }
     }
 
@@ -72,7 +75,7 @@ public class FieldOfViewAdaptedToEdge : MonoBehaviour
         }
     }
 
-    private float FindVisibleTargetsMinimumDistance()
+    private void FindVisibleTargetsMinimumDistance()
     {
         Vector3 globalClosestPoint = default;
         float globalClosestPointDst = float.PositiveInfinity;
@@ -158,7 +161,8 @@ public class FieldOfViewAdaptedToEdge : MonoBehaviour
             isTargetVisible = false;
         }
 
-        return globalClosestPointDst;
+        closestTargetDst = globalClosestPointDst;
+        closestTargetDstNormalized = closestTargetDst / viewRadius;
     }
 
     private bool IsPointVisible(Vector3 point)
@@ -288,5 +292,10 @@ public class FieldOfViewAdaptedToEdge : MonoBehaviour
         }
 
         return new Vector3(Mathf.Sin(angleInDegrees * Mathf.Deg2Rad), 0, Mathf.Cos(angleInDegrees * Mathf.Deg2Rad));
+    }
+    
+    public void AdjustViewAngle(float newViewAngle)
+    {
+        viewAngle = newViewAngle;
     }
 }

@@ -15,7 +15,6 @@ public enum PlayerState
 public class Player : MonoBehaviour
 {
     [SerializeField] private float speed;
-
     [SerializeField] private float timeBetweenActions = 0.1f;
     [SerializeField] private float rotationSpeed;
 
@@ -40,6 +39,8 @@ public class Player : MonoBehaviour
     {
         change.x = Input.GetAxisRaw("Horizontal");
         change.y = Input.GetAxisRaw("Vertical");
+
+        Debug.Log(change.ToString());
 
         if (Input.GetButtonDown("Fire1") && currentState != PlayerState.Eat)
         {

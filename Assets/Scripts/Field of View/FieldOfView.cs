@@ -8,6 +8,7 @@ using Gizmos = Popcron.Gizmos;
 public class FieldOfView : MonoBehaviour
 {
     [HideInInspector] public bool isTargetVisible;
+    [HideInInspector] public bool isTargetFood;
     [HideInInspector] public Vector3 targetPosition;
 
 
@@ -96,6 +97,7 @@ public class FieldOfView : MonoBehaviour
             {
                 closestTargetDst = visibleTargetDst;
                 closestTargetDstNormalized = closestTargetDst / viewRadius;
+
                 closestTarget = visibleTarget;
             }
         }
@@ -104,6 +106,7 @@ public class FieldOfView : MonoBehaviour
         if (closestTarget != null)
         {
             isTargetVisible = true;
+            isTargetFood = closestTarget.CompareTag("Food");
             targetPosition = closestTarget.position;
         }
         else
@@ -225,5 +228,10 @@ public class FieldOfView : MonoBehaviour
         }
 
         return new Vector3(Mathf.Sin(angleInDegrees * Mathf.Deg2Rad), 0, Mathf.Cos(angleInDegrees * Mathf.Deg2Rad));
+    }
+
+    public void AdjustViewAngle(float newViewAngle)
+    {
+        viewAngle = newViewAngle;
     }
 }
