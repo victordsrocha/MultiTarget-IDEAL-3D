@@ -21,7 +21,7 @@ public class Player : MonoBehaviour
     private Rigidbody _myRigidbody;
     private Animator _animator;
     public PlayerState currentState;
-    private Vector3 change;
+    public Vector3 change;
 
     private static readonly int Eat = Animator.StringToHash("Eat");
     private static readonly int Run = Animator.StringToHash("Run");
@@ -40,7 +40,7 @@ public class Player : MonoBehaviour
         change.x = Input.GetAxisRaw("Horizontal");
         change.y = Input.GetAxisRaw("Vertical");
 
-        Debug.Log(change.ToString());
+        //Debug.Log(change.ToString());
 
         if (Input.GetButtonDown("Fire1") && currentState != PlayerState.Eat)
         {

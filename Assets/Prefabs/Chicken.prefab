@@ -125,6 +125,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8aeb5bf866fc9a44b8379d2be3cc063, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isTargetVisible: 0
+  targetPosition: {x: 0, y: 0, z: 0}
   viewRadius: 9
   viewAngle: 120
   targetMask:
@@ -134,7 +136,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1024
   visibleTargets: []
-  minimumEdgeDistance: 0
+  closestTargetDst: 0
+  closestTargetDstNormalized: 0
   meshResolution: 1
   edgeResolveIterations: 4
   edgeDstThreshold: 0.5
@@ -345,6 +348,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f8fd878d4a021a46a397a48c7eb03ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isTargetVisible: 0
+  isTargetFood: 0
+  targetPosition: {x: 0, y: 0, z: 0}
   viewRadius: 31.5
   viewAngle: 10
   targetMask:
@@ -354,6 +360,9 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   visibleTargets: []
+  closestTarget: {fileID: 0}
+  closestTargetDst: 0
+  closestTargetDstNormalized: 0
   meshResolution: 1
   edgeResolveIterations: 4
   edgeDstThreshold: 0.5
@@ -402,6 +411,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f8fd878d4a021a46a397a48c7eb03ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isTargetVisible: 0
+  isTargetFood: 0
+  targetPosition: {x: 0, y: 0, z: 0}
   viewRadius: 31.5
   viewAngle: 10
   targetMask:
@@ -411,6 +423,9 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   visibleTargets: []
+  closestTarget: {fileID: 0}
+  closestTargetDst: 0
+  closestTargetDstNormalized: 0
   meshResolution: 1
   edgeResolveIterations: 4
   edgeDstThreshold: 0.5
@@ -523,6 +538,7 @@ GameObject:
   - component: {fileID: 947110483243772605}
   - component: {fileID: 947110483243772606}
   - component: {fileID: 947110483243772604}
+  - component: {fileID: -2590921674978246411}
   m_Layer: 0
   m_Name: Chicken
   m_TagString: Untagged
@@ -612,6 +628,19 @@ MonoBehaviour:
   timeBetweenActions: 0.1
   rotationSpeed: 5
   currentState: 0
+  change: {x: 0, y: 0, z: 0}
+--- !u!114 &-2590921674978246411
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 945869633907177723}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4860a91624a7d24fac9fd923c9ac4fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &945886514643667921
 GameObject:
   m_ObjectHideFlags: 0

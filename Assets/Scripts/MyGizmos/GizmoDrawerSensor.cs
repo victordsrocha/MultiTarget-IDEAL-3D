@@ -7,12 +7,7 @@ public class GizmoDrawerSensor : MonoBehaviour
 {
     public Material material = null;
 
-    private FieldOfView fov;
-
-    private void Start()
-    {
-        fov = transform.GetComponent<FieldOfView>();
-    }
+    public VisionState visionState;
 
     private void Update()
     {
@@ -25,9 +20,11 @@ public class GizmoDrawerSensor : MonoBehaviour
             Gizmos.Enabled = !Gizmos.Enabled;
         }
 
+/*
         if (fov.isTargetVisible)
         {
             Gizmos.Line(fov.transform.position, fov.targetPosition, Color.magenta);
         }
+        */
     }
 }

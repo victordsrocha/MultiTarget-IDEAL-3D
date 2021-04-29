@@ -7,9 +7,11 @@ using Gizmos = Popcron.Gizmos;
 
 public class FieldOfView : MonoBehaviour
 {
-    [HideInInspector] public bool isTargetVisible;
-    [HideInInspector] public bool isTargetFood;
-    [HideInInspector] public Vector3 targetPosition;
+    public bool isFoodVisible;
+    public Vector3 foodPosition;
+
+    public bool isPoisonVisible;
+    public Vector3 poisonPosition;
 
 
     public float viewRadius;
@@ -18,12 +20,15 @@ public class FieldOfView : MonoBehaviour
     public LayerMask targetMask;
     public LayerMask obstacleMask;
 
-    //[HideInInspector] 
     public List<Transform> visibleTargets = new List<Transform>();
 
-    public Transform closestTarget;
-    public float closestTargetDst;
-    public float closestTargetDstNormalized;
+    public Transform closestFood;
+    public float closestFoodDst;
+    public float closestFoodDstNormalized;
+
+    public Transform closestPoison;
+    public float closestPoisonDst;
+    public float closestPoisonDstNormalized;
 
     public float meshResolution;
     public int edgeResolveIterations;
@@ -48,7 +53,8 @@ public class FieldOfView : MonoBehaviour
         {
             yield return new WaitForSeconds(delay);
             FindVisibleTargets();
-            UpdateClosestTarget();
+            UpdateClosestFood();
+            UpdateClosestPoison();
         }
     }
 
@@ -82,36 +88,73 @@ public class FieldOfView : MonoBehaviour
     }
 
 
-    void UpdateClosestTarget()
+    void UpdateClosestFood()
     {
-        closestTarget = null;
-        closestTargetDst = float.PositiveInfinity;
-        closestTargetDstNormalized = float.PositiveInfinity;
+        closestFood = null;
+        closestFoodDst = float.PositiveInfinity;
+        closestFoodDstNormalized = float.PositiveInfinity;
 
         foreach (var visibleTarget in visibleTargets)
         {
-            Vector3 targetInThePlane =
-                new Vector3(visibleTarget.position.x, transform.position.y, visibleTarget.position.z);
-            float visibleTargetDst = Vector3.Distance(transform.position, targetInThePlane);
-            if (visibleTargetDst < closestTargetDst)
+            if (visibleTarget.CompareTag("Food"))
             {
-                closestTargetDst = visibleTargetDst;
-                closestTargetDstNormalized = closestTargetDst / viewRadius;
+                Vector3 targetInThePlane =
+                    new Vector3(visibleTarget.position.x, transform.position.y, visibleTarget.position.z);
+                float visibleTargetDst = Vector3.Distance(transform.position, targetInThePlane);
+                if (visibleTargetDst < closestFoodDst)
+                {
+                    closestFoodDst = visibleTargetDst;
+                    closestFoodDstNormalized = closestFoodDst / viewRadius;
 
-                closestTarget = visibleTarget;
+                    closestFood = visibleTarget;
+                }
             }
         }
 
 
-        if (closestTarget != null)
+        if (closestFood != null)
         {
-            isTargetVisible = true;
-            isTargetFood = closestTarget.CompareTag("Food");
-            targetPosition = closestTarget.position;
+            isFoodVisible = true;
+            foodPosition = closestFood.position;
         }
         else
         {
-            isTargetVisible = false;
+            isFoodVisible = false;
+        }
+    }
+    
+    void UpdateClosestPoison()
+    {
+        closestPoison = null;
+        closestPoisonDst = float.PositiveInfinity;
+        closestPoisonDstNormalized = float.PositiveInfinity;
+
+        foreach (var visibleTarget in visibleTargets)
+        {
+            if (visibleTarget.CompareTag("Poison"))
+            {
+                Vector3 targetInThePlane =
+                    new Vector3(visibleTarget.position.x, transform.position.y, visibleTarget.position.z);
+                float visibleTargetDst = Vector3.Distance(transform.position, targetInThePlane);
+                if (visibleTargetDst < closestPoisonDst)
+                {
+                    closestPoisonDst = visibleTargetDst;
+                    closestPoisonDstNormalized = closestPoisonDst / viewRadius;
+
+                    closestPoison = visibleTarget;
+                }
+            }
+        }
+
+
+        if (closestPoison != null)
+        {
+            isPoisonVisible = true;
+            foodPosition = closestPoison.position;
+        }
+        else
+        {
+            isPoisonVisible = false;
         }
     }
 
