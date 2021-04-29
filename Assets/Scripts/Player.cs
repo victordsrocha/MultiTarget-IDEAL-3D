@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using Random = UnityEngine.Random;
 
 public enum PlayerState
 {
@@ -26,6 +27,18 @@ public class Player : MonoBehaviour
     private static readonly int Eat = Animator.StringToHash("Eat");
     private static readonly int Run = Animator.StringToHash("Run");
     private static readonly int Walk = Animator.StringToHash("Walk");
+
+    private void Awake()
+    {
+        float x = Random.Range(-22f, 22f);
+        float z = Random.Range(-22f, 22f);
+
+        float rotation = Random.Range(0f, 360f);
+        
+        transform.Rotate(Vector3.up, rotation);
+
+        transform.position = new Vector3(x, 0, z);
+    }
 
     private void Start()
     {

@@ -1585,7 +1585,7 @@ MonoBehaviour:
     m_Bits: 2816
   foodPrefab: {fileID: 4042373863318507645, guid: 3761eccccd3fa4f478f20037355e2015, type: 3}
   poisonPrefab: {fileID: 9012357032979139792, guid: 858fef354cb41ab4b82e9f060aba6678, type: 3}
-  fruitMaxQuantity: 20
+  fruitMaxQuantity: 50
   foodListGameObject: {fileID: 1183944293}
   poisonListGameObject: {fileID: 731979143}
 --- !u!1 &2119142796
@@ -1791,6 +1791,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Chicken
       objectReference: {fileID: 0}
+    - target: {fileID: 947110483243772606, guid: dbfa5fb95a233344d8fd219eb5e0445b, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 948999094114844149, guid: dbfa5fb95a233344d8fd219eb5e0445b, type: 3}
       propertyPath: m_RootOrder
       value: 7
@@ -1805,7 +1809,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 948999094114844149, guid: dbfa5fb95a233344d8fd219eb5e0445b, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -15.08
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 948999094114844149, guid: dbfa5fb95a233344d8fd219eb5e0445b, type: 3}
       propertyPath: m_LocalRotation.w

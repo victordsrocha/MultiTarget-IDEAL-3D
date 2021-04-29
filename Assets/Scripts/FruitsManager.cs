@@ -53,7 +53,7 @@ public class FruitsManager : MonoBehaviour
         float z = Random.Range(-23.9f, 23.9f);
         Vector3 birthSpot = new Vector3(x, 0.5f, z);
 
-        Collider[] overlapSphere = Physics.OverlapSphere(birthSpot, 2f, obstacleMask);
+        Collider[] overlapSphere = Physics.OverlapSphere(birthSpot, 0.51f, obstacleMask);
         if (overlapSphere.Length == 0)
         {
             newTarget = Instantiate(targetPrefab, parent.transform, true);
