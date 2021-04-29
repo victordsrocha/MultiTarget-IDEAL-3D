@@ -20,13 +20,10 @@ public class Player : MonoBehaviour
     [SerializeField] private float rotationSpeed;
 
     private Rigidbody _myRigidbody;
-    private Animator _animator;
     public PlayerState currentState;
     public Vector3 change;
 
-    private static readonly int Eat = Animator.StringToHash("Eat");
-    private static readonly int Run = Animator.StringToHash("Run");
-    private static readonly int Walk = Animator.StringToHash("Walk");
+    private ChickenAnimation _animation;
 
     private void Awake()
     {
@@ -34,7 +31,7 @@ public class Player : MonoBehaviour
         float z = Random.Range(-22f, 22f);
 
         float rotation = Random.Range(0f, 360f);
-        
+
         transform.Rotate(Vector3.up, rotation);
 
         transform.position = new Vector3(x, 0, z);
@@ -44,17 +41,16 @@ public class Player : MonoBehaviour
     {
         change = Vector3.zero;
         _myRigidbody = GetComponent<Rigidbody>();
-        _animator = GetComponent<Animator>();
         currentState = PlayerState.Idle;
+
+        _animation = GetComponent<ChickenAnimation>();
     }
 
     private void Update()
     {
         change.x = Input.GetAxisRaw("Horizontal");
         change.y = Input.GetAxisRaw("Vertical");
-
-        //Debug.Log(change.ToString());
-
+        
         if (Input.GetButtonDown("Fire1") && currentState != PlayerState.Eat)
         {
             StartCoroutine(EatCoroutine());
@@ -66,6 +62,7 @@ public class Player : MonoBehaviour
         }
 
         UpdateState();
+        _animation.UpdateAnimation(change);
     }
 
     public IEnumerator EatCoroutine()
@@ -76,14 +73,12 @@ public class Player : MonoBehaviour
         _myRigidbody.velocity = Vector3.zero;
         _myRigidbody.angularVelocity = Vector3.zero;
 
-        UpdateAnimatorState(Eat);
         currentState = PlayerState.Eat;
-        yield return new WaitForSeconds(.5f);
+        yield return StartCoroutine(_animation.EatCoroutineAnimation());
         currentState = PlayerState.Idle;
-        UpdateAnimatorState(0);
     }
 
-    public void Move()
+    private void Move()
     {
         if (change.y > 0)
         {
@@ -98,24 +93,6 @@ public class Player : MonoBehaviour
             _myRigidbody.velocity = Vector3.zero;
         }
     }
-
-    /*
-    private void Rotate()
-    {
-        if (change.x > 0)
-        {
-            _myRigidbody.angularVelocity = -transform.up * rotationSpeed;
-        }
-        else if (change.x < 0)
-        {
-            _myRigidbody.angularVelocity = transform.up * rotationSpeed;
-        }
-        else
-        {
-            _myRigidbody.angularVelocity = Vector3.zero;
-        }
-    }
-    */
 
     private void Rotate()
     {
@@ -138,45 +115,10 @@ public class Player : MonoBehaviour
         if (change.x != 0 || change.y != 0)
         {
             currentState = PlayerState.Move;
-            UpdateAnimatorState(Walk);
-
-            if (change.y > 0)
-            {
-                UpdateAnimatorState(Run);
-            }
         }
         else
         {
             currentState = PlayerState.Idle;
-            UpdateAnimatorState(0);
-        }
-    }
-
-    private void UpdateAnimatorState(int newAnimatorState)
-    {
-        if (newAnimatorState == Walk)
-        {
-            _animator.SetBool(Walk, true);
-            _animator.SetBool(Run, false);
-            _animator.SetBool(Eat, false);
-        }
-        else if (newAnimatorState == Run)
-        {
-            _animator.SetBool(Walk, false);
-            _animator.SetBool(Run, true);
-            _animator.SetBool(Eat, false);
-        }
-        else if (newAnimatorState == Eat)
-        {
-            _animator.SetBool(Walk, false);
-            _animator.SetBool(Run, false);
-            _animator.SetBool(Eat, true);
-        }
-        else
-        {
-            _animator.SetBool(Walk, false);
-            _animator.SetBool(Run, false);
-            _animator.SetBool(Eat, false);
         }
     }
 }
