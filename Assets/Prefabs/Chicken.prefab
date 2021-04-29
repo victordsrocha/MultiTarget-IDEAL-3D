@@ -348,9 +348,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f8fd878d4a021a46a397a48c7eb03ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isTargetVisible: 0
-  isTargetFood: 0
-  targetPosition: {x: 0, y: 0, z: 0}
+  isFoodVisible: 0
+  foodPosition: {x: 0, y: 0, z: 0}
+  isPoisonVisible: 0
+  poisonPosition: {x: 0, y: 0, z: 0}
   viewRadius: 31.5
   viewAngle: 10
   targetMask:
@@ -360,9 +361,12 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   visibleTargets: []
-  closestTarget: {fileID: 0}
-  closestTargetDst: 0
-  closestTargetDstNormalized: 0
+  closestFood: {fileID: 0}
+  closestFoodDst: 0
+  closestFoodDstNormalized: 0
+  closestPoison: {fileID: 0}
+  closestPoisonDst: 0
+  closestPoisonDstNormalized: 0
   meshResolution: 1
   edgeResolveIterations: 4
   edgeDstThreshold: 0.5
@@ -411,9 +415,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f8fd878d4a021a46a397a48c7eb03ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isTargetVisible: 0
-  isTargetFood: 0
-  targetPosition: {x: 0, y: 0, z: 0}
+  isFoodVisible: 0
+  foodPosition: {x: 0, y: 0, z: 0}
+  isPoisonVisible: 0
+  poisonPosition: {x: 0, y: 0, z: 0}
   viewRadius: 31.5
   viewAngle: 10
   targetMask:
@@ -423,9 +428,12 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   visibleTargets: []
-  closestTarget: {fileID: 0}
-  closestTargetDst: 0
-  closestTargetDstNormalized: 0
+  closestFood: {fileID: 0}
+  closestFoodDst: 0
+  closestFoodDstNormalized: 0
+  closestPoison: {fileID: 0}
+  closestPoisonDst: 0
+  closestPoisonDstNormalized: 0
   meshResolution: 1
   edgeResolveIterations: 4
   edgeDstThreshold: 0.5
@@ -439,6 +447,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2076269789}
+  - component: {fileID: 1577593375}
+  - component: {fileID: 1577593376}
   m_Layer: 0
   m_Name: Eye
   m_TagString: Untagged
@@ -463,6 +473,50 @@ Transform:
   m_Father: {fileID: 948999094114844149}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1577593375
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2076269788}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 774092ea9723e6441bdfc6f7fb914ae7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leftFOV: {fileID: 1477064171}
+  rightFOV: {fileID: 1076958161}
+  edgeFOV: {fileID: 798108416}
+  isRightFoodVisible: 0
+  rightFood: {fileID: 0}
+  rightFoodDstNormalized: 0
+  isRightPoisonVisible: 0
+  rightPoison: {fileID: 0}
+  rightPoisonDstNormalized: 0
+  isLeftFoodVisible: 0
+  leftFood: {fileID: 0}
+  leftFoodDstNormalized: 0
+  isLeftPoisonVisible: 0
+  leftPoison: {fileID: 0}
+  leftPoisonDstNormalized: 0
+  isWallVisible: 0
+  closestWallPoint: {x: 0, y: 0, z: 0}
+  wallDstNormalized: 0
+--- !u!114 &1577593376
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2076269788}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 236071c1073b0fa48aaacf8d99195236, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  material: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  visionState: {fileID: 1577593375}
 --- !u!1 &945810831916149249
 GameObject:
   m_ObjectHideFlags: 0
@@ -539,7 +593,7 @@ GameObject:
   - component: {fileID: 947110483243772606}
   - component: {fileID: 947110483243772604}
   - component: {fileID: -2590921674978246411}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Chicken
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -636,11 +690,13 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 945869633907177723}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f4860a91624a7d24fac9fd923c9ac4fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentEnergy: 0
+  period: 0.5
 --- !u!1 &945886514643667921
 GameObject:
   m_ObjectHideFlags: 0
@@ -1494,5 +1550,5 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.15, y: 0.03, z: 0.15}
+  m_Size: {x: 0.3, y: 0.03, z: 0.3}
   m_Center: {x: 0, y: 0, z: 0}
