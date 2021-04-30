@@ -591,8 +591,9 @@ GameObject:
   - component: {fileID: 896238450213045191}
   - component: {fileID: 947110483243772605}
   - component: {fileID: 947110483243772606}
-  - component: {fileID: 947110483243772604}
-  - component: {fileID: 621510321}
+  - component: {fileID: 7231507363228209245}
+  - component: {fileID: 5827710373352523462}
+  - component: {fileID: 1170395647871696899}
   m_Layer: 11
   m_Name: Chicken
   m_TagString: Untagged
@@ -666,24 +667,7 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.17
   m_Center: {x: 0, y: 0.23, z: 0}
---- !u!114 &947110483243772604
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 945869633907177723}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9df0e3d6d85efff4d85daee00fefe45a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed: 15
-  timeBetweenActions: 0.1
-  rotationSpeed: 5
-  currentState: 0
-  change: {x: 0, y: 0, z: 0}
---- !u!114 &621510321
+--- !u!114 &7231507363228209245
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -695,6 +679,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00a1b0fed726b0d46bb09ce8dcbff61d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &5827710373352523462
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 945869633907177723}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6781b7633abf47a42a72417fbdefb647, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1170395647871696899
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 945869633907177723}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15c34cf90a1970246b5a310e73e304c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeed: 15
+  rotationSpeed: 5
+  timeBetweenActions: 0.1
 --- !u!1 &945886514643667921
 GameObject:
   m_ObjectHideFlags: 0
@@ -1229,7 +1240,7 @@ GameObject:
   m_Component:
   - component: {fileID: 947110481690596907}
   - component: {fileID: 947110481690596906}
-  - component: {fileID: 803540804}
+  - component: {fileID: 1448297225828622272}
   m_Layer: 0
   m_Name: Beak Trigger Collider
   m_TagString: Untagged
@@ -1265,7 +1276,7 @@ CapsuleCollider:
   m_Height: 1
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &803540804
+--- !u!114 &1448297225828622272
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

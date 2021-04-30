@@ -8,8 +8,8 @@ using Random = UnityEngine.Random;
 public class FruitsManager : MonoBehaviour
 {
     public LayerMask obstacleMask;
-    public Food foodPrefab;
-    public Food poisonPrefab;
+    public Fruit fruitPrefab;
+    public Fruit poisonPrefab;
 
     public int fruitMaxQuantity;
 
@@ -29,16 +29,16 @@ public class FruitsManager : MonoBehaviour
         return foodListGameObject.transform.childCount + poisonListGameObject.transform.childCount;
     }
 
-    private Food InstantiateNewFruit()
+    private Fruit InstantiateNewFruit()
     {
         //var targetPrefab = 0.5 > Random.Range(0, 1) ? foodPrefab : poisonPrefab;
 
-        Food targetPrefab;
+        Fruit targetPrefab;
         GameObject parent;
 
         if (0.5 > Random.Range(0f, 1f))
         {
-            targetPrefab = foodPrefab;
+            targetPrefab = fruitPrefab;
             parent = foodListGameObject;
         }
         else
@@ -47,7 +47,7 @@ public class FruitsManager : MonoBehaviour
             parent = poisonListGameObject;
         }
 
-        Food newTarget = null;
+        Fruit newTarget = null;
 
         float x = Random.Range(-23.9f, 23.9f);
         float z = Random.Range(-23.9f, 23.9f);

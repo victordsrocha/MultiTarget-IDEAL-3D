@@ -300,6 +300,23 @@ Transform:
   m_Father: {fileID: 727295082}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+--- !u!1 &566413922 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 945869633907177723, guid: dbfa5fb95a233344d8fd219eb5e0445b, type: 3}
+  m_PrefabInstance: {fileID: 947110482489284969}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &566413930
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 566413922}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55fbfaf6eeb910147baef80988184608, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &619375868
 GameObject:
   m_ObjectHideFlags: 0
@@ -880,11 +897,9 @@ MonoBehaviour:
   rightEyeText: {fileID: 1742518771}
   leftEyeText: {fileID: 1645371903}
   edgeEyeText: {fileID: 673902751}
-  EnergyText: {fileID: 0}
   rightEyeFov: {fileID: 337244907}
   leftEyeFov: {fileID: 1666481470}
   edgeEyeFov: {fileID: 1802859109}
-  energy: {fileID: 0}
 --- !u!4 &974359751
 Transform:
   m_ObjectHideFlags: 0
@@ -1492,7 +1507,7 @@ MonoBehaviour:
   obstacleMask:
     serializedVersion: 2
     m_Bits: 2816
-  foodPrefab: {fileID: 4042373863318507645, guid: 3761eccccd3fa4f478f20037355e2015, type: 3}
+  fruitPrefab: {fileID: 4042373863318507645, guid: 3761eccccd3fa4f478f20037355e2015, type: 3}
   poisonPrefab: {fileID: 9012357032979139792, guid: 858fef354cb41ab4b82e9f060aba6678, type: 3}
   fruitMaxQuantity: 50
   foodListGameObject: {fileID: 1183944293}
@@ -1696,6 +1711,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1577593376, guid: dbfa5fb95a233344d8fd219eb5e0445b, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 945869633907177723, guid: dbfa5fb95a233344d8fd219eb5e0445b, type: 3}
       propertyPath: m_Name
       value: Chicken

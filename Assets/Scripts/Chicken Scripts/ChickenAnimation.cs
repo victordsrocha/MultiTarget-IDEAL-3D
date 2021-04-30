@@ -1,8 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ChickenAnimation : MonoBehaviour
+public class ChickenAnimation : MonoBehaviour, ICharacterBaseAnimation
 {
     private Animator _animator;
 
@@ -44,13 +45,6 @@ public class ChickenAnimation : MonoBehaviour
         }
     }
 
-    public IEnumerator EatCoroutineAnimation()
-    {
-        UpdateAnimatorState(Eat);
-        yield return new WaitForSeconds(0.5f); 
-        UpdateAnimatorState(0);
-    }
-
     public void UpdateAnimation(Vector3 change)
     {
         if (change.x != 0 || change.y != 0)
@@ -66,5 +60,18 @@ public class ChickenAnimation : MonoBehaviour
         {
             UpdateAnimatorState(0);
         }
+    }
+
+    public void PlayAttackAnimation(Action onAnimComplete)
+    {
+        StartCoroutine(EatCoroutineAnimation(onAnimComplete));
+    }
+
+    public IEnumerator EatCoroutineAnimation(Action onAnimComplete)
+    {
+        UpdateAnimatorState(Eat);
+        yield return new WaitForSeconds(0.5f);
+        UpdateAnimatorState(0);
+        onAnimComplete?.Invoke();
     }
 }
