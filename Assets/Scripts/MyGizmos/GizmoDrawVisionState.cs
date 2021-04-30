@@ -20,7 +20,7 @@ public class GizmoDrawVisionState : MonoBehaviour
         _edgeFOV = visionState.edgeFOV;
     }
 
-    private void Update()
+    private void LateUpdate()
     {
         //use custom material, if null it uses a default line material
         Gizmos.Material = material;
@@ -32,22 +32,22 @@ public class GizmoDrawVisionState : MonoBehaviour
         }
 
 
-        if (visionState.isLeftFoodVisible)
+        if (visionState.isLeftFoodVisible && visionState.leftFood != null)
         {
             Gizmos.Line(_leftFOV.transform.position, visionState.leftFood.position, Color.magenta);
         }
 
-        if (visionState.isRightFoodVisible)
+        if (visionState.isRightFoodVisible && visionState.rightFood != null)
         {
             Gizmos.Line(_rightFOV.transform.position, visionState.rightFood.position, Color.magenta);
         }
 
-        if (visionState.isLeftPoisonVisible)
+        if (visionState.isLeftPoisonVisible && visionState.leftPoison != null)
         {
             Gizmos.Line(_leftFOV.transform.position, visionState.leftPoison.position, Color.magenta);
         }
 
-        if (visionState.isRightPoisonVisible)
+        if (visionState.isRightPoisonVisible && visionState.rightPoison != null)
         {
             Gizmos.Line(_rightFOV.transform.position, visionState.rightPoison.position, Color.magenta);
         }

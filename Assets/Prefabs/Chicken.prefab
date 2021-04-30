@@ -592,7 +592,7 @@ GameObject:
   - component: {fileID: 947110483243772605}
   - component: {fileID: 947110483243772606}
   - component: {fileID: 947110483243772604}
-  - component: {fileID: -2590921674978246411}
+  - component: {fileID: 621510321}
   m_Layer: 11
   m_Name: Chicken
   m_TagString: Untagged
@@ -683,20 +683,18 @@ MonoBehaviour:
   rotationSpeed: 5
   currentState: 0
   change: {x: 0, y: 0, z: 0}
---- !u!114 &-2590921674978246411
+--- !u!114 &621510321
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 945869633907177723}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4860a91624a7d24fac9fd923c9ac4fc, type: 3}
+  m_Script: {fileID: 11500000, guid: 00a1b0fed726b0d46bb09ce8dcbff61d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentEnergy: 0
-  period: 0.5
 --- !u!1 &945886514643667921
 GameObject:
   m_ObjectHideFlags: 0

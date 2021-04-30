@@ -47,7 +47,7 @@ public class ChickenAnimation : MonoBehaviour
     public IEnumerator EatCoroutineAnimation()
     {
         UpdateAnimatorState(Eat);
-        yield return new WaitForSeconds(.4f);
+        yield return new WaitForSeconds(0.5f); 
         UpdateAnimatorState(0);
     }
 

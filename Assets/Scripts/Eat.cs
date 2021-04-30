@@ -6,12 +6,20 @@ using UnityEngine;
 
 public class Eat : MonoBehaviour
 {
-    private void OnTriggerEnter(Collider other)
+    private Player _player;
+
+    private void Start()
     {
-        if (other.CompareTag("Food") || other.CompareTag("Poison"))
+        _player = transform.parent.GetComponent<Player>();
+    }
+
+    private void OnTriggerEnter(Collider fruitCollider)
+    {
+        if (_player.currentState == PlayerState.Eat) return;
+        
+        if (fruitCollider.CompareTag("Food") || fruitCollider.CompareTag("Poison"))
         {
-            StartCoroutine(this.transform.parent.GetComponent<Player>().EatCoroutine());
-            other.GetComponent<Food>().DestroyFood();
+            StartCoroutine(_player.EatCoroutine(fruitCollider));
         }
     }
 }

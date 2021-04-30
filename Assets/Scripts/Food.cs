@@ -7,6 +7,6 @@ public class Food : MonoBehaviour
 {
     public void DestroyFood()
     {
-        Destroy(gameObject, 0.8f);
+        Destroy(gameObject);
     }
 }

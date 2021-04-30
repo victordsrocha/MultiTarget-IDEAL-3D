@@ -50,22 +50,18 @@ public class Player : MonoBehaviour
     {
         change.x = Input.GetAxisRaw("Horizontal");
         change.y = Input.GetAxisRaw("Vertical");
-        
-        if (Input.GetButtonDown("Fire1") && currentState != PlayerState.Eat)
-        {
-            StartCoroutine(EatCoroutine());
-        }
-        else if (currentState != PlayerState.Eat)
+
+        if (currentState != PlayerState.Eat)
         {
             Move();
             Rotate();
+            _animation.UpdateAnimation(change);
         }
 
         UpdateState();
-        _animation.UpdateAnimation(change);
     }
 
-    public IEnumerator EatCoroutine()
+    public IEnumerator EatCoroutine(Collider fruitCollider)
     {
         change.x = 0;
         change.y = 0;
@@ -75,6 +71,7 @@ public class Player : MonoBehaviour
 
         currentState = PlayerState.Eat;
         yield return StartCoroutine(_animation.EatCoroutineAnimation());
+        fruitCollider.GetComponent<Food>().DestroyFood();
         currentState = PlayerState.Idle;
     }
 
