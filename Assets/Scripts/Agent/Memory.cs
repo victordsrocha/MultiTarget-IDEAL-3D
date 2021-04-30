@@ -6,43 +6,43 @@ using UnityEngine;
 
 public class Memory : MonoBehaviour, IMemory
 {
-    private Dictionary<string, Interaction> _knownInteractions;
+    public Dictionary<string, Interaction> KnownInteractions { get; private set; }
     private Dictionary<string, Experiment> _knownExperiments;
 
     private void Start()
     {
-        _knownInteractions = new Dictionary<string, Interaction>();
+        KnownInteractions = new Dictionary<string, Interaction>();
         _knownExperiments = new Dictionary<string, Experiment>();
         Init();
     }
 
     public Interaction AddOrGetInteraction(string label)
     {
-        if (!_knownInteractions.ContainsKey(label))
+        if (!KnownInteractions.ContainsKey(label))
         {
             Interaction interaction = new Interaction(label);
-            _knownInteractions.Add(label, interaction);
+            KnownInteractions.Add(label, interaction);
         }
 
-        return _knownInteractions[label];
+        return KnownInteractions[label];
     }
 
     public Interaction GetPrimitiveInteraction(string label)
     {
-        return _knownInteractions[label];
+        return KnownInteractions[label];
     }
 
     public Interaction AddOrGetPrimitiveInteraction(string label)
     {
         Interaction interaction;
-        if (!_knownInteractions.ContainsKey(label))
+        if (!KnownInteractions.ContainsKey(label))
         {
             interaction = AddOrGetInteraction(label);
             interaction.Valence = CalcValence(label);
         }
         else
         {
-            interaction = _knownInteractions[label];
+            interaction = KnownInteractions[label];
         }
 
         return interaction;
@@ -65,7 +65,7 @@ public class Memory : MonoBehaviour, IMemory
     {
         string label = '(' + preInteraction.Label + ' ' + postInteraction.Label + ')';
         Interaction interaction;
-        if (!_knownInteractions.ContainsKey(label))
+        if (!KnownInteractions.ContainsKey(label))
         {
             interaction = AddOrGetInteraction(label);
             interaction.PreInteraction = preInteraction;
@@ -75,7 +75,7 @@ public class Memory : MonoBehaviour, IMemory
         }
         else
         {
-            interaction = _knownInteractions[label];
+            interaction = KnownInteractions[label];
         }
 
         return interaction;
