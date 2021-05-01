@@ -64,189 +64,54 @@ public class Decider : MonoBehaviour
         return activatedInteractions;
     }
 
-
-    public List<Anticipation> GetDefaultAnticipations()
+    public HashSet<Anticipation> Anticipate()
     {
-        var anticipations = new List<Anticipation>();
-        foreach (var experience in _memory.KnownExperiments.Values)
+        var defaultSet = new HashSet<Anticipation>();
+        foreach (var interaction in _memory.KnownInteractions.Values)
         {
-            var defaultExperience = experience;
-            if (defaultExperience.IntendedInteraction.is_primitive())
+            if (interaction.IsPrimitive())
             {
-                var anticipation = new Anticipation(experience, 0);
-                anticipations.Add(anticipation);
+                var defaultAnticipation = new Anticipation(interaction.Experiment, 0)
+                {
+                    AnticipationsSet = new HashSet<Anticipation>()
+                };
+                defaultSet.Add(defaultAnticipation);
             }
         }
 
-        return anticipations;
-    }
+        var activatedInteractions = GetActivatedInteractions();
 
-    public List<Anticipation> Anticipate()
-    {
-        List<Anticipation> anticipations = GetDefaultAnticipations();
-        List<Interaction> activatedInteractions = GetActivatedInteractions();
-
-        // este bloco cria uma lista de anticipations a partir da lista de interações ativadas
-        if (_enactedInteraction != null)
+        var proposedAnticipationsSet = new HashSet<Anticipation>();
+        foreach (var activatedInteraction in activatedInteractions)
         {
-            foreach (var activatedInteraction in activatedInteractions)
+            int proclivity = activatedInteraction.Weight * activatedInteraction.PostInteraction.Valence;
+            var anticipation = new Anticipation(activatedInteraction.PostInteraction.Experiment, proclivity);
+
+            if (!proposedAnticipationsSet.Contains(anticipation))
             {
-                if (activatedInteraction.PostInteraction.Experiment != null)
+                proposedAnticipationsSet.Add(anticipation);
+            }
+        }
+
+        foreach (var defaultAnticipation in defaultSet)
+        {
+            foreach (var anticipation in proposedAnticipationsSet)
+            {
+                var firstPrimitiveInteraction = anticipation.GetFirstPrimitiveInteraction();
+                if (firstPrimitiveInteraction.Experiment == defaultAnticipation.Experiment)
                 {
-                    var newAnticipation = new Anticipation
-                    (
-                        activatedInteraction.PostInteraction.Experiment,
-                        activatedInteraction.Weight * activatedInteraction.PostInteraction.valence
-                    );
-
-                    var found = false;
-                    foreach (var anticipation in anticipations)
-                    {
-                        if (newAnticipation.Experiment == anticipation.Experiment)
-                        {
-                            anticipation.AddProclivity(activatedInteraction.Weight *
-                                                       activatedInteraction.PostInteraction.valence);
-                            found = true;
-                            break;
-                        }
-                    }
-
-                    if (!found)
-                    {
-                        anticipations.Add(newAnticipation);
-                    }
+                    defaultAnticipation.AnticipationsSet.Add(anticipation);
+                    defaultAnticipation.AddProclivity(anticipation.Proclivity);
                 }
             }
         }
 
-        /*
-        * este bloco faz uso da lista de enacted interactions armazenadas em experiments
-        * se uma dessas interactions é o postInteraction de uma interação ativada:
-        * então podemos aumentar (ou diminuir?) a tendência (proclivity) da anticipation de origem
-        */
-        foreach (var anticipation in anticipations)
-        {
-            foreach (var experimentEnactedInteraction in anticipation.Experiment.EnactedInteractions)
-            {
-                foreach (var activatedInteraction in activatedInteractions)
-                {
-                    if (experimentEnactedInteraction == activatedInteraction.PostInteraction)
-                    {
-                        var proclivity = activatedInteraction.Weight * experimentEnactedInteraction.valence;
-                        anticipation.AddProclivity(proclivity);
-                    }
-                }
-            }
-        }
-
-        return anticipations;
+        return defaultSet;
     }
 
-    private Experiment GetOtherExperiment(Experiment experiment)
-    {
-        /*
-         * Acessa memória de experimentos conhecidos e retorna um experimento diferente do
-         * recebido como argumento.
-         * Por enquanto está sendo feito de forma aleatória.
-         *
-         * TODO refazer esta função usando Set:
-         * experiments_set = set(self.memory.known_experiments.values()) - {experiment}
-         * return random.choice(list(experiments_set))
-         */
-        var experiments = _memory.KnownExperiments.Values.ToList();
-        var index = Random.Range(0, experiments.Count);
-        var other = experiments[index];
-
-        if (other == experiment)
-        {
-            other = GetOtherExperiment(experiment);
-        }
-
-        return other;
-    }
-
-    private Experiment GetOtherExperimentPrimitive()
-    {
-        var primitiveAnticipations = GetDefaultAnticipations();
-        var randomPos = Random.Range(0, primitiveAnticipations.Count);
-        return primitiveAnticipations[randomPos].Experiment;
-        //return primitiveAnticipations[0].Experiment;
-    }
-
-    public Experiment SelectExperiment(List<Anticipation> anticipations)
-    {
-        /*
-        The selectExperiment( ) function sorts the list of anticipations by decreasing proclivity of
-        their proposed interaction. Then, it takes the fist anticipation (index [0]), which has
-        the highest proclivity in the list. If this proclivity is positive, then the agent wants to
-        re-enact this proposed interaction, leading to the agent choosing this proposed
-        interaction's experiment.
-
-        Por enquanto: se houver alguma anticipation com proclivity > 0 então a anticipation de
-        maior proclivity sempre será escolhida, caso contrário sorteia um experimento conhecido
-        qualquer para retornar.
-        
-        Acho que seria melhor tirar esse sorteio.... pois ignora o fato de que meu agente tem um
-        impeto de tentar agir de acordo com o que gostou/ não gostou
-        Assim sendo não faz sentido escolher aleatoriamente um -10 se há um -4
-
-        Args:
-            Anticipation list -> Lista de antecipações criadas por Anticipate( )
-
-        Returns:
-            Experiment -> experimento selecionado
-        */
-        Experiment selectedExperiment;
-        if (anticipations.Count > 0)
-        {
-            anticipations = anticipations.OrderByDescending(x => x.Proclivity).ToList();
-
-            /*
-            foreach (var anticipation in anticipations)
-            {
-                Debug.Log("propose " + anticipation);
-            }
-            */
 
 
-            var selectedAnticipation = anticipations[0];
-
-            if (0.9 > Random.Range(0, 1))
-            {
-                // 90% escolhe a melhor anticipation independente se é maior que zero
-                return selectedAnticipation.Experiment;
-            }
-
-            if (selectedAnticipation.Proclivity > 0f)
-            {
-                selectedExperiment = selectedAnticipation.Experiment;
-            }
-            else
-            {
-                // selectedExperiment = GetOtherExperiment(selectedAnticipation.Experiment);
-                //selectedExperiment = selectedAnticipation.experiment;
-
-                // não estou gostando de escolher aleatoriamente qualquer propose, mesmo que a proclivity seja muito
-                // negativa
-
-                // vou usar uma escolha aleatoria somente entre exp primitivos e depois pesquiso esse
-                // problema
-
-                // TODO
-
-                selectedExperiment = GetOtherExperimentPrimitive();
-            }
-        }
-
-        else
-        {
-            selectedExperiment = GetOtherExperimentPrimitive();
-        }
-
-        return selectedExperiment;
-    }
-
-    // essa função não deveria estar em memory?
+    // essa função não deveria estar em memory? Ou em uma classe Learn?
     public void LearnCompositeInteraction(Interaction newEnactedInteraction)
     {
         var previousInteraction = _enactedInteraction;

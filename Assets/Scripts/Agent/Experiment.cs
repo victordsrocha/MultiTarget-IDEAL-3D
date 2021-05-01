@@ -5,13 +5,13 @@ using UnityEngine;
 public class Experiment
 {
     private string _label;
-    private HashSet<Interaction> _enactedInteractions;
-    private Interaction _intendedInteraction;
+    public HashSet<Interaction> EnactedInteractions { get; private set; }
+    public Interaction IntendedInteraction { get; private set; }
 
     public Experiment(string label, Interaction intendedInteraction)
     {
         this._label = label;
-        _intendedInteraction = intendedInteraction;
-        _enactedInteractions = new HashSet<Interaction>();
+        IntendedInteraction = intendedInteraction;
+        EnactedInteractions = new HashSet<Interaction>();
     }
 }

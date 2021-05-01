@@ -7,12 +7,12 @@ using UnityEngine;
 public class Memory : MonoBehaviour, IMemory
 {
     public Dictionary<string, Interaction> KnownInteractions { get; private set; }
-    private Dictionary<string, Experiment> _knownExperiments;
+    public Dictionary<string, Experiment> KnownExperiments { get; private set; }
 
     private void Start()
     {
         KnownInteractions = new Dictionary<string, Interaction>();
-        _knownExperiments = new Dictionary<string, Experiment>();
+        KnownExperiments = new Dictionary<string, Experiment>();
         Init();
     }
 
@@ -51,14 +51,14 @@ public class Memory : MonoBehaviour, IMemory
     public Experiment AddOrGetAbstractExperiment(Interaction interaction)
     {
         string label = interaction.Label;
-        if (!_knownExperiments.ContainsKey(label))
+        if (!KnownExperiments.ContainsKey(label))
         {
             var abstractExperiment = new Experiment(label, interaction);
             interaction.Experiment = abstractExperiment;
-            _knownExperiments.Add(label, abstractExperiment);
+            KnownExperiments.Add(label, abstractExperiment);
         }
 
-        return _knownExperiments[label];
+        return KnownExperiments[label];
     }
 
     public Interaction AddOrGetCompositeInteraction(Interaction preInteraction, Interaction postInteraction)
