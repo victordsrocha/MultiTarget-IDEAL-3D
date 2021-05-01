@@ -1,10 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Anticipation
+public class Anticipation : IComparable<Anticipation>
 {
-    private Interaction _intendedInteraction;
+    public Interaction IntendedInteraction;
     public Experiment Experiment;
     public int Proclivity;
     public HashSet<Anticipation> AnticipationsSet;
@@ -13,7 +14,7 @@ public class Anticipation
     {
         Experiment = experiment;
         Proclivity = proclivity;
-        _intendedInteraction = experiment.IntendedInteraction;
+        IntendedInteraction = experiment.IntendedInteraction;
     }
 
     public void AddProclivity(int incProclivity)
@@ -23,12 +24,19 @@ public class Anticipation
 
     public Interaction GetFirstPrimitiveInteraction()
     {
-        Interaction firstPrimitiveInteraction = _intendedInteraction;
+        Interaction firstPrimitiveInteraction = IntendedInteraction;
         while (!firstPrimitiveInteraction.IsPrimitive())
         {
             firstPrimitiveInteraction = firstPrimitiveInteraction.PreInteraction;
         }
 
         return firstPrimitiveInteraction;
+    }
+
+    public int CompareTo(Anticipation other)
+    {
+        if (ReferenceEquals(this, other)) return 0;
+        if (ReferenceEquals(null, other)) return 1;
+        return Proclivity.CompareTo(other.Proclivity);
     }
 }

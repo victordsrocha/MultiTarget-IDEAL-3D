@@ -7,6 +7,8 @@ using Random = UnityEngine.Random;
 
 public class Decider : MonoBehaviour
 {
+    [SerializeField] private int threshold;
+
     private Memory _memory;
     private Interaction _enactedInteraction;
     private Interaction _superInteraction;
@@ -109,6 +111,22 @@ public class Decider : MonoBehaviour
         return defaultSet;
     }
 
+    Interaction SelectInteraction()
+    {
+        HashSet<Anticipation> defaultSet = Anticipate();
+        Anticipation selectedDefaultAnticipation = defaultSet.Max();
+        Anticipation selectedAnticipation = selectedDefaultAnticipation.AnticipationsSet.Max();
+        Interaction selectedInteraction = selectedAnticipation.IntendedInteraction;
+
+        if (selectedInteraction.Weight > threshold && selectedAnticipation.Proclivity > 0)
+        {
+            return selectedInteraction;
+        }
+        else
+        {
+            return selectedAnticipation.GetFirstPrimitiveInteraction();
+        }
+    }
 
 
     // essa função não deveria estar em memory? Ou em uma classe Learn?
