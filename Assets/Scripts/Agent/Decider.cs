@@ -10,7 +10,7 @@ public class Decider : MonoBehaviour
     [SerializeField] private int threshold;
 
     private Memory _memory;
-    private Interaction _enactedInteraction;
+    public Interaction EnactedInteraction;
     private Interaction _superInteraction;
     private Interaction _higherLevelSuperInteraction1;
     private Interaction _higherLevelSuperInteraction2;
@@ -18,7 +18,7 @@ public class Decider : MonoBehaviour
     private void Start()
     {
         _memory = GetComponent<Memory>();
-        _enactedInteraction = null;
+        EnactedInteraction = null;
         _superInteraction = null;
     }
 
@@ -29,12 +29,12 @@ public class Decider : MonoBehaviour
     List<Interaction> GetActivatedInteractions()
     {
         var contextInteractions = new List<Interaction>();
-        if (_enactedInteraction != null)
+        if (EnactedInteraction != null)
         {
-            contextInteractions.Add(_enactedInteraction);
-            if (!_enactedInteraction.IsPrimitive())
+            contextInteractions.Add(EnactedInteraction);
+            if (!EnactedInteraction.IsPrimitive())
             {
-                contextInteractions.Add(_enactedInteraction.PostInteraction);
+                contextInteractions.Add(EnactedInteraction.PostInteraction);
             }
 
             if (_superInteraction != null)
@@ -111,7 +111,7 @@ public class Decider : MonoBehaviour
         return defaultSet;
     }
 
-    Interaction SelectInteraction()
+    public Interaction SelectInteraction()
     {
         HashSet<Anticipation> defaultSet = Anticipate();
         Anticipation selectedDefaultAnticipation = defaultSet.Max();
@@ -130,7 +130,7 @@ public class Decider : MonoBehaviour
 
     public void LearnCompositeInteraction(Interaction newEnactedInteraction)
     {
-        var previousInteraction = _enactedInteraction;
+        var previousInteraction = EnactedInteraction;
         var lastInteraction = newEnactedInteraction;
         var previousSuperInteraction = _superInteraction;
         Interaction lastSuperInteraction = null;

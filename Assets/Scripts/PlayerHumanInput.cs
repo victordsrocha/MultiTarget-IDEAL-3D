@@ -21,6 +21,6 @@ public class PlayerHumanInput : MonoBehaviour
 
         _move = Input.GetAxisRaw("Vertical");
         _rotate = Input.GetAxisRaw("Horizontal");
-        _chickenMoveVelocity.SetMotorsValues(_move, _rotate);
+        _chickenMoveVelocity.SetMotorsValues((int)_move,(int) _rotate);
     }
 }

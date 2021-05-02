@@ -6,53 +6,74 @@ using UnityEngine;
 
 public class Enacter : MonoBehaviour
 {
-    private AgentEnvironmentInterface envInterface;
+    private Memory _memory;
+    private AgentEnvironmentInterface _envInterface;
+    public Interaction FinalEnactedInteraction;
+    private Queue<Interaction> _enactedInteractionsPrimitiveQueue;
 
     private void Start()
     {
-        envInterface = GetComponent<AgentEnvironmentInterface>();
+        _memory = GetComponent<Memory>();
+        _envInterface = GetComponent<AgentEnvironmentInterface>();
+        _enactedInteractionsPrimitiveQueue = new Queue<Interaction>();
     }
 
-    // precisa ser uma coroutine
-    private void EnactIntendedInteraction(Interaction intendedInteraction)
+    public Interaction Enact(Interaction intendedInteraction)
     {
-        var primitiveQueue = new Queue<Interaction>();
-        var primitiveStack = new Stack<Interaction>();
-        primitiveStack.Push(intendedInteraction);
-
-        while (primitiveStack.Any())
+        if (intendedInteraction.IsPrimitive())
         {
-            var topInteraction = primitiveStack.Pop();
-            if (!topInteraction.IsPrimitive())
+            var enactedPrimitiveInteraction = _enactedInteractionsPrimitiveQueue.Dequeue();
+
+            if (enactedPrimitiveInteraction == null)
             {
-                primitiveStack.Push(topInteraction.PostInteraction);
-                primitiveStack.Push(topInteraction.PreInteraction);
+                throw new Exception();
+            }
+
+            return enactedPrimitiveInteraction;
+            //return EnvInterface.EnactPrimitiveInteraction(intendedInteraction);
+        }
+        else
+        {
+            // Enact the pre-interaction
+            var enactedPreInteraction = Enact(intendedInteraction.PreInteraction);
+            if (enactedPreInteraction != intendedInteraction.PreInteraction)
+            {
+                // if the preInteraction failed then the enaction of the intendedInteraction is interrupted here
+                return enactedPreInteraction;
             }
             else
             {
-                primitiveQueue.Enqueue(topInteraction);
+                // enact the post-interaction
+                var enactedPostInteraction = Enact(intendedInteraction.PostInteraction);
+                return _memory.AddOrGetCompositeInteraction(enactedPreInteraction, enactedPostInteraction);
             }
         }
+    }
 
-        while (primitiveQueue.Any())
+    public IEnumerator EnactCoroutine(Interaction intendedInteraction)
+    {
+        Stack<Interaction> stackNextPrimitive = new Stack<Interaction>();
+        stackNextPrimitive.Push(intendedInteraction);
+
+        while (stackNextPrimitive.Count > 0)
         {
-            var currentIntendedPrimitiveInteraction = primitiveQueue.Dequeue();
-
-            StartCoroutine(envInterface.EnactPrimitiveInteraction(currentIntendedPrimitiveInteraction));
-            
-            // WAIT -> esperar corrotina ser encerrada
-            var currentEnactedPrimitiveInteraction = envInterface.CurrentEnactedPrimitiveInteraction;
-            
-            if (currentIntendedPrimitiveInteraction == currentEnactedPrimitiveInteraction)
+            var nextInteraction = stackNextPrimitive.Pop();
+            if (nextInteraction.IsPrimitive())
             {
-                // previousRecordInteraction = recordWithStructure(enactedInteraction);
-                continue;
+                yield return StartCoroutine(_envInterface.EnactPrimitiveInteraction(nextInteraction));
+
+                if (nextInteraction != _envInterface.CurrentEnactedPrimitiveInteraction)
+                {
+                    break;
+                }
             }
             else
             {
-                // previousRecordInteraction = recordWithStructure(enactedInteraction);
-                break;
+                stackNextPrimitive.Push(nextInteraction.PostInteraction);
+                stackNextPrimitive.Push(nextInteraction.PreInteraction);
             }
         }
+
+        FinalEnactedInteraction = Enact(intendedInteraction);
     }
 }
