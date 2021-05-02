@@ -24,7 +24,7 @@ public class ChickenMoveVelocity : MonoBehaviour, IMoveVelocity
         _rigidbody = GetComponent<Rigidbody>();
         _characterBaseAnimation = GetComponent<ICharacterBaseAnimation>();
         SetInitialPosition();
-        _enabled = true;
+        _enabled = false;
     }
 
     private void FixedUpdate()

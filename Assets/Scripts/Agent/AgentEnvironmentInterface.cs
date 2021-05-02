@@ -21,8 +21,8 @@ public class AgentEnvironmentInterface : MonoBehaviour
     public IEnumerator EnactPrimitiveInteraction(Interaction currentIntendedPrimitiveInteraction)
     {
         string result = String.Empty;
-        char moveActionCod = currentIntendedPrimitiveInteraction.Label[0];
-        char rotateActionCod = currentIntendedPrimitiveInteraction.Label[1];
+        string moveActionCod = currentIntendedPrimitiveInteraction.Label[0].ToString();
+        string rotateActionCod = currentIntendedPrimitiveInteraction.Label[1].ToString();
         SendActionToMotors(moveActionCod, rotateActionCod);
 
         yield return StartCoroutine(_moveVelocity.EnactAction());
@@ -32,7 +32,7 @@ public class AgentEnvironmentInterface : MonoBehaviour
         CurrentEnactedPrimitiveInteraction = _memory.AddOrGetPrimitiveInteraction(result);
     }
 
-    private void SendActionToMotors(char moveActionCod, char rotateActionCod)
+    private void SendActionToMotors(string moveActionCod, string rotateActionCod)
     {
         // ▶ ▷ △ ▲ ▼ ▽ ◀ ◁ ◇ ◈ ◆ ← → ↑ ↓
 
@@ -40,15 +40,15 @@ public class AgentEnvironmentInterface : MonoBehaviour
 
         move = moveActionCod switch
         {
-            '→' => 1,
-            '←' => -1,
+            "→" => 1,
+            "←" => -1,
             _ => move
         };
 
         rotate = rotateActionCod switch
         {
-            '↓' => 1,
-            '↑' => -1,
+            "↓" => 1,
+            "↑" => -1,
             _ => rotate
         };
 

@@ -22,7 +22,7 @@ public class Agent : MonoBehaviour
         while (true)
         {
             var intendedInteraction = _decider.SelectInteraction();
-            StartCoroutine(TryEnactAndLearnCoroutine(intendedInteraction));
+            yield return StartCoroutine(TryEnactAndLearnCoroutine(intendedInteraction));
         }
     }
     

@@ -39,6 +39,7 @@ public class Memory : MonoBehaviour, IMemory
         {
             interaction = AddOrGetInteraction(label);
             interaction.Valence = CalcValence(label);
+            AddOrGetAbstractExperiment(interaction);
         }
         else
         {
@@ -97,11 +98,11 @@ public class Memory : MonoBehaviour, IMemory
 
         int sumValence = 0;
 
-        sumValence += -1 * source[0].Count(c => c == '↑'); // Rotate Left
-        sumValence += -1 * source[0].Count(c => c == '↓'); // Rotate Right
+        //sumValence += -1 * source[0].Count(c => c == '↑'); // Rotate Left
+        //sumValence += -1 * source[0].Count(c => c == '↓'); // Rotate Right
 
-        sumValence += -3 * source[0].Count(c => c == '→'); // Forward
-        sumValence += -3 * source[0].Count(c => c == '←'); // Backward
+        //sumValence += -3 * source[0].Count(c => c == '→'); // Forward
+        //sumValence += -3 * source[0].Count(c => c == '←'); // Backward
 
         sumValence += +10 * source[1].Count(c => c == 'a'); // food appear
         sumValence += -15 * source[1].Count(c => c == 'd'); // food disappear

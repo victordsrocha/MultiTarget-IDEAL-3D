@@ -111,10 +111,31 @@ public class Decider : MonoBehaviour
         return defaultSet;
     }
 
+    private Interaction GetRandomNeutralPrimitiveInteraction(HashSet<Anticipation> defaultSet)
+    {
+        List<Anticipation> defaultNeutralList = new List<Anticipation>();
+        foreach (var anticipation in defaultSet)
+        {
+            if (!anticipation.AnticipationsSet.Any())
+            {
+                defaultNeutralList.Add(anticipation);
+            }
+        }
+        
+        int randomPos = Random.Range(0, defaultNeutralList.Count() - 1);
+        return defaultNeutralList[randomPos].IntendedInteraction;
+    }
+
     public Interaction SelectInteraction()
     {
         HashSet<Anticipation> defaultSet = Anticipate();
         Anticipation selectedDefaultAnticipation = defaultSet.Max();
+        if (!selectedDefaultAnticipation.AnticipationsSet.Any())
+        {
+            //return selectedDefaultAnticipation.IntendedInteraction;
+            return GetRandomNeutralPrimitiveInteraction(defaultSet);
+        }
+
         Anticipation selectedAnticipation = selectedDefaultAnticipation.AnticipationsSet.Max();
         Interaction selectedInteraction = selectedAnticipation.IntendedInteraction;
 

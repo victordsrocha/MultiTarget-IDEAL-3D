@@ -594,6 +594,12 @@ GameObject:
   - component: {fileID: 7231507363228209245}
   - component: {fileID: 5827710373352523462}
   - component: {fileID: 1170395647871696899}
+  - component: {fileID: 1450737794766138074}
+  - component: {fileID: 7392341149699849917}
+  - component: {fileID: 1595044469257280632}
+  - component: {fileID: 6272794755386890873}
+  - component: {fileID: 5504472236066268972}
+  - component: {fileID: 8554693656898606047}
   m_Layer: 11
   m_Name: Chicken
   m_TagString: Untagged
@@ -706,6 +712,97 @@ MonoBehaviour:
   moveSpeed: 15
   rotationSpeed: 5
   timeBetweenActions: 0.1
+--- !u!114 &1450737794766138074
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 945869633907177723}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e3c718790289474a9b174d45f8ebd48, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  threshold: 4
+--- !u!114 &7392341149699849917
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 945869633907177723}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8552f9b9daa97f94bac12489ffcb22ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leftFOV: {fileID: 1477064171}
+  rightFOV: {fileID: 1076958161}
+  edgeFOV: {fileID: 798108416}
+  isRightFoodVisible: 0
+  rightFood: {fileID: 0}
+  rightFoodDstNormalized: 0
+  isRightPoisonVisible: 0
+  rightPoison: {fileID: 0}
+  rightPoisonDstNormalized: 0
+  isLeftFoodVisible: 0
+  leftFood: {fileID: 0}
+  leftFoodDstNormalized: 0
+  isLeftPoisonVisible: 0
+  leftPoison: {fileID: 0}
+  leftPoisonDstNormalized: 0
+  isWallVisible: 0
+  closestWallPoint: {x: 0, y: 0, z: 0}
+  wallDstNormalized: 0
+--- !u!114 &1595044469257280632
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 945869633907177723}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1165af1a9caf20546bdeaa09b65740cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &6272794755386890873
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 945869633907177723}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f02ab14b37dae524a9d3f3d57ece29af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &5504472236066268972
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 945869633907177723}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 170743ad0045c9144be53829b296c5a2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &8554693656898606047
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 945869633907177723}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 50881163943d52a48ad2731caa904311, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &945886514643667921
 GameObject:
   m_ObjectHideFlags: 0

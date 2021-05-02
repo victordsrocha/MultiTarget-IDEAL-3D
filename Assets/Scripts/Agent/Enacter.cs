@@ -61,7 +61,7 @@ public class Enacter : MonoBehaviour
             if (nextInteraction.IsPrimitive())
             {
                 yield return StartCoroutine(_envInterface.EnactPrimitiveInteraction(nextInteraction));
-
+                _enactedInteractionsPrimitiveQueue.Enqueue(_envInterface.CurrentEnactedPrimitiveInteraction);
                 if (nextInteraction != _envInterface.CurrentEnactedPrimitiveInteraction)
                 {
                     break;
