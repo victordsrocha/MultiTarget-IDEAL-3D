@@ -11,12 +11,21 @@ public class UITest : MonoBehaviour
     public Text leftEyeText;
     public Text edgeEyeText;
 
+    public Text fruitsQuantityText;
+    public Text poisonsQuantityText;
+
     public FieldOfView rightEyeFov;
     public FieldOfView leftEyeFov;
     public FieldOfViewAdaptedToEdge edgeEyeFov;
 
+    public GameObject fruits;
+    public GameObject poisons;
+
     private void LateUpdate()
     {
+        fruitsQuantityText.text = "Fruits: " + fruits.transform.childCount.ToString();
+        poisonsQuantityText.text = "Poisons: " + poisons.transform.childCount.ToString();
+
         leftEyeText.text = "Left:\t\t" +
                            leftEyeFov.closestFoodDstNormalized.ToString("F",
                                CultureInfo.CreateSpecificCulture("en-US")) + ", " +
