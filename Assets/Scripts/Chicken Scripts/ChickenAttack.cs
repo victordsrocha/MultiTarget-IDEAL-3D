@@ -36,7 +36,7 @@ public class ChickenAttack : MonoBehaviour, IAttack
         _moveVelocity.Disable();
     }
 
-    public void Attack()
+    public void AttackCoroutine()
     {
         SetStateAttacking();
         _characterBaseAnimation.PlayAttackAnimation(SetStateNormal);

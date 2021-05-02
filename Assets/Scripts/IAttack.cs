@@ -6,5 +6,5 @@ using UnityEngine;
 public interface IAttack
 {
     bool IsAttackEnabled { get; }
-    void Attack();
+    void AttackCoroutine();
 }

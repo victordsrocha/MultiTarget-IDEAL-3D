@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,7 +8,7 @@ public class Agent : MonoBehaviour
     private Memory _memory;
     private Decider _decider;
     private Enacter _enacter;
-    
+
     private void Start()
     {
         _memory = GetComponent<Memory>();
@@ -16,7 +17,7 @@ public class Agent : MonoBehaviour
 
         StartCoroutine(StepCoroutine());
     }
-    
+
     private IEnumerator StepCoroutine()
     {
         while (true)
@@ -25,19 +26,21 @@ public class Agent : MonoBehaviour
             yield return StartCoroutine(TryEnactAndLearnCoroutine(intendedInteraction));
         }
     }
-    
+
     IEnumerator TryEnactAndLearnCoroutine(Interaction intendedInteraction)
     {
         yield return StartCoroutine(_enacter.EnactCoroutine(intendedInteraction));
         Learn(intendedInteraction, _enacter.FinalEnactedInteraction);
     }
-    
+
     void Learn(Interaction intendedInteraction, Interaction enactedInteraction)
     {
         if (enactedInteraction != intendedInteraction)
         {
             intendedInteraction.Experiment.EnactedInteractions.Add(enactedInteraction);
         }
+
+        Debug.Log(enactedInteraction.Label);
 
         _decider.LearnCompositeInteraction(enactedInteraction);
         _decider.EnactedInteraction = enactedInteraction;

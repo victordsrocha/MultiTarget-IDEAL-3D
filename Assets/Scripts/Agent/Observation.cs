@@ -16,6 +16,9 @@ public class Observation : MonoBehaviour
         Unchanged
     }
 
+    public BeakTrigger beakTrigger;
+    private BodyCollider _bodyCollider;
+
     public FieldOfView leftFOV;
     public FieldOfView rightFOV;
     public FieldOfViewAdaptedToEdge edgeFOV;
@@ -49,6 +52,8 @@ public class Observation : MonoBehaviour
         leftEye = new Eye(leftFOV);
         rightEye = new Eye(rightFOV);
         wallEye = new EyeWall(edgeFOV);
+
+        _bodyCollider = GetComponent<BodyCollider>();
     }
 
     public string ObservationString()
@@ -56,6 +61,7 @@ public class Observation : MonoBehaviour
         UpdateVisionState();
         UpdateLeftEye();
         UpdateRightEye();
+        IsFoodReached();
         UpdateWallEye();
 
         var observationString = ",";
@@ -245,6 +251,25 @@ public class Observation : MonoBehaviour
         rightEye.IsSeeingAnyPoison = isLeftPoisonVisible;
     }
 
+    void IsFoodReached()
+    {
+        if (beakTrigger.lastFruit != 0)
+        {
+            if (beakTrigger.lastFruit == 1)
+            {
+                leftEye.LastFoodStatus = VisionStateStatus.Reached;
+                rightEye.LastFoodStatus = VisionStateStatus.Reached;
+            }
+            else
+            {
+                leftEye.LastPoisonStatus = VisionStateStatus.Reached;
+                rightEye.LastPoisonStatus = VisionStateStatus.Reached;
+            }
+
+            beakTrigger.lastFruit = 0;
+        }
+    }
+
     private void UpdateWallEye()
     {
         if (isWallVisible)
@@ -278,6 +303,15 @@ public class Observation : MonoBehaviour
             else
             {
                 wallEye.LastWallStatus = VisionStateStatus.Unchanged;
+            }
+        }
+
+        //bump?
+        if (wallEye.IsSeeingWall)
+        {
+            if (_bodyCollider.isColliding)
+            {
+                wallEye.LastWallStatus = VisionStateStatus.Bump;
             }
         }
 

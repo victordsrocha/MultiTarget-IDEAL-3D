@@ -6,22 +6,17 @@ using UnityEngine;
 
 public class BeakTrigger : MonoBehaviour
 {
-    private IAttack _playerAttack;
-
-    private void Start()
-    {
-        _playerAttack = transform.parent.GetComponent<IAttack>();
-    }
+    // 0 => null
+    // 1 => food
+    // 2 => poison
+    public int lastFruit = 0;
 
     private void OnTriggerEnter(Collider fruitCollider)
     {
-        if (_playerAttack.IsAttackEnabled)
+        if (fruitCollider.CompareTag("Food") || fruitCollider.CompareTag("Poison"))
         {
-            if (fruitCollider.CompareTag("Food") || fruitCollider.CompareTag("Poison"))
-            {
-                fruitCollider.GetComponent<Fruit>().DestroyFood(.4f); 
-                _playerAttack.Attack();
-            }
+            lastFruit = fruitCollider.CompareTag("Food") ? 1 : 2;
+            fruitCollider.GetComponent<Fruit>().DestroyFood(0f);
         }
     }
 }
