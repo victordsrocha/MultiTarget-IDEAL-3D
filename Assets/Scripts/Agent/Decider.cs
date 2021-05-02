@@ -128,8 +128,6 @@ public class Decider : MonoBehaviour
         }
     }
 
-
-    // essa função não deveria estar em memory? Ou em uma classe Learn?
     public void LearnCompositeInteraction(Interaction newEnactedInteraction)
     {
         var previousInteraction = _enactedInteraction;
@@ -158,9 +156,5 @@ public class Decider : MonoBehaviour
         }
 
         this._superInteraction = lastSuperInteraction;
-
-        // When a schema reaches a weight of 0 it is deleted from memory
-        _memory.DecrementAndForgetSchemas(new List<Interaction>()
-            {previousInteraction, lastInteraction, previousSuperInteraction, lastSuperInteraction});
     }
 }
