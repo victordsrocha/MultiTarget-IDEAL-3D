@@ -47,12 +47,6 @@ public class ChickenMoveVelocity : MonoBehaviour, IMoveVelocity
         thisTransform.position = new Vector3(x, 0, z);
     }
 
-    public void SetMotorsValues(float move, float rotate)
-    {
-        this._move = move;
-        this._rotate = rotate;
-    }
-
     private void Move()
     {
         if (_move > 0)
@@ -92,5 +86,19 @@ public class ChickenMoveVelocity : MonoBehaviour, IMoveVelocity
     {
         _enabled = false;
         _rigidbody.velocity = Vector3.zero;
+    }
+
+    public void SetMotorsValues(int move, int rotate)
+    {
+        this._move = move;
+        this._rotate = rotate;
+    }
+
+    public IEnumerator EnactAction()
+    {
+        Enable();
+        yield return new WaitForSeconds(timeBetweenActions);
+        Disable();
+        // TODO Collect observation here!
     }
 }

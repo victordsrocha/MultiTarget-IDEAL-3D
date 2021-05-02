@@ -6,4 +6,6 @@ public interface IMoveVelocity
 {
     void Enable();
     void Disable();
+    void SetMotorsValues(int move, int rotate);
+    IEnumerator EnactAction();
 }

@@ -118,7 +118,7 @@ public class Decider : MonoBehaviour
         Anticipation selectedAnticipation = selectedDefaultAnticipation.AnticipationsSet.Max();
         Interaction selectedInteraction = selectedAnticipation.IntendedInteraction;
 
-        if (selectedInteraction.Weight > threshold && selectedAnticipation.Proclivity > 0)
+        if (selectedInteraction.Weight >= threshold && selectedAnticipation.Proclivity > 0)
         {
             return selectedInteraction;
         }
