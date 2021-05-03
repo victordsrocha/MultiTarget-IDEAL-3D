@@ -72,8 +72,39 @@ public class Observation : MonoBehaviour
         observationString += ResultFromStatus(rightEye.LastPoisonStatus);
         observationString += ",";
         observationString += ResultFromStatus(wallEye.LastWallStatus);
+        observationString += ",";
+        observationString += ClosestLeftTarget();
+        observationString += ClosestRightTarget();
 
         return observationString;
+    }
+
+    char ClosestLeftTarget()
+    {
+        if (leftEye.LastFoodDistance<leftEye.LastPoisonDistance)
+        {
+            return 'f';
+        }
+        else if (leftEye.LastFoodDistance>leftEye.LastPoisonDistance)
+        {
+            return 'p';
+        }
+
+        return 'n';
+    }
+    
+    char ClosestRightTarget()
+    {
+        if (rightEye.LastFoodDistance<rightEye.LastPoisonDistance)
+        {
+            return 'f';
+        }
+        else if (rightEye.LastFoodDistance>rightEye.LastPoisonDistance)
+        {
+            return 'p';
+        }
+
+        return 'n';
     }
 
     private void UpdateVisionState()
@@ -245,10 +276,10 @@ public class Observation : MonoBehaviour
             }
         }
 
-        rightEye.LastFoodDistance = leftFoodDstNormalized;
-        rightEye.LastPoisonDistance = leftPoisonDstNormalized;
-        rightEye.IsSeeingAnyFood = isLeftFoodVisible;
-        rightEye.IsSeeingAnyPoison = isLeftPoisonVisible;
+        rightEye.LastFoodDistance = rightFoodDstNormalized;
+        rightEye.LastPoisonDistance = rightPoisonDstNormalized;
+        rightEye.IsSeeingAnyFood = isRightFoodVisible;
+        rightEye.IsSeeingAnyPoison = isRightPoisonVisible;
     }
 
     void IsFoodReached()

@@ -98,15 +98,15 @@ public class Memory : MonoBehaviour, IMemory
 
         int sumValence = 0;
 
-        //sumValence += -1 * source[0].Count(c => c == '↑'); // Rotate Left
-        //sumValence += -1 * source[0].Count(c => c == '↓'); // Rotate Right
-
-        //sumValence += -3 * source[0].Count(c => c == '→'); // Forward
-        //sumValence += -3 * source[0].Count(c => c == '←'); // Backward
+        sumValence += -1 * source[0].Count(c => c == '-'); // Nothing
+        sumValence += -1 * source[0].Count(c => c == '↑'); // Rotate Left
+        sumValence += -1 * source[0].Count(c => c == '↓'); // Rotate Right
+        sumValence += -1 * source[0].Count(c => c == '→'); // Forward
+        sumValence += -1 * source[0].Count(c => c == '←'); // Backward
 
         sumValence += +10 * source[1].Count(c => c == 'a'); // food appear
         sumValence += -15 * source[1].Count(c => c == 'd'); // food disappear
-        sumValence += +50 * source[1].Count(c => c == 'r'); // food reached
+        sumValence += +100 * source[1].Count(c => c == 'r'); // food reached
         sumValence += +20 * source[1].Count(c => c == 'c'); // food closer
         sumValence += -10 * source[1].Count(c => c == 'f'); // food further
         // sumValence += 0 * source[1].Count(c => c == 'u'); // food unchanged
@@ -120,7 +120,7 @@ public class Memory : MonoBehaviour, IMemory
 
         //sumValence += 0 * source[3].Count(c => c == 'a'); // wall appear
         //sumValence += 0 * source[3].Count(c => c == 'd'); // wall disappear
-        sumValence += -50 * source[3].Count(c => c == 'b'); // wall bump
+        //sumValence += -50 * source[3].Count(c => c == 'b'); // wall bump
         //sumValence += 0 * source[3].Count(c => c == 'c'); // wall closer
         //sumValence += 0 * source[3].Count(c => c == 'f'); // wall further
         // sumValence += 0 * source[3].Count(c => c == 'u'); // wall unchanged
@@ -132,24 +132,14 @@ public class Memory : MonoBehaviour, IMemory
     {
         // ▶ ▷ △ ▲ ▼ ▽ ◀ ◁ ◇ ◈ ◆ ← → ↑ ↓
 
-        var move1 = AddOrGetPrimitiveInteraction("→↑,uu,uu,u");
-        var move2 = AddOrGetPrimitiveInteraction("→-,uu,uu,u");
-        var move3 = AddOrGetPrimitiveInteraction("→↓,uu,uu,u");
-        var move4 = AddOrGetPrimitiveInteraction("-↑,uu,uu,u");
-        var move5 = AddOrGetPrimitiveInteraction("--,uu,uu,u");
-        var move6 = AddOrGetPrimitiveInteraction("-↓,uu,uu,u");
-        var move7 = AddOrGetPrimitiveInteraction("←↑,uu,uu,u");
-        var move8 = AddOrGetPrimitiveInteraction("←-,uu,uu,u");
-        var move9 = AddOrGetPrimitiveInteraction("←↓,uu,uu,u");
-
-        AddOrGetAbstractExperiment(move1);
-        AddOrGetAbstractExperiment(move2);
-        AddOrGetAbstractExperiment(move3);
-        AddOrGetAbstractExperiment(move4);
-        AddOrGetAbstractExperiment(move5);
-        AddOrGetAbstractExperiment(move6);
-        AddOrGetAbstractExperiment(move7);
-        AddOrGetAbstractExperiment(move8);
-        AddOrGetAbstractExperiment(move9);
+        AddOrGetPrimitiveInteraction("→↑,uu,uu,u,nn");
+        AddOrGetPrimitiveInteraction("→-,uu,uu,u,nn");
+        AddOrGetPrimitiveInteraction("→↓,uu,uu,u,nn");
+        AddOrGetPrimitiveInteraction("-↑,uu,uu,u,nn");
+        //AddOrGetPrimitiveInteraction("--,uu,uu,u,nn");
+        AddOrGetPrimitiveInteraction("-↓,uu,uu,u,nn");
+        AddOrGetPrimitiveInteraction("←↑,uu,uu,u,nn");
+        AddOrGetPrimitiveInteraction("←-,uu,uu,u,nn");
+        AddOrGetPrimitiveInteraction("←↓,uu,uu,u,nn");
     }
 }
