@@ -54,7 +54,7 @@ public class FieldOfViewAdaptedToEdge : MonoBehaviour
         DrawFieldOfView();
     }
 
-    private void FindVisibleTargets()
+    public void FindVisibleTargets()
     {
         visibleTargets.Clear();
         Collider[] targetsInViewRadius = Physics.OverlapSphere(transform.position, viewRadius, targetMask);
@@ -75,7 +75,7 @@ public class FieldOfViewAdaptedToEdge : MonoBehaviour
         }
     }
 
-    private void FindVisibleTargetsMinimumDistance()
+    public void FindVisibleTargetsMinimumDistance()
     {
         Vector3 globalClosestPoint = default;
         float globalClosestPointDst = float.PositiveInfinity;
@@ -293,7 +293,7 @@ public class FieldOfViewAdaptedToEdge : MonoBehaviour
 
         return new Vector3(Mathf.Sin(angleInDegrees * Mathf.Deg2Rad), 0, Mathf.Cos(angleInDegrees * Mathf.Deg2Rad));
     }
-    
+
     public void AdjustViewAngle(float newViewAngle)
     {
         viewAngle = newViewAngle;

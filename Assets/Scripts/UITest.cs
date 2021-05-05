@@ -14,6 +14,8 @@ public class UITest : MonoBehaviour
     public Text fruitsQuantityText;
     public Text poisonsQuantityText;
 
+    public Text hapinessText;
+
     public FieldOfView rightEyeFov;
     public FieldOfView leftEyeFov;
     public FieldOfViewAdaptedToEdge edgeEyeFov;
@@ -21,8 +23,13 @@ public class UITest : MonoBehaviour
     public GameObject fruits;
     public GameObject poisons;
 
+    public Agent agent;
+
     private void LateUpdate()
     {
+        hapinessText.text = "Happiness: " + agent.happiness.ToString("F",
+            CultureInfo.CreateSpecificCulture("en-US"));
+
         fruitsQuantityText.text = "Fruits: " + fruits.transform.childCount.ToString();
         poisonsQuantityText.text = "Poisons: " + poisons.transform.childCount.ToString();
 

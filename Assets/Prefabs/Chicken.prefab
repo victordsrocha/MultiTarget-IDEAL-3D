@@ -593,13 +593,13 @@ GameObject:
   - component: {fileID: 947110483243772606}
   - component: {fileID: 7231507363228209245}
   - component: {fileID: 1170395647871696899}
-  - component: {fileID: 3206075621600436572}
   - component: {fileID: 7392341149699849917}
   - component: {fileID: 3089520323303152897}
   - component: {fileID: 1595044469257280632}
   - component: {fileID: 6272794755386890873}
   - component: {fileID: 5504472236066268972}
-  - component: {fileID: 2488833159889412544}
+  - component: {fileID: 9151677410253968288}
+  - component: {fileID: 6437025510022976704}
   m_Layer: 11
   m_Name: Chicken
   m_TagString: Untagged
@@ -696,22 +696,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15c34cf90a1970246b5a310e73e304c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 15
+  moveSpeed: 10
   rotationSpeed: 5
   timeBetweenActions: 0.1
---- !u!114 &3206075621600436572
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 945869633907177723}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5e3c718790289474a9b174d45f8ebd48, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  threshold: 4
 --- !u!114 &7392341149699849917
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -768,6 +755,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1165af1a9caf20546bdeaa09b65740cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  happiness: 0
+  stepEnabled: 1
+  stepNumber: 0
+  stepManager: {fileID: 0}
 --- !u!114 &6272794755386890873
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -792,7 +783,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 170743ad0045c9144be53829b296c5a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &2488833159889412544
+--- !u!114 &9151677410253968288
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -804,6 +795,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50881163943d52a48ad2731caa904311, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &6437025510022976704
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 945869633907177723}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e3c718790289474a9b174d45f8ebd48, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  threshold: 4
+  enactedInteractionText: 
 --- !u!1 &945886514643667921
 GameObject:
   m_ObjectHideFlags: 0

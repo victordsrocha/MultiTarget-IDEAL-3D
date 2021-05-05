@@ -10,10 +10,14 @@ public class Enacter : MonoBehaviour
     private AgentEnvironmentInterface _envInterface;
     public Interaction FinalEnactedInteraction;
     private Queue<Interaction> _enactedInteractionsPrimitiveQueue;
+    
+    public bool nextPrimitiveAction;
+    private Agent _agent;
 
     private void Start()
     {
         _memory = GetComponent<Memory>();
+        _agent = GetComponent<Agent>();
         _envInterface = GetComponent<AgentEnvironmentInterface>();
         _enactedInteractionsPrimitiveQueue = new Queue<Interaction>();
     }
@@ -60,7 +64,10 @@ public class Enacter : MonoBehaviour
             var nextInteraction = stackNextPrimitive.Pop();
             if (nextInteraction.IsPrimitive())
             {
-                yield return StartCoroutine(_envInterface.EnactPrimitiveInteraction(nextInteraction));
+                nextPrimitiveAction = false;
+                StartCoroutine(_envInterface.EnactPrimitiveInteraction(nextInteraction));
+                yield return new WaitUntil(() => nextPrimitiveAction);
+                
                 _enactedInteractionsPrimitiveQueue.Enqueue(_envInterface.CurrentEnactedPrimitiveInteraction);
                 if (nextInteraction != _envInterface.CurrentEnactedPrimitiveInteraction)
                 {
@@ -75,5 +82,6 @@ public class Enacter : MonoBehaviour
         }
 
         FinalEnactedInteraction = Enact(intendedInteraction);
+        _agent.isEnactComplete = true;
     }
 }

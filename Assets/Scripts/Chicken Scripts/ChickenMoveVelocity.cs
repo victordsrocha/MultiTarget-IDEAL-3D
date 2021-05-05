@@ -6,7 +6,7 @@ using UnityEngine;
 using Random = UnityEngine.Random;
 
 [RequireComponent(typeof(Rigidbody))]
-public class ChickenMoveVelocity : MonoBehaviour, IMoveVelocity
+public class ChickenMoveVelocity : MonoBehaviour
 {
     [SerializeField] private float moveSpeed;
     [SerializeField] private float rotationSpeed;
@@ -18,11 +18,15 @@ public class ChickenMoveVelocity : MonoBehaviour, IMoveVelocity
     private ICharacterBaseAnimation _characterBaseAnimation;
 
     private bool _enabled;
+    private Observation _observation;
+    private AgentEnvironmentInterface _interface;
 
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody>();
         _characterBaseAnimation = GetComponent<ICharacterBaseAnimation>();
+        _observation = GetComponent<Observation>();
+        _interface = GetComponent<AgentEnvironmentInterface>();
         SetInitialPosition();
         _enabled = false;
     }
@@ -67,13 +71,28 @@ public class ChickenMoveVelocity : MonoBehaviour, IMoveVelocity
     {
         var rotationVector = transform.rotation.eulerAngles.y;
 
-        if (_rotate > 0)
+        switch (_rotate)
         {
-            transform.DORotate(new Vector3(0.0f, rotationVector + rotationSpeed, 0.0f), timeBetweenActions);
+            case 1:
+                transform.DORotate(new Vector3(0.0f, rotationVector + rotationSpeed, 0.0f), timeBetweenActions);
+                break;
+            case -1:
+                transform.DORotate(new Vector3(0.0f, rotationVector - rotationSpeed, 0.0f), timeBetweenActions);
+                break;
         }
-        else if (_rotate < 0)
+    }
+
+    private void RotateAngularVelocity()
+    {
+        var rotationVector = transform.up;
+        switch (_rotate)
         {
-            transform.DORotate(new Vector3(0.0f, rotationVector - rotationSpeed, 0.0f), timeBetweenActions);
+            case 1:
+                _rigidbody.angularVelocity = -rotationVector * rotationSpeed;
+                break;
+            case -1:
+                _rigidbody.angularVelocity = rotationVector * rotationSpeed;
+                break;
         }
     }
 
@@ -86,6 +105,7 @@ public class ChickenMoveVelocity : MonoBehaviour, IMoveVelocity
     {
         _enabled = false;
         _rigidbody.velocity = Vector3.zero;
+        //_rigidbody.angularVelocity = Vector3.zero;
     }
 
     public void SetMotorsValues(int move, int rotate)
@@ -97,8 +117,9 @@ public class ChickenMoveVelocity : MonoBehaviour, IMoveVelocity
     public IEnumerator EnactAction()
     {
         Enable();
-        yield return new WaitForSeconds(timeBetweenActions);
+        yield return new WaitForSeconds(timeBetweenActions); 
         Disable();
-        // TODO Collect observation here!
+        _observation.ObservationResult();
+        _interface._observationDone = true;
     }
 }

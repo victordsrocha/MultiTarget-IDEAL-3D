@@ -63,7 +63,7 @@ public class FieldOfView : MonoBehaviour
         DrawFieldOfView();
     }
 
-    void FindVisibleTargets()
+    public void FindVisibleTargets()
     {
         visibleTargets.Clear();
         Collider[] targetsInViewRadius = Physics.OverlapSphere(transform.position, viewRadius, targetMask);
@@ -88,11 +88,12 @@ public class FieldOfView : MonoBehaviour
     }
 
 
-    void UpdateClosestFood()
+    public void UpdateClosestFood()
     {
         closestFood = null;
         closestFoodDst = float.PositiveInfinity;
         closestFoodDstNormalized = float.PositiveInfinity;
+        isFoodVisible = false;
 
         foreach (var visibleTarget in visibleTargets)
         {
@@ -103,6 +104,7 @@ public class FieldOfView : MonoBehaviour
                 float visibleTargetDst = Vector3.Distance(transform.position, targetInThePlane);
                 if (visibleTargetDst < closestFoodDst)
                 {
+                    isFoodVisible = true;
                     closestFoodDst = visibleTargetDst;
                     closestFoodDstNormalized = closestFoodDst / viewRadius;
 
@@ -112,22 +114,16 @@ public class FieldOfView : MonoBehaviour
         }
 
 
-        if (closestFood != null)
-        {
-            isFoodVisible = true;
-            foodPosition = closestFood.position;
-        }
-        else
-        {
-            isFoodVisible = false;
-        }
+        if (!isFoodVisible) return;
+        if (closestFood is { }) foodPosition = closestFood.position;
     }
-    
-    void UpdateClosestPoison()
+
+    public void UpdateClosestPoison()
     {
         closestPoison = null;
         closestPoisonDst = float.PositiveInfinity;
         closestPoisonDstNormalized = float.PositiveInfinity;
+        isPoisonVisible = false;
 
         foreach (var visibleTarget in visibleTargets)
         {
@@ -138,6 +134,7 @@ public class FieldOfView : MonoBehaviour
                 float visibleTargetDst = Vector3.Distance(transform.position, targetInThePlane);
                 if (visibleTargetDst < closestPoisonDst)
                 {
+                    isPoisonVisible = true;
                     closestPoisonDst = visibleTargetDst;
                     closestPoisonDstNormalized = closestPoisonDst / viewRadius;
 
@@ -147,15 +144,8 @@ public class FieldOfView : MonoBehaviour
         }
 
 
-        if (closestPoison != null)
-        {
-            isPoisonVisible = true;
-            foodPosition = closestPoison.position;
-        }
-        else
-        {
-            isPoisonVisible = false;
-        }
+        if (!isPoisonVisible) return;
+        if (closestPoison is { }) foodPosition = closestPoison.position;
     }
 
 

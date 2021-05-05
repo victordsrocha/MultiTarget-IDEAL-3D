@@ -15,6 +15,8 @@ public class Decider : MonoBehaviour
     private Interaction _higherLevelSuperInteraction1;
     private Interaction _higherLevelSuperInteraction2;
 
+    public string enactedInteractionText;
+
     private void Start()
     {
         _memory = GetComponent<Memory>();
@@ -93,6 +95,11 @@ public class Decider : MonoBehaviour
             {
                 proposedAnticipationsSet.Add(anticipation);
             }
+            else
+            {
+                // debug
+                int x = 1;
+            }
         }
 
         foreach (var defaultAnticipation in defaultSet)
@@ -128,11 +135,14 @@ public class Decider : MonoBehaviour
 
     public Interaction SelectInteraction()
     {
+        enactedInteractionText = "";
         HashSet<Anticipation> defaultSet = Anticipate();
         Anticipation selectedDefaultAnticipation = defaultSet.Max();
         if (!selectedDefaultAnticipation.AnticipationsSet.Any())
         {
             //return selectedDefaultAnticipation.IntendedInteraction;
+            //Debug.Log("*Random Pick");
+            enactedInteractionText = "*** Random Pick ***";
             return GetRandomNeutralPrimitiveInteraction(defaultSet);
         }
 
@@ -177,5 +187,10 @@ public class Decider : MonoBehaviour
         }
 
         this._superInteraction = lastSuperInteraction;
+
+        if (enactedInteractionText != "*** Random Pick ***")
+        {
+            enactedInteractionText = newEnactedInteraction.Label;
+        }
     }
 }

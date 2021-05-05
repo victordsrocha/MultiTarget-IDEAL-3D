@@ -104,10 +104,10 @@ public class Memory : MonoBehaviour, IMemory
         sumValence += -1 * source[0].Count(c => c == '→'); // Forward
         sumValence += -1 * source[0].Count(c => c == '←'); // Backward
 
-        sumValence += +10 * source[1].Count(c => c == 'a'); // food appear
+        sumValence += +15 * source[1].Count(c => c == 'a'); // food appear
         sumValence += -15 * source[1].Count(c => c == 'd'); // food disappear
         sumValence += +100 * source[1].Count(c => c == 'r'); // food reached
-        sumValence += +20 * source[1].Count(c => c == 'c'); // food closer
+        sumValence += +10 * source[1].Count(c => c == 'c'); // food closer
         sumValence += -10 * source[1].Count(c => c == 'f'); // food further
         // sumValence += 0 * source[1].Count(c => c == 'u'); // food unchanged
 
@@ -124,6 +124,7 @@ public class Memory : MonoBehaviour, IMemory
         //sumValence += 0 * source[3].Count(c => c == 'c'); // wall closer
         //sumValence += 0 * source[3].Count(c => c == 'f'); // wall further
         // sumValence += 0 * source[3].Count(c => c == 'u'); // wall unchanged
+        
 
         return sumValence;
     }
@@ -138,8 +139,8 @@ public class Memory : MonoBehaviour, IMemory
         AddOrGetPrimitiveInteraction("-↑,uu,uu,u,nn");
         //AddOrGetPrimitiveInteraction("--,uu,uu,u,nn");
         AddOrGetPrimitiveInteraction("-↓,uu,uu,u,nn");
-        AddOrGetPrimitiveInteraction("←↑,uu,uu,u,nn");
-        AddOrGetPrimitiveInteraction("←-,uu,uu,u,nn");
-        AddOrGetPrimitiveInteraction("←↓,uu,uu,u,nn");
+        //AddOrGetPrimitiveInteraction("←↑,uu,uu,u,nn");
+        //AddOrGetPrimitiveInteraction("←-,uu,uu,u,nn");
+        //AddOrGetPrimitiveInteraction("←↓,uu,uu,u,nn");
     }
 }

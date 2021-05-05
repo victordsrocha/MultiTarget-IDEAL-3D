@@ -47,6 +47,8 @@ public class Observation : MonoBehaviour
     private Eye rightEye;
     private EyeWall wallEye;
 
+    public string Result { get; private set; }
+
     private void Start()
     {
         leftEye = new Eye(leftFOV);
@@ -56,7 +58,7 @@ public class Observation : MonoBehaviour
         _bodyCollider = GetComponent<BodyCollider>();
     }
 
-    public string ObservationString()
+    public void ObservationResult()
     {
         UpdateVisionState();
         UpdateLeftEye();
@@ -76,30 +78,30 @@ public class Observation : MonoBehaviour
         observationString += ClosestLeftTarget();
         observationString += ClosestRightTarget();
 
-        return observationString;
+        Result = observationString;
     }
 
     char ClosestLeftTarget()
     {
-        if (leftEye.LastFoodDistance<leftEye.LastPoisonDistance)
+        if (leftEye.LastFoodDistance < leftEye.LastPoisonDistance)
         {
             return 'f';
         }
-        else if (leftEye.LastFoodDistance>leftEye.LastPoisonDistance)
+        else if (leftEye.LastFoodDistance > leftEye.LastPoisonDistance)
         {
             return 'p';
         }
 
         return 'n';
     }
-    
+
     char ClosestRightTarget()
     {
-        if (rightEye.LastFoodDistance<rightEye.LastPoisonDistance)
+        if (rightEye.LastFoodDistance < rightEye.LastPoisonDistance)
         {
             return 'f';
         }
-        else if (rightEye.LastFoodDistance>rightEye.LastPoisonDistance)
+        else if (rightEye.LastFoodDistance > rightEye.LastPoisonDistance)
         {
             return 'p';
         }
@@ -109,6 +111,17 @@ public class Observation : MonoBehaviour
 
     private void UpdateVisionState()
     {
+        //leftFOV.FindVisibleTargets();
+        //leftFOV.UpdateClosestFood();
+        //leftFOV.UpdateClosestPoison();
+
+        //rightFOV.FindVisibleTargets();
+        //rightFOV.UpdateClosestFood();
+        //rightFOV.UpdateClosestPoison();
+
+        //edgeFOV.FindVisibleTargets();
+        //edgeFOV.FindVisibleTargetsMinimumDistance();
+
         isRightFoodVisible = rightFOV.isFoodVisible;
         rightFood = rightFOV.closestFood;
         rightFoodDstNormalized = rightFOV.closestFoodDstNormalized;
@@ -151,6 +164,12 @@ public class Observation : MonoBehaviour
             }
             else
             {
+                //DEBUG!!!
+                if (leftEye.LastFoodStatus == VisionStateStatus.Appear)
+                {
+                    Debug.Log("ERRROOOOOO");
+                }
+
                 leftEye.LastFoodStatus = VisionStateStatus.Appear;
             }
         }
@@ -208,15 +227,15 @@ public class Observation : MonoBehaviour
 
     private void UpdateRightEye()
     {
-        if (isLeftFoodVisible)
+        if (isRightFoodVisible)
         {
             if (rightEye.IsSeeingAnyFood)
             {
-                if (leftFoodDstNormalized < rightEye.LastFoodDistance)
+                if (rightFoodDstNormalized < rightEye.LastFoodDistance)
                 {
                     rightEye.LastFoodStatus = VisionStateStatus.Closer;
                 }
-                else if (leftFoodDstNormalized > rightEye.LastFoodDistance)
+                else if (rightFoodDstNormalized > rightEye.LastFoodDistance)
                 {
                     rightEye.LastFoodStatus = VisionStateStatus.Further;
                 }
@@ -242,15 +261,15 @@ public class Observation : MonoBehaviour
             }
         }
 
-        if (isLeftPoisonVisible)
+        if (isRightPoisonVisible)
         {
             if (rightEye.IsSeeingAnyPoison)
             {
-                if (leftPoisonDstNormalized < rightEye.LastPoisonDistance)
+                if (rightPoisonDstNormalized < rightEye.LastPoisonDistance)
                 {
                     rightEye.LastPoisonStatus = VisionStateStatus.Closer;
                 }
-                else if (leftPoisonDstNormalized > rightEye.LastPoisonDistance)
+                else if (rightPoisonDstNormalized > rightEye.LastPoisonDistance)
                 {
                     rightEye.LastPoisonStatus = VisionStateStatus.Further;
                 }
