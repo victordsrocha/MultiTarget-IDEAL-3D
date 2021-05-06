@@ -39,10 +39,10 @@ public class Agent : MonoBehaviour
             stepNumber++;
             var intendedInteraction = _decider.SelectInteraction();
 
-            stepManager.intendedInteractionText.text = intendedInteraction.Label;
-            stepManager.enactedInteractionText.text = "";
+            stepManager.intendedInteractionText.text = "Intended Interaction: " + intendedInteraction.Label;
+            //stepManager.enactedInteractionText.text = "Enacted Interaction: ";
 
-            if (stepManager.stepByStep)
+            if (stepManager.stepByStep || stepManager.frozen)
             {
                 stepManager.frozen = true;
                 yield return new WaitUntil(() => !stepManager.frozen);
@@ -60,7 +60,7 @@ public class Agent : MonoBehaviour
         StartCoroutine(_enacter.EnactCoroutine(intendedInteraction));
         yield return new WaitUntil(() => isEnactComplete);
 
-        stepManager.enactedInteractionText.text = _enacter.FinalEnactedInteraction.Label;
+        stepManager.enactedInteractionText.text = "Enacted Interaction: " + _enacter.FinalEnactedInteraction.Label;
 
         if (stepManager.stepByStep)
         {
@@ -81,8 +81,6 @@ public class Agent : MonoBehaviour
 
         _decider.LearnCompositeInteraction(enactedInteraction);
         _decider.EnactedInteraction = enactedInteraction;
-
-        stepManager.enactedInteractionText.text = enactedInteraction.Label;
 
         //Debug.Log(enactedInteraction.Label);
         Debug.Log(_decider.enactedInteractionText);

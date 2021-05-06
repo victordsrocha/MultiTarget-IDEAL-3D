@@ -111,16 +111,16 @@ public class Memory : MonoBehaviour, IMemory
         sumValence += -10 * source[1].Count(c => c == 'f'); // food further
         // sumValence += 0 * source[1].Count(c => c == 'u'); // food unchanged
 
-        //sumValence += 0 * source[2].Count(c => c == 'a'); // poison appear
-        //sumValence += 0 * source[2].Count(c => c == 'd'); // poison disappear
-        sumValence += -100 * source[2].Count(c => c == 'r'); // poison reached
-        //sumValence += 0 * source[2].Count(c => c == 'c'); // poison closer
-        //sumValence += 0 * source[2].Count(c => c == 'f'); // poison further
+        //sumValence += -15 * source[2].Count(c => c == 'a'); // poison appear
+        //sumValence += +15 * source[2].Count(c => c == 'd'); // poison disappear
+        sumValence += -100 * source[2].Count(c => c == 'r'); // poison reached 
+        //sumValence += +10 * source[2].Count(c => c == 'c'); // poison closer
+        //sumValence += -10 * source[2].Count(c => c == 'f'); // poison further
         // sumValence += 0 * source[2].Count(c => c == 'u'); // poison unchanged
 
         //sumValence += 0 * source[3].Count(c => c == 'a'); // wall appear
         //sumValence += 0 * source[3].Count(c => c == 'd'); // wall disappear
-        //sumValence += -50 * source[3].Count(c => c == 'b'); // wall bump
+        //sumValence += -5 * source[3].Count(c => c == 'b'); // wall bump
         //sumValence += 0 * source[3].Count(c => c == 'c'); // wall closer
         //sumValence += 0 * source[3].Count(c => c == 'f'); // wall further
         // sumValence += 0 * source[3].Count(c => c == 'u'); // wall unchanged

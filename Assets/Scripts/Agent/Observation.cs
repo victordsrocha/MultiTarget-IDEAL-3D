@@ -111,16 +111,16 @@ public class Observation : MonoBehaviour
 
     private void UpdateVisionState()
     {
-        //leftFOV.FindVisibleTargets();
-        //leftFOV.UpdateClosestFood();
-        //leftFOV.UpdateClosestPoison();
+        leftFOV.FindVisibleTargets();
+        leftFOV.UpdateClosestFood();
+        leftFOV.UpdateClosestPoison();
 
-        //rightFOV.FindVisibleTargets();
-        //rightFOV.UpdateClosestFood();
-        //rightFOV.UpdateClosestPoison();
+        rightFOV.FindVisibleTargets();
+        rightFOV.UpdateClosestFood();
+        rightFOV.UpdateClosestPoison();
 
-        //edgeFOV.FindVisibleTargets();
-        //edgeFOV.FindVisibleTargetsMinimumDistance();
+        edgeFOV.FindVisibleTargets();
+        edgeFOV.FindVisibleTargetsMinimumDistance();
 
         isRightFoodVisible = rightFOV.isFoodVisible;
         rightFood = rightFOV.closestFood;

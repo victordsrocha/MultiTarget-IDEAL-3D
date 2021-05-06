@@ -8,22 +8,28 @@ public class StepManager : MonoBehaviour
 {
     public Text intendedInteractionText;
     public Text enactedInteractionText;
-    
+
     public bool stepByStep;
     public bool frozen;
 
     public Button stepButton;
+    public Button runButton;
 
-    public void StepButton()
+    private void Awake()
     {
-        frozen = false;
+        stepButton.onClick.AddListener(StepButton);
+        runButton.onClick.AddListener(RunButton);
     }
 
-    public void StepByStepButton()
+    private void RunButton()
     {
-        stepByStep = !stepByStep;
-        frozen = stepByStep;
+        stepByStep = false;
+        frozen = !frozen;
+    }
 
-        stepButton.gameObject.SetActive(stepByStep);
+    private void StepButton()
+    {
+        stepByStep = true;
+        frozen = !frozen;
     }
 }
