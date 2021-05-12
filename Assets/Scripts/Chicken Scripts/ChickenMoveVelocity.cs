@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
+using DG.Tweening.Core;
+using DG.Tweening.Plugins.Options;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -17,9 +19,11 @@ public class ChickenMoveVelocity : MonoBehaviour
     private Rigidbody _rigidbody;
     private ICharacterBaseAnimation _characterBaseAnimation;
 
-    private bool _enabled;
     private Observation _observation;
     private AgentEnvironmentInterface _interface;
+
+    private bool _isRotationComplete;
+    private bool _isMoveComplete;
 
     private void Awake()
     {
@@ -28,17 +32,6 @@ public class ChickenMoveVelocity : MonoBehaviour
         _observation = GetComponent<Observation>();
         _interface = GetComponent<AgentEnvironmentInterface>();
         SetInitialPosition();
-        _enabled = false;
-    }
-
-    private void FixedUpdate()
-    {
-        if (_enabled)
-        {
-            Move();
-            Rotate();
-            _characterBaseAnimation.UpdateAnimation(new Vector3(_rotate, _move));
-        }
     }
 
     private void SetInitialPosition()
@@ -51,7 +44,7 @@ public class ChickenMoveVelocity : MonoBehaviour
         thisTransform.position = new Vector3(x, 0, z);
     }
 
-    private void Move()
+    private IEnumerator Move(float duration)
     {
         if (_move > 0)
         {
@@ -65,21 +58,30 @@ public class ChickenMoveVelocity : MonoBehaviour
         {
             _rigidbody.velocity = Vector3.zero;
         }
+
+        yield return new WaitForSeconds(duration);
+
+        _rigidbody.velocity = Vector3.zero;
+        _isMoveComplete = true;
     }
 
-    private void Rotate()
+    private IEnumerator Rotate()
     {
         var rotationVector = transform.rotation.eulerAngles.y;
+        TweenerCore<Quaternion, Vector3, QuaternionOptions> dot = null;
 
         switch (_rotate)
         {
             case 1:
-                transform.DORotate(new Vector3(0.0f, rotationVector + rotationSpeed, 0.0f), timeBetweenActions);
+                dot = transform.DORotate(new Vector3(0.0f, rotationVector + rotationSpeed, 0.0f), timeBetweenActions);
                 break;
             case -1:
-                transform.DORotate(new Vector3(0.0f, rotationVector - rotationSpeed, 0.0f), timeBetweenActions);
+                dot = transform.DORotate(new Vector3(0.0f, rotationVector - rotationSpeed, 0.0f), timeBetweenActions);
                 break;
         }
+
+        if (dot != null) yield return dot;
+        _isRotationComplete = true;
     }
 
     private void RotateAngularVelocity()
@@ -96,29 +98,29 @@ public class ChickenMoveVelocity : MonoBehaviour
         }
     }
 
-    public void Enable()
-    {
-        _enabled = true;
-    }
-
-    public void Disable()
-    {
-        _enabled = false;
-        _rigidbody.velocity = Vector3.zero;
-        //_rigidbody.angularVelocity = Vector3.zero;
-    }
-
     public void SetMotorsValues(int move, int rotate)
     {
         this._move = move;
         this._rotate = rotate;
     }
 
+    private void UpdateAnimation()
+    {
+        _characterBaseAnimation.UpdateAnimation(new Vector3(_rotate, _move));
+    }
+
     public IEnumerator EnactAction()
     {
-        Enable();
-        yield return new WaitForSeconds(timeBetweenActions); 
-        Disable();
+        _isRotationComplete = false;
+        _isMoveComplete = false;
+
+        UpdateAnimation();
+
+        StartCoroutine(Rotate());
+        StartCoroutine(Move(timeBetweenActions));
+
+        yield return new WaitUntil(() => _isRotationComplete && _isMoveComplete);
+
         _observation.ObservationResult();
         _interface._observationDone = true;
     }
