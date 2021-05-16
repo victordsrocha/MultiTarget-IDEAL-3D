@@ -98,9 +98,9 @@ public class Memory : MonoBehaviour, IMemory
 
         int sumValence = 0;
 
-        //sumValence += -1 * source[0].Count(c => c == '-'); // Nothing
-        sumValence += -2 * source[0].Count(c => c == '↑'); // Rotate Left
-        sumValence += -2 * source[0].Count(c => c == '↓'); // Rotate Right
+        sumValence += -1 * source[0].Count(c => c == '-'); // Nothing
+        sumValence += -1 * source[0].Count(c => c == '↑'); // Rotate Left
+        sumValence += -1 * source[0].Count(c => c == '↓'); // Rotate Right
         sumValence += -1 * source[0].Count(c => c == '→'); // Forward
         sumValence += -1 * source[0].Count(c => c == '←'); // Backward
 
@@ -149,8 +149,8 @@ public class Memory : MonoBehaviour, IMemory
         var b4 = AddOrGetPrimitiveInteraction("-↑,uu,uu,b,nn");
         var b6 = AddOrGetPrimitiveInteraction("-↓,uu,uu,b,nn");
 
-        var m1 = AddOrGetPrimitiveInteraction("-↑,uu,uu,f,nn");
-        var m2 = AddOrGetPrimitiveInteraction("-↓,uu,uu,f,nn");
+        var m1 = AddOrGetPrimitiveInteraction("-↑,uu,uu,l,nn");
+        var m2 = AddOrGetPrimitiveInteraction("-↓,uu,uu,l,nn");
 
         AddOrGetCompositeInteraction(b2, b4);
         AddOrGetCompositeInteraction(b2, b6);

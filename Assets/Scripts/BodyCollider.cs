@@ -6,19 +6,21 @@ using UnityEngine;
 public class BodyCollider : MonoBehaviour
 {
     public bool isColliding;
+    public LayerMask wallMask;
 
     private void Start()
     {
         isColliding = false;
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void Update()
     {
-        isColliding = true;
+        isColliding = IsCollidingCheck();
     }
 
-    private void OnTriggerExit(Collider other)
+    public bool IsCollidingCheck()
     {
-        isColliding = false;
+        Collider[] overlapSphere = Physics.OverlapSphere(transform.position, 1f, wallMask);
+        return overlapSphere.Length != 0;
     }
 }

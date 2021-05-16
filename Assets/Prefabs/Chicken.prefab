@@ -542,13 +542,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 389276166971770176}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.3421, z: 0.2021}
-  m_LocalScale: {x: 1.25, y: 1, z: 1}
+  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 0.3421, z: 0.24}
+  m_LocalScale: {x: 1.25, y: 0.3, z: 1}
   m_Children: []
   m_Father: {fileID: 948999094114844149}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!136 &5515903087900064438
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -576,6 +576,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isColliding: 0
+  wallMask:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!1 &945810831916149249
 GameObject:
   m_ObjectHideFlags: 0
@@ -657,7 +660,7 @@ GameObject:
   - component: {fileID: 6272794755386890873}
   - component: {fileID: 9151677410253968288}
   - component: {fileID: 5504472236066268972}
-  - component: {fileID: 8627760080418234359}
+  - component: {fileID: 8105281343838030391}
   m_Layer: 11
   m_Name: Chicken
   m_TagString: Untagged
@@ -804,7 +807,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   memory: {fileID: 9151677410253968288}
-  decider: {fileID: 8627760080418234359}
+  decider: {fileID: 8105281343838030391}
   enacter: {fileID: 5504472236066268972}
   happiness: 0
   stepEnabled: 1
@@ -856,7 +859,7 @@ MonoBehaviour:
   envInterface: {fileID: 6272794755386890873}
   nextPrimitiveAction: 0
   agent: {fileID: 1595044469257280632}
---- !u!114 &8627760080418234359
+--- !u!114 &8105281343838030391
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

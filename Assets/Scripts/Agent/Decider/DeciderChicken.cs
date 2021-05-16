@@ -145,12 +145,20 @@ public class DeciderChicken : Decider
     {
         EnactedInteractionText = "";
         var defaultSet = Anticipate();
-        ActionAnticipation selectedDefaultAnticipation = defaultSet.Max();
-        if (!selectedDefaultAnticipation.AnticipationsSet.Any())
+
+        int c = 0;
+        foreach (var actionAnticipation in defaultSet)
+        {
+            c += actionAnticipation.AnticipationsSet.Count();
+        }
+
+        if (c == 0)
         {
             EnactedInteractionText = "*** Random Pick ***";
             return GetRandomNeutralPrimitiveInteraction(defaultSet);
-        }
+        } 
+
+        ActionAnticipation selectedDefaultAnticipation = defaultSet.Where(x=>x.AnticipationsSet.Any()).Max();
 
         Anticipation selectedAnticipation = selectedDefaultAnticipation.AnticipationsSet.Max();
         Interaction selectedInteraction = selectedAnticipation.IntendedInteraction;
