@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Anticipation : IComparable<Anticipation>
+public class Anticipation : IComparable<Anticipation>, IEquatable<Anticipation>
 {
     public Interaction IntendedInteraction;
     public Experiment Experiment;
@@ -35,8 +35,21 @@ public class Anticipation : IComparable<Anticipation>
 
     public int CompareTo(Anticipation other)
     {
-        if (ReferenceEquals(this, other)) return 0;
-        if (ReferenceEquals(null, other)) return 1;
-        return Proclivity.CompareTo(other.Proclivity);
+        if (Proclivity == other.Proclivity)
+        {
+            return 0;
+        }
+
+        if (Proclivity > other.Proclivity)
+        {
+            return 1;
+        }
+
+        return -1;
+    }
+
+    public bool Equals(Anticipation other)
+    {
+        return other != null && Experiment == other.Experiment;
     }
 }
