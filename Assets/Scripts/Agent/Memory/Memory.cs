@@ -120,9 +120,10 @@ public class Memory : MonoBehaviour, IMemory
 
         //sumValence += 0 * source[3].Count(c => c == 'a'); // wall appear
         //sumValence += 0 * source[3].Count(c => c == 'd'); // wall disappear
-        sumValence += -5 * source[3].Count(c => c == 'b'); // wall bump
+        sumValence += -10 * source[3].Count(c => c == 'b'); // wall bump
+        sumValence += +10 * source[3].Count(c => c == 'l'); // wall release
         //sumValence += 0 * source[3].Count(c => c == 'c'); // wall closer
-        //sumValence += 0 * source[3].Count(c => c == 'f'); // wall further
+        //sumValence += 3 * source[3].Count(c => c == 'f'); // wall further
         // sumValence += 0 * source[3].Count(c => c == 'u'); // wall unchanged
 
 
@@ -142,5 +143,18 @@ public class Memory : MonoBehaviour, IMemory
         //AddOrGetPrimitiveInteraction("←↑,uu,uu,u,nn");
         //AddOrGetPrimitiveInteraction("←-,uu,uu,u,nn");
         //AddOrGetPrimitiveInteraction("←↓,uu,uu,u,nn");
+
+        // bump
+        var b2 = AddOrGetPrimitiveInteraction("→-,uu,uu,b,nn");
+        var b4 = AddOrGetPrimitiveInteraction("-↑,uu,uu,b,nn");
+        var b6 = AddOrGetPrimitiveInteraction("-↓,uu,uu,b,nn");
+
+        var m1 = AddOrGetPrimitiveInteraction("-↑,uu,uu,f,nn");
+        var m2 = AddOrGetPrimitiveInteraction("-↓,uu,uu,f,nn");
+
+        AddOrGetCompositeInteraction(b2, b4);
+        AddOrGetCompositeInteraction(b2, b6);
+        AddOrGetCompositeInteraction(b4, m1);
+        AddOrGetCompositeInteraction(b6, m2);
     }
 }

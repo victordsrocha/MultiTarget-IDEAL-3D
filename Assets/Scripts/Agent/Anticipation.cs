@@ -33,23 +33,41 @@ public class Anticipation : IComparable<Anticipation>, IEquatable<Anticipation>
         return firstPrimitiveInteraction;
     }
 
-    public int CompareTo(Anticipation other)
+    public string GetFirstAction()
     {
-        if (Proclivity == other.Proclivity)
-        {
-            return 0;
-        }
+        Interaction firstPrimitiveInteraction = GetFirstPrimitiveInteraction();
 
-        if (Proclivity > other.Proclivity)
-        {
-            return 1;
-        }
+        string moveActionCod = firstPrimitiveInteraction.Label[0].ToString();
+        string rotateActionCod = firstPrimitiveInteraction.Label[1].ToString();
 
-        return -1;
+        string firstAction = moveActionCod + rotateActionCod;
+        return firstAction;
     }
 
     public bool Equals(Anticipation other)
     {
-        return other != null && Experiment == other.Experiment;
+        if (ReferenceEquals(null, other)) return false;
+        if (ReferenceEquals(this, other)) return true;
+        return Equals(Experiment, other.Experiment);
+    }
+
+    public override bool Equals(object obj)
+    {
+        if (ReferenceEquals(null, obj)) return false;
+        if (ReferenceEquals(this, obj)) return true;
+        if (obj.GetType() != this.GetType()) return false;
+        return Equals((Anticipation) obj);
+    }
+
+    public override int GetHashCode()
+    {
+        return (Experiment != null ? Experiment.GetHashCode() : 0);
+    }
+
+    public int CompareTo(Anticipation other)
+    {
+        if (ReferenceEquals(this, other)) return 0;
+        if (ReferenceEquals(null, other)) return 1;
+        return Proclivity.CompareTo(other.Proclivity);
     }
 }

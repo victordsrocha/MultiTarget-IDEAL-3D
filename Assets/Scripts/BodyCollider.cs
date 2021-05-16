@@ -5,21 +5,19 @@ using UnityEngine;
 
 public class BodyCollider : MonoBehaviour
 {
-    private Collider _collider;
     public bool isColliding;
 
-    private void Awake()
+    private void Start()
     {
-        _collider = GetComponent<Collider>();
         isColliding = false;
     }
 
-    private void OnCollisionEnter(Collision other)
+    private void OnTriggerEnter(Collider other)
     {
         isColliding = true;
     }
 
-    private void OnCollisionExit(Collision other)
+    private void OnTriggerExit(Collider other)
     {
         isColliding = false;
     }

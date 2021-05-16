@@ -1,24 +1,27 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class DeciderChicken : Decider
 {
     public override Interaction EnactedInteraction { get; set; }
     public override string EnactedInteractionText { get; set; }
-    
+
+    [SerializeField] private int threshold;
+
     private Interaction _superInteraction;
     private Interaction _higherLevelSuperInteraction1;
     private Interaction _higherLevelSuperInteraction2;
-    
+
     public Memory memory;
-    
+
     private void Start()
     {
         EnactedInteraction = null;
         _superInteraction = null;
     }
-    
+
     /// <summary>
     /// The current enacted interaction activates previously learned composite interactions as it matches
     /// their pre-interaction, then the agent gets the activated composited interaction set.
@@ -62,22 +65,9 @@ public class DeciderChicken : Decider
 
         return activatedInteractions;
     }
-    
-    private HashSet<Anticipation> Anticipate()
-    {
-        var defaultSet = new HashSet<Anticipation>();
-        foreach (var interaction in memory.KnownInteractions.Values)
-        {
-            if (interaction.IsPrimitive())
-            {
-                var defaultAnticipation = new Anticipation(interaction.Experiment, 0)
-                {
-                    AnticipationsSet = new HashSet<Anticipation>()
-                };
-                defaultSet.Add(defaultAnticipation);
-            }
-        }
 
+    private HashSet<ActionAnticipation> Anticipate()
+    {
         var activatedInteractions = GetActivatedInteractions();
 
         var proposedAnticipationsSet = new HashSet<Anticipation>();
@@ -92,29 +82,121 @@ public class DeciderChicken : Decider
             }
         }
 
-        foreach (var defaultAnticipation in defaultSet)
+        foreach (var anticipation in proposedAnticipationsSet)
+        {
+            foreach (var experimentEnactedInteraction in anticipation.Experiment.EnactedInteractions)
+            {
+                foreach (var activatedInteraction in activatedInteractions)
+                {
+                    if (experimentEnactedInteraction == activatedInteraction.PostInteraction)
+                    {
+                        var proclivity = activatedInteraction.Weight * experimentEnactedInteraction.Valence;
+                        anticipation.AddProclivity(proclivity);
+                    }
+                }
+            }
+        }
+
+        var defaultSet = new HashSet<ActionAnticipation>
+        {
+            new ActionAnticipation("→↑", memory.GetPrimitiveInteraction("→↑,uu,uu,u,nn")),
+            new ActionAnticipation("→-", memory.GetPrimitiveInteraction("→-,uu,uu,u,nn")),
+            new ActionAnticipation("→↓", memory.GetPrimitiveInteraction("→↓,uu,uu,u,nn")),
+            new ActionAnticipation("-↑", memory.GetPrimitiveInteraction("-↑,uu,uu,u,nn")),
+            //new ActionAnticipation("--", memory.GetPrimitiveInteraction("--,uu,uu,u,nn")),
+            new ActionAnticipation("-↓", memory.GetPrimitiveInteraction("-↓,uu,uu,u,nn")),
+            //new ActionAnticipation("←↑", memory.GetPrimitiveInteraction("←↑,uu,uu,u,nn")),
+            //new ActionAnticipation("←-", memory.GetPrimitiveInteraction("←-,uu,uu,u,nn")),
+            //new ActionAnticipation("←↓", memory.GetPrimitiveInteraction("←↓,uu,uu,u,nn"))
+        };
+
+        foreach (var actionAnticipation in defaultSet)
         {
             foreach (var anticipation in proposedAnticipationsSet)
             {
-                var firstPrimitiveInteraction = anticipation.GetFirstPrimitiveInteraction();
-                if (firstPrimitiveInteraction.Experiment == defaultAnticipation.Experiment)
+                string firstAction = anticipation.GetFirstAction();
+                if (firstAction == actionAnticipation.Action)
                 {
-                    defaultAnticipation.AnticipationsSet.Add(anticipation);
-                    defaultAnticipation.AddProclivity(anticipation.Proclivity);
+                    actionAnticipation.AnticipationsSet.Add(anticipation);
+                    actionAnticipation.AddProclivity(anticipation.Proclivity);
                 }
             }
         }
 
         return defaultSet;
     }
-    
+
+    private Interaction GetRandomNeutralPrimitiveInteraction(HashSet<ActionAnticipation> defaultSet)
+    {
+        List<ActionAnticipation> defaultNeutralList = new List<ActionAnticipation>();
+        foreach (ActionAnticipation actionAnticipation in defaultSet)
+        {
+            if (!actionAnticipation.AnticipationsSet.Any())
+            {
+                defaultNeutralList.Add(actionAnticipation);
+            }
+        }
+
+        int randomPos = Random.Range(0, defaultNeutralList.Count() - 1);
+        return defaultNeutralList[randomPos].NeutralInteraction;
+    }
+
     public override Interaction SelectInteraction()
     {
-        throw new System.NotImplementedException();
+        EnactedInteractionText = "";
+        var defaultSet = Anticipate();
+        ActionAnticipation selectedDefaultAnticipation = defaultSet.Max();
+        if (!selectedDefaultAnticipation.AnticipationsSet.Any())
+        {
+            EnactedInteractionText = "*** Random Pick ***";
+            return GetRandomNeutralPrimitiveInteraction(defaultSet);
+        }
+
+        Anticipation selectedAnticipation = selectedDefaultAnticipation.AnticipationsSet.Max();
+        Interaction selectedInteraction = selectedAnticipation.IntendedInteraction;
+
+        if (selectedInteraction.Weight >= threshold && selectedAnticipation.Proclivity > 0)
+        {
+            return selectedInteraction;
+        }
+        else
+        {
+            return selectedAnticipation.GetFirstPrimitiveInteraction();
+        }
     }
 
     public override void LearnCompositeInteraction(Interaction newEnactedInteraction)
     {
-        throw new System.NotImplementedException();
+        var previousInteraction = EnactedInteraction;
+        var lastInteraction = newEnactedInteraction;
+        var previousSuperInteraction = _superInteraction;
+        Interaction lastSuperInteraction = null;
+
+        // learn [previous current] called the super interaction
+        if (previousInteraction != null)
+        {
+            lastSuperInteraction =
+                memory.AddOrGetAndReinforceCompositeInteraction(previousInteraction, lastInteraction);
+        }
+
+        // Learn higher-level interactions
+        if (previousSuperInteraction != null)
+        {
+            // learn [penultimate [previous current]]
+            _higherLevelSuperInteraction1 = memory.AddOrGetAndReinforceCompositeInteraction(
+                previousSuperInteraction.PreInteraction,
+                lastSuperInteraction);
+
+            // learn [[penultimate previous] current]
+            _higherLevelSuperInteraction2 =
+                memory.AddOrGetAndReinforceCompositeInteraction(previousSuperInteraction, lastInteraction);
+        }
+
+        this._superInteraction = lastSuperInteraction;
+
+        if (EnactedInteractionText != "*** Random Pick ***")
+        {
+            EnactedInteractionText = newEnactedInteraction.Label;
+        }
     }
 }

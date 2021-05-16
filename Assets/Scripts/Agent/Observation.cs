@@ -13,6 +13,7 @@ public class Observation : MonoBehaviour
         Further,
         Reached,
         Bump,
+        Release,
         Unchanged
     }
 
@@ -360,6 +361,12 @@ public class Observation : MonoBehaviour
             if (bodyCollider.isColliding)
             {
                 wallEye.LastWallStatus = VisionStateStatus.Bump;
+                wallEye.IsBumping = true;
+            }
+            else if (wallEye.IsBumping)
+            {
+                wallEye.IsBumping = false;
+                wallEye.LastWallStatus = VisionStateStatus.Release;
             }
         }
 
@@ -385,6 +392,8 @@ public class Observation : MonoBehaviour
                 return 'r';
             case VisionStateStatus.Unchanged:
                 return 'u';
+            case VisionStateStatus.Release:
+                return 'l';
             default:
                 throw new ArgumentOutOfRangeException();
         }
@@ -418,6 +427,7 @@ public class Observation : MonoBehaviour
         public VisionStateStatus LastWallStatus;
         public float LastWallDistance;
         public bool IsSeeingWall;
+        public bool IsBumping;
 
         public EyeWall(FieldOfViewAdaptedToEdge fieldOfViewAdaptedToEdge)
         {
@@ -425,6 +435,7 @@ public class Observation : MonoBehaviour
             LastWallStatus = VisionStateStatus.Unchanged;
             LastWallDistance = float.PositiveInfinity;
             IsSeeingWall = false;
+            IsBumping = false;
         }
     }
 }
