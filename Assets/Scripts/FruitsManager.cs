@@ -1,8 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.PlayerLoop;
+using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 public class FruitsManager : MonoBehaviour
@@ -16,11 +18,21 @@ public class FruitsManager : MonoBehaviour
     public GameObject foodListGameObject;
     public GameObject poisonListGameObject;
 
+    public Toggle resetToggle;
+    public Agent agent;
+    private int resetCount = 1;
+
     private void Update()
     {
         if (QuantityFruits() < fruitMaxQuantity)
         {
             InstantiateNewFruit();
+        }
+
+        if (agent.stepNumber > (5000 * resetCount) && resetToggle.isOn)
+        {
+            resetCount++;
+            ResetFruits();
         }
     }
 
@@ -29,9 +41,25 @@ public class FruitsManager : MonoBehaviour
         return foodListGameObject.transform.childCount + poisonListGameObject.transform.childCount;
     }
 
+    public void ResetFruits()
+    {
+        List<Transform> foods = foodListGameObject.transform.Cast<Transform>().ToList();
+        List<Transform> poisons = poisonListGameObject.transform.Cast<Transform>().ToList();
+
+        foreach (Transform food in foods)
+        {
+            food.GetComponent<Fruit>().DestroyFood(0f);
+        }
+
+        foreach (Transform poison in poisons)
+        {
+            poison.GetComponent<Fruit>().DestroyFood(0f);
+        }
+    }
+
     private Fruit InstantiateNewFruit()
     {
-        //var targetPrefab = 0.5 > Random.Range(0, 1) ? foodPrefab : poisonPrefab;
+        //var targetPrefab = 0.5 > Random.Range(0, 1) ? foodPrefab : poisonPrefab; 
 
         Fruit targetPrefab;
         GameObject parent;
@@ -58,8 +86,8 @@ public class FruitsManager : MonoBehaviour
         {
             newTarget = Instantiate(targetPrefab, parent.transform, true);
             newTarget.transform.position = birthSpot;
-            
-            
+
+
             //newTarget.birthTime = Time.time;
 
             //int time = (int) Time.time;

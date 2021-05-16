@@ -17,7 +17,7 @@ public class Observation : MonoBehaviour
     }
 
     public BeakTrigger beakTrigger;
-    private BodyCollider _bodyCollider;
+    public BodyCollider bodyCollider;
 
     public FieldOfView leftFOV;
     public FieldOfView rightFOV;
@@ -54,8 +54,6 @@ public class Observation : MonoBehaviour
         leftEye = new Eye(leftFOV);
         rightEye = new Eye(rightFOV);
         wallEye = new EyeWall(edgeFOV);
-
-        _bodyCollider = GetComponent<BodyCollider>();
     }
 
     public void ObservationResult()
@@ -359,7 +357,7 @@ public class Observation : MonoBehaviour
         //bump?
         if (wallEye.IsSeeingWall)
         {
-            if (_bodyCollider.isColliding)
+            if (bodyCollider.isColliding)
             {
                 wallEye.LastWallStatus = VisionStateStatus.Bump;
             }

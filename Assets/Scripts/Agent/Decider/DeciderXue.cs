@@ -5,21 +5,20 @@ using System.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public class Decider : MonoBehaviour
+public class DeciderXue : Decider
 {
     [SerializeField] private int threshold;
+    public override Interaction EnactedInteraction { get; set; }
+    public override string EnactedInteractionText { get; set; }
 
-    private Memory _memory;
-    public Interaction EnactedInteraction;
     private Interaction _superInteraction;
     private Interaction _higherLevelSuperInteraction1;
     private Interaction _higherLevelSuperInteraction2;
 
-    public string enactedInteractionText;
+    public Memory memory;
 
     private void Start()
     {
-        _memory = GetComponent<Memory>();
         EnactedInteraction = null;
         _superInteraction = null;
     }
@@ -56,7 +55,7 @@ public class Decider : MonoBehaviour
         }
 
         var activatedInteractions = new List<Interaction>();
-        foreach (var knowInteraction in _memory.KnownInteractions.Values)
+        foreach (var knowInteraction in memory.KnownInteractions.Values)
         {
             if (knowInteraction.IsPrimitive()) continue;
             if (contextInteractions.Contains(knowInteraction.PreInteraction))
@@ -68,10 +67,10 @@ public class Decider : MonoBehaviour
         return activatedInteractions;
     }
 
-    public HashSet<Anticipation> Anticipate()
+    private HashSet<Anticipation> Anticipate()
     {
         var defaultSet = new HashSet<Anticipation>();
-        foreach (var interaction in _memory.KnownInteractions.Values)
+        foreach (var interaction in memory.KnownInteractions.Values)
         {
             if (interaction.IsPrimitive())
             {
@@ -133,16 +132,16 @@ public class Decider : MonoBehaviour
         return defaultNeutralList[randomPos].IntendedInteraction;
     }
 
-    public Interaction SelectInteraction()
+    public override Interaction SelectInteraction()
     {
-        enactedInteractionText = "";
+        EnactedInteractionText = "";
         HashSet<Anticipation> defaultSet = Anticipate();
         Anticipation selectedDefaultAnticipation = defaultSet.Max();
         if (!selectedDefaultAnticipation.AnticipationsSet.Any())
         {
             //return selectedDefaultAnticipation.IntendedInteraction;
             //Debug.Log("*Random Pick");
-            enactedInteractionText = "*** Random Pick ***";
+            EnactedInteractionText = "*** Random Pick ***";
             return GetRandomNeutralPrimitiveInteraction(defaultSet);
         }
 
@@ -159,7 +158,7 @@ public class Decider : MonoBehaviour
         }
     }
 
-    public void LearnCompositeInteraction(Interaction newEnactedInteraction)
+    public override void LearnCompositeInteraction(Interaction newEnactedInteraction)
     {
         var previousInteraction = EnactedInteraction;
         var lastInteraction = newEnactedInteraction;
@@ -170,27 +169,27 @@ public class Decider : MonoBehaviour
         if (previousInteraction != null)
         {
             lastSuperInteraction =
-                _memory.AddOrGetAndReinforceCompositeInteraction(previousInteraction, lastInteraction);
+                memory.AddOrGetAndReinforceCompositeInteraction(previousInteraction, lastInteraction);
         }
 
         // Learn higher-level interactions
         if (previousSuperInteraction != null)
         {
             // learn [penultimate [previous current]]
-            _higherLevelSuperInteraction1 = _memory.AddOrGetAndReinforceCompositeInteraction(
+            _higherLevelSuperInteraction1 = memory.AddOrGetAndReinforceCompositeInteraction(
                 previousSuperInteraction.PreInteraction,
                 lastSuperInteraction);
 
             // learn [[penultimate previous] current]
             _higherLevelSuperInteraction2 =
-                _memory.AddOrGetAndReinforceCompositeInteraction(previousSuperInteraction, lastInteraction);
+                memory.AddOrGetAndReinforceCompositeInteraction(previousSuperInteraction, lastInteraction);
         }
 
         this._superInteraction = lastSuperInteraction;
 
-        if (enactedInteractionText != "*** Random Pick ***")
+        if (EnactedInteractionText != "*** Random Pick ***")
         {
-            enactedInteractionText = newEnactedInteraction.Label;
+            EnactedInteractionText = newEnactedInteraction.Label;
         }
     }
 }

@@ -6,9 +6,9 @@ using UnityEngine;
 
 public class Agent : MonoBehaviour
 {
-    private Memory _memory;
-    private Decider _decider;
-    private Enacter _enacter;
+    public Memory memory;
+    public Decider decider;
+    public Enacter enacter;
 
     private Queue<int> _last100Valences;
     public double happiness;
@@ -22,10 +22,6 @@ public class Agent : MonoBehaviour
 
     private void Start()
     {
-        _memory = GetComponent<Memory>();
-        _decider = GetComponent<Decider>();
-        _enacter = GetComponent<Enacter>();
-
         _last100Valences = new Queue<int>();
 
         stepNumber = 0;
@@ -37,11 +33,13 @@ public class Agent : MonoBehaviour
         while (true)
         {
             stepNumber++;
-            var intendedInteraction = _decider.SelectInteraction();
+            stepManager.stepNumberText.text = "Step: " + stepNumber.ToString();
 
-            stepManager.intendedInteractionText.text = "Intended Interaction: " + intendedInteraction.Label;
-            //stepManager.enactedInteractionText.text = "Enacted Interaction: ";
+            var intendedInteraction = decider.SelectInteraction();
 
+            stepManager.intendedInteractionText.text = "Intended Interaction: (" + intendedInteraction.Valence + ") " +
+                                                       intendedInteraction.Label;
+            
             if (stepManager.stepByStep || stepManager.frozen)
             {
                 stepManager.frozen = true;
@@ -57,10 +55,11 @@ public class Agent : MonoBehaviour
     IEnumerator TryEnactAndLearnCoroutine(Interaction intendedInteraction)
     {
         isEnactComplete = false;
-        StartCoroutine(_enacter.EnactCoroutine(intendedInteraction));
+        StartCoroutine(enacter.EnactCoroutine(intendedInteraction));
         yield return new WaitUntil(() => isEnactComplete);
 
-        stepManager.enactedInteractionText.text = "Enacted Interaction: " + _enacter.FinalEnactedInteraction.Label;
+        stepManager.enactedInteractionText.text = "Enacted Interaction: (" + enacter.FinalEnactedInteraction.Valence +
+                                                  ") " + enacter.FinalEnactedInteraction.Label;
 
         if (stepManager.stepByStep)
         {
@@ -68,7 +67,7 @@ public class Agent : MonoBehaviour
             yield return new WaitUntil(() => !stepManager.frozen);
         }
 
-        Learn(intendedInteraction, _enacter.FinalEnactedInteraction);
+        Learn(intendedInteraction, enacter.FinalEnactedInteraction);
         nextStep = true;
     }
 
@@ -79,11 +78,11 @@ public class Agent : MonoBehaviour
             intendedInteraction.Experiment.EnactedInteractions.Add(enactedInteraction);
         }
 
-        _decider.LearnCompositeInteraction(enactedInteraction);
-        _decider.EnactedInteraction = enactedInteraction;
+        decider.LearnCompositeInteraction(enactedInteraction);
+        decider.EnactedInteraction = enactedInteraction;
 
         //Debug.Log(enactedInteraction.Label);
-        Debug.Log(_decider.enactedInteractionText);
+        Debug.Log(decider.EnactedInteractionText);
         UpdateHapiness(enactedInteraction.Valence);
     }
 

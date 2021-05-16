@@ -5,43 +5,37 @@ using UnityEngine;
 
 public class ChickenAnimation : MonoBehaviour, ICharacterBaseAnimation
 {
-    private Animator _animator;
+    public Animator animator;
 
     private static readonly int Eat = Animator.StringToHash("Eat");
     private static readonly int Run = Animator.StringToHash("Run");
     private static readonly int Walk = Animator.StringToHash("Walk");
 
-    // Start is called before the first frame update
-    private void Start()
-    {
-        _animator = GetComponent<Animator>();
-    }
-
     private void UpdateAnimatorState(int newAnimatorState)
     {
         if (newAnimatorState == Walk)
         {
-            _animator.SetBool(Walk, true);
-            _animator.SetBool(Run, false);
-            _animator.SetBool(Eat, false);
+            animator.SetBool(Walk, true);
+            animator.SetBool(Run, false);
+            animator.SetBool(Eat, false);
         }
         else if (newAnimatorState == Run)
         {
-            _animator.SetBool(Walk, false);
-            _animator.SetBool(Run, true);
-            _animator.SetBool(Eat, false);
+            animator.SetBool(Walk, false);
+            animator.SetBool(Run, true);
+            animator.SetBool(Eat, false);
         }
         else if (newAnimatorState == Eat)
         {
-            _animator.SetBool(Walk, false);
-            _animator.SetBool(Run, false);
-            _animator.SetBool(Eat, true);
+            animator.SetBool(Walk, false);
+            animator.SetBool(Run, false);
+            animator.SetBool(Eat, true);
         }
         else
         {
-            _animator.SetBool(Walk, false);
-            _animator.SetBool(Run, false);
-            _animator.SetBool(Eat, false);
+            animator.SetBool(Walk, false);
+            animator.SetBool(Run, false);
+            animator.SetBool(Eat, false);
         }
     }
 

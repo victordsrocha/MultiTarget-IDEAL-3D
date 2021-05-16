@@ -9,6 +9,8 @@ public class StepManager : MonoBehaviour
     public Text intendedInteractionText;
     public Text enactedInteractionText;
 
+    public Text stepNumberText;
+
     public bool stepByStep;
     public bool frozen;
 

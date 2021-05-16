@@ -10,9 +10,9 @@ using Random = UnityEngine.Random;
 [RequireComponent(typeof(Rigidbody))]
 public class ChickenMoveVelocity : MonoBehaviour
 {
-    [SerializeField] private float moveSpeed;
-    [SerializeField] private float rotationSpeed;
-    [SerializeField] private float timeBetweenActions;
+    [SerializeField] private float moveSpeed = 6;
+    [SerializeField] private float rotationSpeed = 5;
+    [SerializeField] private float timeBetweenActions = 0.1f;
 
     private float _move;
     private float _rotate;

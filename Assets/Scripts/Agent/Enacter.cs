@@ -6,19 +6,16 @@ using UnityEngine;
 
 public class Enacter : MonoBehaviour
 {
-    private Memory _memory;
-    private AgentEnvironmentInterface _envInterface;
+    public Memory memory;
+    public AgentEnvironmentInterface envInterface;
     public Interaction FinalEnactedInteraction;
     private Queue<Interaction> _enactedInteractionsPrimitiveQueue;
     
     public bool nextPrimitiveAction;
-    private Agent _agent;
+    public Agent agent;
 
     private void Start()
     {
-        _memory = GetComponent<Memory>();
-        _agent = GetComponent<Agent>();
-        _envInterface = GetComponent<AgentEnvironmentInterface>();
         _enactedInteractionsPrimitiveQueue = new Queue<Interaction>();
     }
 
@@ -49,7 +46,7 @@ public class Enacter : MonoBehaviour
             {
                 // enact the post-interaction
                 var enactedPostInteraction = Enact(intendedInteraction.PostInteraction);
-                return _memory.AddOrGetCompositeInteraction(enactedPreInteraction, enactedPostInteraction);
+                return memory.AddOrGetCompositeInteraction(enactedPreInteraction, enactedPostInteraction);
             }
         }
     }
@@ -65,11 +62,11 @@ public class Enacter : MonoBehaviour
             if (nextInteraction.IsPrimitive())
             {
                 nextPrimitiveAction = false;
-                StartCoroutine(_envInterface.EnactPrimitiveInteraction(nextInteraction));
+                StartCoroutine(envInterface.EnactPrimitiveInteraction(nextInteraction));
                 yield return new WaitUntil(() => nextPrimitiveAction);
                 
-                _enactedInteractionsPrimitiveQueue.Enqueue(_envInterface.CurrentEnactedPrimitiveInteraction);
-                if (nextInteraction != _envInterface.CurrentEnactedPrimitiveInteraction)
+                _enactedInteractionsPrimitiveQueue.Enqueue(envInterface.CurrentEnactedPrimitiveInteraction);
+                if (nextInteraction != envInterface.CurrentEnactedPrimitiveInteraction)
                 {
                     break;
                 }
@@ -82,6 +79,6 @@ public class Enacter : MonoBehaviour
         }
 
         FinalEnactedInteraction = Enact(intendedInteraction);
-        _agent.isEnactComplete = true;
+        agent.isEnactComplete = true;
     }
 }

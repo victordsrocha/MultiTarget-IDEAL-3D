@@ -3,15 +3,25 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class TimeManager : MonoBehaviour
 {
-    public int captureFramerate = 0;
-    public int timeScale = 1;
+    public Toggle speedToggle;
+    private bool _fast = false;
+
+    private void Awake()
+    {
+        QualitySettings.vSyncCount = 0; 
+        //Time.captureFramerate = 50;
+    }
 
     private void Update()
     {
-        Time.captureFramerate = captureFramerate;
-        Time.timeScale = timeScale;
+        if (speedToggle.isOn != _fast)
+        {
+            _fast = !_fast;
+            Time.captureFramerate = Time.captureFramerate == 0 ? 50 : 0;
+        }
     }
 }

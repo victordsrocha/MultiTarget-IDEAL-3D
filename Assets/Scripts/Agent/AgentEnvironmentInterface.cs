@@ -5,22 +5,14 @@ using UnityEngine;
 
 public class AgentEnvironmentInterface : MonoBehaviour
 {
-    private ChickenMoveVelocity _moveVelocity;
-    private Memory _memory;
+    public ChickenMoveVelocity moveVelocity;
+    public Memory memory;
 
-    private Observation _observation;
+    public Observation observation;
     public Interaction CurrentEnactedPrimitiveInteraction;
 
     public bool _observationDone;
-    private Enacter _enacter;
-
-    private void Start()
-    {
-        _moveVelocity = GetComponent<ChickenMoveVelocity>();
-        _memory = GetComponent<Memory>();
-        _observation = GetComponent<Observation>();
-        _enacter = GetComponent<Enacter>();
-    }
+    public Enacter enacter;
 
     public IEnumerator EnactPrimitiveInteraction(Interaction currentIntendedPrimitiveInteraction)
     {
@@ -30,13 +22,13 @@ public class AgentEnvironmentInterface : MonoBehaviour
         SendActionToMotors(moveActionCod, rotateActionCod);
 
         _observationDone = false;
-        StartCoroutine(_moveVelocity.EnactAction());
+        StartCoroutine(moveVelocity.EnactAction());
         yield return new WaitUntil(() => _observationDone);
 
         result += moveActionCod + rotateActionCod;
-        result += _observation.Result;
-        CurrentEnactedPrimitiveInteraction = _memory.AddOrGetPrimitiveInteraction(result);
-        _enacter.nextPrimitiveAction = true;
+        result += observation.Result;
+        CurrentEnactedPrimitiveInteraction = memory.AddOrGetPrimitiveInteraction(result);
+        enacter.nextPrimitiveAction = true;
     }
 
     private void SendActionToMotors(string moveActionCod, string rotateActionCod)
@@ -59,7 +51,7 @@ public class AgentEnvironmentInterface : MonoBehaviour
             _ => rotate
         };
 
-        _moveVelocity.SetMotorsValues(move, rotate);
+        moveVelocity.SetMotorsValues(move, rotate);
     }
 
 
