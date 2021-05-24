@@ -660,7 +660,7 @@ GameObject:
   - component: {fileID: 6272794755386890873}
   - component: {fileID: 9151677410253968288}
   - component: {fileID: 5504472236066268972}
-  - component: {fileID: 8105281343838030391}
+  - component: {fileID: 2991225852906903840}
   m_Layer: 11
   m_Name: Chicken
   m_TagString: Untagged
@@ -807,7 +807,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   memory: {fileID: 9151677410253968288}
-  decider: {fileID: 8105281343838030391}
+  decider: {fileID: 2991225852906903840}
   enacter: {fileID: 5504472236066268972}
   happiness: 0
   stepEnabled: 1
@@ -859,7 +859,7 @@ MonoBehaviour:
   envInterface: {fileID: 6272794755386890873}
   nextPrimitiveAction: 0
   agent: {fileID: 1595044469257280632}
---- !u!114 &8105281343838030391
+--- !u!114 &2991225852906903840
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -868,7 +868,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 945869633907177723}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 11b67e880b2b03045aa9f2962292b719, type: 3}
+  m_Script: {fileID: 11500000, guid: 318ee2640297c424d97ce60ee4f9925e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   threshold: 4

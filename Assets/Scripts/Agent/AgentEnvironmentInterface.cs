@@ -39,15 +39,15 @@ public class AgentEnvironmentInterface : MonoBehaviour
 
         move = moveActionCod switch
         {
-            "→" => 1,
-            "←" => -1,
+            ">" => 1,
+            "<" => -1,
             _ => move
         };
 
         rotate = rotateActionCod switch
         {
-            "↓" => 1,
-            "↑" => -1,
+            "v" => 1,
+            "^" => -1,
             _ => rotate
         };
 

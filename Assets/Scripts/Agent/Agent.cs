@@ -12,6 +12,7 @@ public class Agent : MonoBehaviour
 
     private Queue<int> _last100Valences;
     public double happiness;
+    public double 
 
     public bool stepEnabled;
     public int stepNumber;

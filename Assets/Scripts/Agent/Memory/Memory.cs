@@ -9,10 +9,15 @@ public class Memory : MonoBehaviour, IMemory
     public Dictionary<string, Interaction> KnownInteractions { get; private set; }
     public Dictionary<string, Experiment> KnownExperiments { get; private set; }
 
+    public List<Interaction> NeutralInteractions { get; private set; }
+
     private void Awake()
     {
         KnownInteractions = new Dictionary<string, Interaction>();
         KnownExperiments = new Dictionary<string, Experiment>();
+
+        NeutralInteractions = new List<Interaction>();
+        
         Init();
     }
 
@@ -99,10 +104,10 @@ public class Memory : MonoBehaviour, IMemory
         int sumValence = 0;
 
         sumValence += -1 * source[0].Count(c => c == '-'); // Nothing
-        sumValence += -1 * source[0].Count(c => c == '↑'); // Rotate Left
-        sumValence += -1 * source[0].Count(c => c == '↓'); // Rotate Right
-        sumValence += -1 * source[0].Count(c => c == '→'); // Forward
-        sumValence += -1 * source[0].Count(c => c == '←'); // Backward
+        sumValence += -1 * source[0].Count(c => c == '^'); // Rotate Left
+        sumValence += -1 * source[0].Count(c => c == 'v'); // Rotate Right
+        sumValence += -1 * source[0].Count(c => c == '>'); // Forward
+        sumValence += -1 * source[0].Count(c => c == '<'); // Backward
 
         sumValence += +15 * source[1].Count(c => c == 'a'); // food appear
         sumValence += -15 * source[1].Count(c => c == 'd'); // food disappear
@@ -111,16 +116,16 @@ public class Memory : MonoBehaviour, IMemory
         sumValence += -10 * source[1].Count(c => c == 'f'); // food further
         // sumValence += 0 * source[1].Count(c => c == 'u'); // food unchanged
 
-        sumValence += -5 * source[2].Count(c => c == 'a'); // poison appear
-        sumValence += +5 * source[2].Count(c => c == 'd'); // poison disappear
+        //sumValence += -10 * source[2].Count(c => c == 'a'); // poison appear
+        //sumValence += +10 * source[2].Count(c => c == 'd'); // poison disappear
         sumValence += -100 * source[2].Count(c => c == 'r'); // poison reached 
-        sumValence += -2 * source[2].Count(c => c == 'c'); // poison closer
-        sumValence += +2 * source[2].Count(c => c == 'f'); // poison further
+        //sumValence += -4 * source[2].Count(c => c == 'c'); // poison closer
+        //sumValence += +4 * source[2].Count(c => c == 'f'); // poison further
         // sumValence += 0 * source[2].Count(c => c == 'u'); // poison unchanged
 
         //sumValence += 0 * source[3].Count(c => c == 'a'); // wall appear
         //sumValence += 0 * source[3].Count(c => c == 'd'); // wall disappear
-        sumValence += -10 * source[3].Count(c => c == 'b'); // wall bump
+        sumValence += -20 * source[3].Count(c => c == 'b'); // wall bump
         sumValence += +10 * source[3].Count(c => c == 'l'); // wall release
         //sumValence += 0 * source[3].Count(c => c == 'c'); // wall closer
         //sumValence += 3 * source[3].Count(c => c == 'f'); // wall further
@@ -134,27 +139,19 @@ public class Memory : MonoBehaviour, IMemory
     {
         // ▶ ▷ △ ▲ ▼ ▽ ◀ ◁ ◇ ◈ ◆ ← → ↑ ↓
 
-        AddOrGetPrimitiveInteraction("→↑,uu,uu,u,nn");
-        AddOrGetPrimitiveInteraction("→-,uu,uu,u,nn");
-        AddOrGetPrimitiveInteraction("→↓,uu,uu,u,nn");
-        AddOrGetPrimitiveInteraction("-↑,uu,uu,u,nn");
+        AddOrGetPrimitiveInteraction(">^,uu,uu,u,nn");
+        AddOrGetPrimitiveInteraction(">-,uu,uu,u,nn");
+        AddOrGetPrimitiveInteraction(">v,uu,uu,u,nn");
+        AddOrGetPrimitiveInteraction("-^,uu,uu,u,nn");
         //AddOrGetPrimitiveInteraction("--,uu,uu,u,nn");
-        AddOrGetPrimitiveInteraction("-↓,uu,uu,u,nn");
-        //AddOrGetPrimitiveInteraction("←↑,uu,uu,u,nn");
-        //AddOrGetPrimitiveInteraction("←-,uu,uu,u,nn");
-        //AddOrGetPrimitiveInteraction("←↓,uu,uu,u,nn");
+        AddOrGetPrimitiveInteraction("-v,uu,uu,u,nn");
+        //AddOrGetPrimitiveInteraction("<^,uu,uu,u,nn");
+        //AddOrGetPrimitiveInteraction("<-,uu,uu,u,nn");
+        //AddOrGetPrimitiveInteraction("<v,uu,uu,u,nn");
 
-        // bump
-        var b2 = AddOrGetPrimitiveInteraction("→-,uu,uu,b,nn");
-        var b4 = AddOrGetPrimitiveInteraction("-↑,uu,uu,b,nn");
-        var b6 = AddOrGetPrimitiveInteraction("-↓,uu,uu,b,nn");
-
-        var m1 = AddOrGetPrimitiveInteraction("-↑,uu,uu,l,nn");
-        var m2 = AddOrGetPrimitiveInteraction("-↓,uu,uu,l,nn");
-
-        AddOrGetCompositeInteraction(b2, b4);
-        AddOrGetCompositeInteraction(b2, b6);
-        AddOrGetCompositeInteraction(b4, m1);
-        AddOrGetCompositeInteraction(b6, m2);
+        foreach (var knownInteraction in KnownInteractions.Values)
+        {
+            NeutralInteractions.Add(knownInteraction);
+        }
     }
 }

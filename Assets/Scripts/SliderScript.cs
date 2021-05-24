@@ -6,15 +6,16 @@ using UnityEngine.UI;
 
 public class SliderScript : MonoBehaviour
 {
+    public FruitsManager fruitsManager;
+    
     [SerializeField] private Slider slider;
     [SerializeField] private Text text;
-    [SerializeField] private FieldOfViewAdaptedToEdge fov;
 
     private void Start()
     {
-        slider.value = 120;
-        text.text = slider.value.ToString("0.00");
-        slider.onValueChanged.AddListener((v) => { text.text = v.ToString("0.00"); });
-        slider.onValueChanged.AddListener(v => { fov.AdjustViewAngle(v);});
+        slider.value = (int)20;
+        text.text = "# targets: " + slider.value.ToString("00");
+        slider.onValueChanged.AddListener((v) => {text.text = "# targets: " + v.ToString("00");});
+        slider.onValueChanged.AddListener(v => { fruitsManager.fruitMaxQuantity=(int)v;});
     }
 }
