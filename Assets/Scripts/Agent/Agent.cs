@@ -22,9 +22,13 @@ public class Agent : MonoBehaviour
     public bool isEnactComplete;
     private bool nextStep;
 
+    public int queueSize;
+    private float gamaHappinessWeight;
+
     private void Start()
     {
-        _lastValences = new Queue<int>();
+        _lastValences = new Queue<int>(queueSize);
+        gamaHappinessWeight = CalcGamaHappinessWeight();
 
         stepNumber = 0;
         StartCoroutine(StepCoroutine());
@@ -88,11 +92,21 @@ public class Agent : MonoBehaviour
         UpdateHapiness(enactedInteraction.Valence);
     }
 
+    float CalcGamaHappinessWeight()
+    {
+        float sum = 0;
+        for (int i = 0; i < queueSize; i++)
+        {
+            sum += Mathf.Pow(gamaHappiness, i);
+        }
+
+        return sum;
+    }
+    
+
     void UpdateHapiness(int valence)
     {
         //Profiler.BeginSample("My Sample Happiness");
-        
-        int queueSize = 10;
         if (_lastValences.Count() == queueSize)
         {
             _lastValences.Dequeue();
@@ -104,7 +118,7 @@ public class Agent : MonoBehaviour
         int p = 0;
         for (int i = _lastValences.Count; i > 0; i--)
         {
-            sum += (float)(_lastValences.ElementAt(i-1) * (Mathf.Pow(gamaHappiness,p)/6.51322));
+            sum += (float)(_lastValences.ElementAt(i-1) * (Mathf.Pow(gamaHappiness,p)/gamaHappinessWeight));
             p++;
         }
 
