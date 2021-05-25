@@ -139,9 +139,9 @@ public class Memory : MonoBehaviour, IMemory
     {
         // ▶ ▷ △ ▲ ▼ ▽ ◀ ◁ ◇ ◈ ◆ ← → ↑ ↓
 
-        AddOrGetPrimitiveInteraction(">^,uu,uu,u,nn");
+        //AddOrGetPrimitiveInteraction(">^,uu,uu,u,nn");
         AddOrGetPrimitiveInteraction(">-,uu,uu,u,nn");
-        AddOrGetPrimitiveInteraction(">v,uu,uu,u,nn");
+        //AddOrGetPrimitiveInteraction(">v,uu,uu,u,nn");
         AddOrGetPrimitiveInteraction("-^,uu,uu,u,nn");
         //AddOrGetPrimitiveInteraction("--,uu,uu,u,nn");
         AddOrGetPrimitiveInteraction("-v,uu,uu,u,nn");

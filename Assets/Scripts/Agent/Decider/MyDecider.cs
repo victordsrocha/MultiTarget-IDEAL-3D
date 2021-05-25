@@ -16,6 +16,7 @@ public class MyDecider : Decider
     private Interaction _higherLevelSuperInteraction2;
 
     public Memory memory;
+    public Agent agent;
     
     private void Start()
     {
@@ -108,13 +109,13 @@ public class MyDecider : Decider
 
     private float DeltaValence(int valence)
     {
-        if (EnactedInteraction.Valence > 0)
+        if (agent.happiness > 0)
         {
             return valence;
         }
         else
         {
-            return valence - EnactedInteraction.Valence;
+            return valence - agent.happiness;
         }
     }
 
