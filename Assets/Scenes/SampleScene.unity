@@ -3708,6 +3708,10 @@ PrefabInstance:
       propertyPath: stepManager
       value: 
       objectReference: {fileID: 1616866237}
+    - target: {fileID: 1595044469257280632, guid: dbfa5fb95a233344d8fd219eb5e0445b, type: 3}
+      propertyPath: gamaHappiness
+      value: 0.9
+      objectReference: {fileID: 0}
     - target: {fileID: 6205481178590146021, guid: dbfa5fb95a233344d8fd219eb5e0445b, type: 3}
       propertyPath: m_LocalPosition.y
       value: 0.35

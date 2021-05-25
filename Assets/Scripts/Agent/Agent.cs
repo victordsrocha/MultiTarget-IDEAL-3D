@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Profiling;
 
 public class Agent : MonoBehaviour
 {
@@ -10,9 +11,9 @@ public class Agent : MonoBehaviour
     public Decider decider;
     public Enacter enacter;
 
-    private Queue<int> _last100Valences;
-    public double happiness;
-    public double 
+    private Queue<int> _lastValences;
+    public float happiness;
+    public float gamaHappiness;
 
     public bool stepEnabled;
     public int stepNumber;
@@ -23,7 +24,7 @@ public class Agent : MonoBehaviour
 
     private void Start()
     {
-        _last100Valences = new Queue<int>();
+        _lastValences = new Queue<int>();
 
         stepNumber = 0;
         StartCoroutine(StepCoroutine());
@@ -40,7 +41,7 @@ public class Agent : MonoBehaviour
 
             stepManager.intendedInteractionText.text = "Intended Interaction: (" + intendedInteraction.Valence + ") " +
                                                        intendedInteraction.Label;
-            
+
             if (stepManager.stepByStep || stepManager.frozen)
             {
                 stepManager.frozen = true;
@@ -89,19 +90,25 @@ public class Agent : MonoBehaviour
 
     void UpdateHapiness(int valence)
     {
-        if (_last100Valences.Count() == 100)
+        //Profiler.BeginSample("My Sample Happiness");
+        
+        int queueSize = 10;
+        if (_lastValences.Count() == queueSize)
         {
-            _last100Valences.Dequeue();
+            _lastValences.Dequeue();
         }
 
-        _last100Valences.Enqueue(valence);
+        _lastValences.Enqueue(valence);
 
         float sum = 0;
-        foreach (var v in _last100Valences)
+        int p = 0;
+        for (int i = _lastValences.Count; i > 0; i--)
         {
-            sum += v;
+            sum += (float)(_lastValences.ElementAt(i-1) * (Mathf.Pow(gamaHappiness,p)/6.51322));
+            p++;
         }
 
-        happiness = sum / _last100Valences.Count();
+        happiness = sum;
+        //Profiler.EndSample();
     }
 }

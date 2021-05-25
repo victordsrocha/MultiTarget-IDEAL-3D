@@ -7,17 +7,17 @@ public class Anticipation : IComparable<Anticipation>, IEquatable<Anticipation>
 {
     public Interaction IntendedInteraction;
     public Experiment Experiment;
-    public int Proclivity;
+    public float Proclivity;
     public HashSet<Anticipation> AnticipationsSet;
 
-    public Anticipation(Experiment experiment, int proclivity)
+    public Anticipation(Experiment experiment, float proclivity)
     {
         Experiment = experiment;
         Proclivity = proclivity;
         IntendedInteraction = experiment.IntendedInteraction;
     }
 
-    public void AddProclivity(int incProclivity)
+    public void AddProclivity(float incProclivity)
     {
         this.Proclivity += incProclivity;
     }

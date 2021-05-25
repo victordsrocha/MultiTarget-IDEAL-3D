@@ -7,7 +7,7 @@ public class ActionAnticipation : IComparable<ActionAnticipation>
 {
     public string Action;
     public Interaction NeutralInteraction;
-    public int Proclivity;
+    public float Proclivity;
     public HashSet<Anticipation> AnticipationsSet;
 
     public ActionAnticipation(string action, Interaction neutralInteraction)
@@ -18,7 +18,7 @@ public class ActionAnticipation : IComparable<ActionAnticipation>
         this.Proclivity = 0;
     }
 
-    public void AddProclivity(int anticipationProclivity)
+    public void AddProclivity(float anticipationProclivity)
     {
         this.Proclivity += anticipationProclivity;
     }
