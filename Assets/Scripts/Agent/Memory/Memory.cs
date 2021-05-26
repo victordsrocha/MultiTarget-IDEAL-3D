@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class Memory : MonoBehaviour, IMemory
 {
+    [SerializeField] private float forgettingRate = 0.05f;
     public Dictionary<string, Interaction> KnownInteractions { get; private set; }
     public Dictionary<string, Experiment> KnownExperiments { get; private set; }
 
@@ -92,6 +93,38 @@ public class Memory : MonoBehaviour, IMemory
         var compositeInteraction = AddOrGetCompositeInteraction(preInteraction, postInteraction);
         compositeInteraction.Weight += 1;
         return compositeInteraction;
+    }
+
+    public void DecrementAndForgetSchemas(List<Interaction> enactedInteractions)
+    {
+        foreach (var knownInteraction in KnownInteractions.Values)
+        {
+            if (!knownInteraction.IsPrimitive())
+            {
+                if (!enactedInteractions.Contains(knownInteraction))
+                {
+                    // estou dividindo pela valencia como uma forma provisoria de garantir que 
+                    // memorias muito boas ou muito ruins sejam mais dificilemtne esquecidas
+                    if (knownInteraction.Valence > 1 || knownInteraction.Valence < -1)
+                    {
+                        knownInteraction.Weight -= forgettingRate / Mathf.Abs(knownInteraction.Valence);
+                    }
+                    else
+                    {
+                        knownInteraction.Weight -= forgettingRate;
+                    }
+                }
+
+                // When a schema reaches a weight of 0 it is deleted from memory
+                if (knownInteraction.Weight < 0.01f)
+                {
+                    // KnownInteractions.Remove(knownInteraction.Label);
+                    knownInteraction.Weight = 0f;
+
+                    /* Não é possível excluir, uma interação esquecida pode ser pré-interação de uma outra */
+                }
+            }
+        }
     }
 
 

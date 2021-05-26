@@ -74,7 +74,7 @@ public class DeciderGreedy : Decider
         var proposedAnticipationsSet = new HashSet<Anticipation>();
         foreach (var activatedInteraction in activatedInteractions)
         {
-            int proclivity = activatedInteraction.Weight * activatedInteraction.PostInteraction.Valence;
+            float proclivity = activatedInteraction.Weight * activatedInteraction.PostInteraction.Valence;
             var anticipation = new Anticipation(activatedInteraction.PostInteraction.Experiment, proclivity);
 
             if (!proposedAnticipationsSet.Contains(anticipation))

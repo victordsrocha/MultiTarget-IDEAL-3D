@@ -10,14 +10,14 @@ public class MyDecider : Decider
     [SerializeField] private int threshold;
     public override Interaction EnactedInteraction { get; set; }
     public override string EnactedInteractionText { get; set; }
-    
+
     private Interaction _superInteraction;
     private Interaction _higherLevelSuperInteraction1;
     private Interaction _higherLevelSuperInteraction2;
 
     public Memory memory;
     public Agent agent;
-    
+
     private void Start()
     {
         EnactedInteraction = null;
@@ -178,6 +178,13 @@ public class MyDecider : Decider
         }
 
         this._superInteraction = lastSuperInteraction;
+
+        // When a schema reaches a weight of 0 it is deleted from memory
+        memory.DecrementAndForgetSchemas(new List<Interaction>()
+        {
+            previousInteraction, lastInteraction, previousSuperInteraction, lastSuperInteraction,
+            _higherLevelSuperInteraction1, _higherLevelSuperInteraction2
+        });
 
         if (EnactedInteractionText != "*** Random Pick ***")
         {

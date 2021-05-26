@@ -14,7 +14,7 @@ public class Interaction
 
     public Interaction PostInteraction { get; set; }
 
-    public int Weight { get; set; }
+    public float Weight { get; set; }
 
     public Interaction(string label)
     {
