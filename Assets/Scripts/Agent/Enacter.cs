@@ -65,6 +65,8 @@ public class Enacter : MonoBehaviour
                 StartCoroutine(envInterface.EnactPrimitiveInteraction(nextInteraction));
                 yield return new WaitUntil(() => nextPrimitiveAction);
                 
+                VSRTrace.AddPrimitiveRecord(nextInteraction, envInterface.CurrentEnactedPrimitiveInteraction);
+                
                 _enactedInteractionsPrimitiveQueue.Enqueue(envInterface.CurrentEnactedPrimitiveInteraction);
                 if (nextInteraction != envInterface.CurrentEnactedPrimitiveInteraction)
                 {

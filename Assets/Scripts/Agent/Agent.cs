@@ -31,6 +31,9 @@ public class Agent : MonoBehaviour
         gamaHappinessWeight = CalcGamaHappinessWeight();
 
         stepNumber = 0;
+        
+        VSRTrace.AddRecordHeaders();
+        
         StartCoroutine(StepCoroutine());
     }
 
@@ -79,6 +82,8 @@ public class Agent : MonoBehaviour
 
     void Learn(Interaction intendedInteraction, Interaction enactedInteraction)
     {
+        VSRTrace.AddDecisionRecord(intendedInteraction, enactedInteraction);
+
         if (enactedInteraction != intendedInteraction)
         {
             intendedInteraction.Experiment.EnactedInteractions.Add(enactedInteraction);
@@ -102,7 +107,7 @@ public class Agent : MonoBehaviour
 
         return sum;
     }
-    
+
 
     void UpdateHapiness(int valence)
     {
@@ -118,7 +123,7 @@ public class Agent : MonoBehaviour
         int p = 0;
         for (int i = _lastValences.Count; i > 0; i--)
         {
-            sum += (float)(_lastValences.ElementAt(i-1) * (Mathf.Pow(gamaHappiness,p)/gamaHappinessWeight));
+            sum += (float) (_lastValences.ElementAt(i - 1) * (Mathf.Pow(gamaHappiness, p) / gamaHappinessWeight));
             p++;
         }
 
