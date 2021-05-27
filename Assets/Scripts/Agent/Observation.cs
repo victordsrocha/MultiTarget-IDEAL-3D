@@ -13,6 +13,7 @@ public class Observation : MonoBehaviour
         Further,
         Reached,
         Bump,
+        BumpForward,
         Release,
         Unchanged
     }
@@ -48,6 +49,8 @@ public class Observation : MonoBehaviour
     private Eye rightEye;
     private EyeWall wallEye;
 
+    private bool forward;
+
     public string Result { get; private set; }
 
     private void Start()
@@ -57,8 +60,10 @@ public class Observation : MonoBehaviour
         wallEye = new EyeWall(edgeFOV);
     }
 
-    public void ObservationResult()
+    public void ObservationResult(bool isForward)
     {
+        forward = isForward;
+
         UpdateVisionState();
         UpdateLeftEye();
         UpdateRightEye();
@@ -360,8 +365,16 @@ public class Observation : MonoBehaviour
         {
             if (bodyCollider.isColliding)
             {
-                wallEye.LastWallStatus = VisionStateStatus.Bump;
-                wallEye.IsBumping = true;
+                if (forward)
+                {
+                    wallEye.LastWallStatus = VisionStateStatus.BumpForward;
+                    wallEye.IsBumping = true;
+                }
+                else
+                {
+                    wallEye.LastWallStatus = VisionStateStatus.Bump;
+                    wallEye.IsBumping = true;
+                }
             }
             else if (wallEye.IsBumping)
             {
@@ -388,6 +401,8 @@ public class Observation : MonoBehaviour
                 return 'f';
             case VisionStateStatus.Bump:
                 return 'b';
+            case VisionStateStatus.BumpForward:
+                return 'B';
             case VisionStateStatus.Reached:
                 return 'r';
             case VisionStateStatus.Unchanged:

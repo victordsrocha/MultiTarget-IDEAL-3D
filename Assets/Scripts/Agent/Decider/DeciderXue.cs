@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -16,6 +17,7 @@ public class DeciderXue : Decider
     private Interaction _higherLevelSuperInteraction2;
 
     public Memory memory;
+    public Agent agent;
 
     private void Start()
     {
@@ -69,6 +71,57 @@ public class DeciderXue : Decider
 
     private HashSet<Anticipation> Anticipate()
     {
+        var activatedInteractions = GetActivatedInteractions();
+
+        var proposedAnticipationsSet = new HashSet<Anticipation>();
+
+        foreach (var activatedInteraction in activatedInteractions)
+        {
+            var deltaValence = DeltaValence(activatedInteraction.PostInteraction.Valence);
+
+            float proclivity = activatedInteraction.Weight * deltaValence;
+
+            var anticipation = new Anticipation(activatedInteraction.PostInteraction.Experiment, proclivity);
+
+            if (!proposedAnticipationsSet.Contains(anticipation))
+            {
+                proposedAnticipationsSet.Add(anticipation);
+            }
+        }
+
+        foreach (var anticipation in proposedAnticipationsSet)
+        {
+            foreach (var experimentEnactedInteraction in anticipation.Experiment.EnactedInteractions)
+            {
+                foreach (var activatedInteraction in activatedInteractions)
+                {
+                    if (experimentEnactedInteraction == activatedInteraction.PostInteraction)
+                    {
+                        var deltaValence = DeltaValence(experimentEnactedInteraction.Valence);
+                        var proclivity = activatedInteraction.Weight * deltaValence;
+                        anticipation.AddProclivity(proclivity);
+                    }
+                }
+            }
+        }
+
+        return proposedAnticipationsSet;
+    }
+
+    private float DeltaValence(int valence)
+    {
+        if (agent.happiness > 0)
+        {
+            return valence;
+        }
+        else
+        {
+            return valence - agent.happiness;
+        }
+    }
+    
+    private HashSet<Anticipation> Map(HashSet<Anticipation> proposedAnticipationsSet)
+    {
         var defaultSet = new HashSet<Anticipation>();
         foreach (var interaction in memory.KnownInteractions.Values)
         {
@@ -81,26 +134,7 @@ public class DeciderXue : Decider
                 defaultSet.Add(defaultAnticipation);
             }
         }
-
-        var activatedInteractions = GetActivatedInteractions();
-
-        var proposedAnticipationsSet = new HashSet<Anticipation>();
-        foreach (var activatedInteraction in activatedInteractions)
-        {
-            float proclivity = activatedInteraction.Weight * activatedInteraction.PostInteraction.Valence;
-            var anticipation = new Anticipation(activatedInteraction.PostInteraction.Experiment, proclivity);
-
-            if (!proposedAnticipationsSet.Contains(anticipation))
-            {
-                proposedAnticipationsSet.Add(anticipation);
-            }
-            else
-            {
-                // debug
-                int x = 1;
-            }
-        }
-
+        
         foreach (var defaultAnticipation in defaultSet)
         {
             foreach (var anticipation in proposedAnticipationsSet)
@@ -117,46 +151,43 @@ public class DeciderXue : Decider
         return defaultSet;
     }
 
-    private Interaction GetRandomNeutralPrimitiveInteraction(HashSet<Anticipation> defaultSet)
+    private Interaction GetRandomNeutralPrimitiveInteraction()
     {
-        List<Anticipation> defaultNeutralList = new List<Anticipation>();
-        foreach (var anticipation in defaultSet)
-        {
-            if (!anticipation.AnticipationsSet.Any())
-            {
-                defaultNeutralList.Add(anticipation);
-            }
-        }
-        
-        int randomPos = Random.Range(0, defaultNeutralList.Count() - 1);
-        return defaultNeutralList[randomPos].IntendedInteraction;
+        return memory.NeutralInteractions[Random.Range(0, memory.NeutralInteractions.Count)];
     }
 
     public override Interaction SelectInteraction()
     {
         EnactedInteractionText = "";
-        HashSet<Anticipation> defaultSet = Anticipate();
-        Anticipation selectedDefaultAnticipation = defaultSet.Max();
+        HashSet<Anticipation> proposedAnticipationsSet = Anticipate();
+        HashSet<Anticipation> proposedAnticipationsSetMapped = Map(proposedAnticipationsSet);
+        Anticipation selectedDefaultAnticipation = proposedAnticipationsSetMapped.Max();
         if (!selectedDefaultAnticipation.AnticipationsSet.Any())
         {
-            //return selectedDefaultAnticipation.IntendedInteraction;
-            //Debug.Log("*Random Pick");
-            EnactedInteractionText = "*** Random Pick ***";
-            return GetRandomNeutralPrimitiveInteraction(defaultSet);
+            VSRTrace.random = 1;
+            //EnactedInteractionText = "*** Random Pick ***";
+            return GetRandomNeutralPrimitiveInteraction();
         }
 
+        VSRTrace.random = 0;
+        
         Anticipation selectedAnticipation = selectedDefaultAnticipation.AnticipationsSet.Max();
         Interaction selectedInteraction = selectedAnticipation.IntendedInteraction;
-
+        
         if (selectedInteraction.Weight >= threshold && selectedAnticipation.Proclivity > 0)
         {
             return selectedInteraction;
         }
         else
         {
-            return selectedAnticipation.GetFirstPrimitiveInteraction();
+            //return selectedAnticipation.GetFirstPrimitiveInteraction();
+            return selectedAnticipation.IntendedInteraction.IsPrimitive()
+                ? selectedAnticipation.IntendedInteraction
+                : selectedAnticipation.IntendedInteraction.PreInteraction;
         }
     }
+
+    
 
     public override void LearnCompositeInteraction(Interaction newEnactedInteraction)
     {
@@ -186,6 +217,13 @@ public class DeciderXue : Decider
         }
 
         this._superInteraction = lastSuperInteraction;
+
+        // When a schema reaches a weight of 0 it is deleted from memory
+        memory.DecrementAndForgetSchemas(new List<Interaction>()
+        {
+            previousInteraction, lastInteraction, previousSuperInteraction, lastSuperInteraction,
+            _higherLevelSuperInteraction1, _higherLevelSuperInteraction2
+        });
 
         if (EnactedInteractionText != "*** Random Pick ***")
         {

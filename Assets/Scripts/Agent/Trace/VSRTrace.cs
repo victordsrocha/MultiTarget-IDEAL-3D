@@ -8,6 +8,8 @@ public static class VSRTrace
     private static int decisionCycle = 0;
     private static int primitiveCycle = 0;
 
+    public static int random = 0;
+
     public static void AddRecordHeaders()
     {
         string filepath = "recordFile_decisionCycle.csv";
@@ -15,7 +17,7 @@ public static class VSRTrace
         {
             using (System.IO.StreamWriter file = new System.IO.StreamWriter(@filepath, true))
             {
-                file.WriteLine("Decision Cycle" + "," + "Valence" + "," + "Success");
+                file.WriteLine("Decision Cycle" + "," + "Valence" + "," + "Success" + "," + "Random");
             }
         }
         catch (Exception e)
@@ -31,7 +33,7 @@ public static class VSRTrace
             using (System.IO.StreamWriter file = new System.IO.StreamWriter(@filepath, true))
             {
                 file.WriteLine("Primitive Cycle" + "," + "Valence" + "," + "Success" + "," + "Food" + "," + "Poison" +
-                               "," + "Bump");
+                               "," + "Bump" + "," + "Random");
             }
         }
         catch (Exception e)
@@ -55,7 +57,7 @@ public static class VSRTrace
         {
             using (System.IO.StreamWriter file = new System.IO.StreamWriter(@filepath, true))
             {
-                file.WriteLine(decisionCycle + "," + valence + "," + predictionSuccess);
+                file.WriteLine(decisionCycle + "," + valence + "," + predictionSuccess + "," + random.ToString());
             }
         }
         catch (Exception e)
@@ -68,19 +70,24 @@ public static class VSRTrace
     public static void AddPrimitiveRecord(Interaction primitiveIntendedInteraction,
         Interaction primitiveEnactedInteraction)
     {
-        int IsBump(string scheme)
+        int IsBump(string label)
         {
-            return scheme[9] == 'b' ? 1 : 0;
+            return label[9] switch
+            {
+                'b' => 1,
+                'B' => 2,
+                _ => 0
+            };
         }
 
-        int IsFoodReached(string scheme)
+        int IsFoodReached(string label)
         {
-            return scheme[3] == 'r' ? 1 : 0;
+            return label[3] == 'r' ? 1 : 0;
         }
 
-        int IsPoisonReached(string scheme)
+        int IsPoisonReached(string label)
         {
-            return scheme[6] == 'r' ? 1 : 0;
+            return label[6] == 'r' ? 1 : 0;
         }
 
         primitiveCycle++;
@@ -99,7 +106,7 @@ public static class VSRTrace
             using (System.IO.StreamWriter file = new System.IO.StreamWriter(@filepath, true))
             {
                 file.WriteLine(primitiveCycle + "," + valence + "," + predictionSuccess + "," + food + "," + poison +
-                               "," + bump);
+                               "," + bump + "," + random.ToString());
             }
         }
         catch (Exception e)

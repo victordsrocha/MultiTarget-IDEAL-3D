@@ -131,10 +131,13 @@ public class MyDecider : Decider
         Anticipation selectedAnticipation = proposedAnticipationsSet.Max();
         if (selectedAnticipation == null || selectedAnticipation.Proclivity <= 0)
         {
+            VSRTrace.random = 1;
             EnactedInteractionText = "*** Random Pick ***";
             return GetRandomNeutralPrimitiveInteraction();
         }
 
+        VSRTrace.random = 0;
+        
         Interaction selectedInteraction = selectedAnticipation.IntendedInteraction;
 
         if (selectedInteraction.Weight >= threshold)

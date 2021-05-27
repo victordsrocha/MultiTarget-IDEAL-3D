@@ -3998,8 +3998,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 2816
   fruitPrefab: {fileID: 4042373863318507645, guid: 3761eccccd3fa4f478f20037355e2015, type: 3}
-  poisonPrefab: {fileID: 9012357032979139792, guid: 858fef354cb41ab4b82e9f060aba6678, type: 3}
-  fruitMaxQuantity: 0
+  poisonPrefab: {fileID: 4042373863318507645, guid: 3761eccccd3fa4f478f20037355e2015, type: 3}
+  fruitMaxQuantity: 20
   foodListGameObject: {fileID: 1183944293}
   poisonListGameObject: {fileID: 731979143}
   resetToggle: {fileID: 1307657850}

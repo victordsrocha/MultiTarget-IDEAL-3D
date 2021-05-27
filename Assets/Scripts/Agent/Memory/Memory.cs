@@ -18,7 +18,7 @@ public class Memory : MonoBehaviour, IMemory
         KnownExperiments = new Dictionary<string, Experiment>();
 
         NeutralInteractions = new List<Interaction>();
-        
+
         Init();
     }
 
@@ -158,12 +158,16 @@ public class Memory : MonoBehaviour, IMemory
 
         //sumValence += 0 * source[3].Count(c => c == 'a'); // wall appear
         //sumValence += 0 * source[3].Count(c => c == 'd'); // wall disappear
-        sumValence += -20 * source[3].Count(c => c == 'b'); // wall bump
-        sumValence += +10 * source[3].Count(c => c == 'l'); // wall release
+        sumValence += -5 * source[3].Count(c => c == 'b'); // wall bump (wall is very close)
+        sumValence += -20 * source[3].Count(c => c == 'B'); // wall bump (real bump)
+        sumValence += +5 * source[3].Count(c => c == 'l'); // wall release
         //sumValence += 0 * source[3].Count(c => c == 'c'); // wall closer
         //sumValence += 3 * source[3].Count(c => c == 'f'); // wall further
         // sumValence += 0 * source[3].Count(c => c == 'u'); // wall unchanged
 
+        // sumValence += 0 * source[4].Count(c => c == 'f'); // food is closest
+        // sumValence += 0 * source[4].Count(c => c == 'p'); // poison is closest
+        // sumValence += 0 * source[4].Count(c => c == 'n'); // none is closest
 
         return sumValence;
     }

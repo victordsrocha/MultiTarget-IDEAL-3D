@@ -114,6 +114,8 @@ public class ChickenMoveVelocity : MonoBehaviour
         _isRotationComplete = false;
         _isMoveComplete = false;
 
+        bool forward = this._move > 0;
+
         UpdateAnimation();
 
         StartCoroutine(Rotate());
@@ -121,7 +123,7 @@ public class ChickenMoveVelocity : MonoBehaviour
 
         yield return new WaitUntil(() => _isRotationComplete && _isMoveComplete);
 
-        _observation.ObservationResult();
+        _observation.ObservationResult(forward);
         _interface._observationDone = true;
     }
 }
