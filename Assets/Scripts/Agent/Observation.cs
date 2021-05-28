@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Observation : MonoBehaviour
@@ -16,6 +17,29 @@ public class Observation : MonoBehaviour
         BumpForward,
         Release,
         Unchanged
+    }
+
+    private enum FocusObjectType
+    {
+        Food,
+        Poison,
+        None
+    }
+
+    private enum FocusClosenessStatus
+    {
+        Closer,
+        Distant,
+        Poison,
+        Food,
+        None
+    }
+
+    private enum FocusEye
+    {
+        Left,
+        Right,
+        None
     }
 
     public BeakTrigger beakTrigger;
@@ -51,6 +75,16 @@ public class Observation : MonoBehaviour
 
     private bool forward;
 
+    // Focus
+    private FocusObjectType _focusObjectType;
+    private VisionStateStatus _focusObjectStatus;
+    private bool _focusChange;
+    private FocusClosenessStatus _focusClosenessStatus;
+    private FocusEye _focusEye;
+    private Transform _focusTransform;
+    private float _focusLastDistance;
+    private float _distanceThreshold;
+
     public string Result { get; private set; }
 
     private void Start()
@@ -58,6 +92,16 @@ public class Observation : MonoBehaviour
         leftEye = new Eye(leftFOV);
         rightEye = new Eye(rightFOV);
         wallEye = new EyeWall(edgeFOV);
+
+
+        _focusObjectType = FocusObjectType.None;
+        _focusObjectStatus = VisionStateStatus.Unchanged;
+        _focusChange = false;
+        _focusClosenessStatus = FocusClosenessStatus.None;
+        _focusEye = FocusEye.None;
+        _focusTransform = null;
+        _focusLastDistance = float.PositiveInfinity;
+        _distanceThreshold = 0.28f;
     }
 
     public void ObservationResult(bool isForward)
@@ -67,23 +111,204 @@ public class Observation : MonoBehaviour
         UpdateVisionState();
         UpdateLeftEye();
         UpdateRightEye();
-        IsFoodReached();
+        IsFoodOrPoisonReached();
         UpdateWallEye();
 
+        UpdateFocus();
+
         var observationString = ",";
-        observationString += ResultFromStatus(leftEye.LastFoodStatus);
-        observationString += ResultFromStatus(rightEye.LastFoodStatus);
-        observationString += ",";
-        observationString += ResultFromStatus(leftEye.LastPoisonStatus);
-        observationString += ResultFromStatus(rightEye.LastPoisonStatus);
-        observationString += ",";
+
+        observationString += FocusResultString();
+
+        //observationString += ResultFromStatus(leftEye.LastFoodStatus);
+        //observationString += ResultFromStatus(rightEye.LastFoodStatus);
+        //observationString += ResultFromStatus(leftEye.LastPoisonStatus);
+        //observationString += ResultFromStatus(rightEye.LastPoisonStatus);
+
         observationString += ResultFromStatus(wallEye.LastWallStatus);
-        observationString += ",";
-        observationString += ClosestLeftTarget();
-        observationString += ClosestRightTarget();
+        //observationString += ClosestLeftTarget();
+        //observationString += ClosestRightTarget();
 
         Result = observationString;
     }
+
+    string FocusResultString()
+    {
+        string result = string.Empty;
+
+        result += _focusObjectType switch
+        {
+            FocusObjectType.Food => "f",
+            FocusObjectType.Poison => "p",
+            FocusObjectType.None => "-",
+            _ => throw new ArgumentOutOfRangeException()
+        };
+
+        switch (_focusObjectStatus)
+        {
+            case VisionStateStatus.Appear:
+                result += "a";
+                break;
+            case VisionStateStatus.Closer:
+                result += "c";
+                break;
+            case VisionStateStatus.Further:
+                result += "f";
+                break;
+            case VisionStateStatus.Reached:
+                result += "r";
+                break;
+            case VisionStateStatus.Unchanged:
+                result += "-";
+                break;
+        }
+
+        if (_focusChange)
+        {
+            result += "*";
+        }
+        else
+        {
+            result += "-";
+        }
+
+        result += _focusClosenessStatus switch
+        {
+            FocusClosenessStatus.Closer => "c",
+            FocusClosenessStatus.Distant => "d",
+            FocusClosenessStatus.None => "-",
+            FocusClosenessStatus.Poison => "p",
+            FocusClosenessStatus.Food => "f",
+            _ => throw new ArgumentOutOfRangeException()
+        };
+
+        result += _focusEye switch
+        {
+            FocusEye.Left => "l",
+            FocusEye.Right => "r",
+            FocusEye.None => "-",
+            _ => throw new ArgumentOutOfRangeException()
+        };
+
+        return result;
+    }
+
+    void UpdateFocus()
+    {
+        float leftFood = leftEye.LastFoodDistance;
+        float leftPoison = leftEye.LastPoisonDistance;
+        float rightFood = rightEye.LastFoodDistance;
+        float rightPoison = rightEye.LastPoisonDistance;
+
+
+        if (leftEye.LastFoodStatus == VisionStateStatus.Reached ||
+            rightEye.LastFoodStatus == VisionStateStatus.Reached)
+        {
+            _focusObjectType = FocusObjectType.Food;
+            _focusChange = true;
+            _focusTransform = null;
+            _focusObjectStatus = VisionStateStatus.Reached;
+            _focusLastDistance = float.PositiveInfinity;
+            _focusClosenessStatus = FocusClosenessStatus.Food;
+            _focusEye = FocusEye.None;
+            return;
+        }
+        else if (leftEye.LastPoisonStatus == VisionStateStatus.Reached ||
+                 rightEye.LastPoisonStatus == VisionStateStatus.Reached)
+        {
+            _focusObjectType = FocusObjectType.Poison;
+            _focusChange = true;
+            _focusTransform = null;
+            _focusObjectStatus = VisionStateStatus.Reached;
+            _focusLastDistance = float.PositiveInfinity;
+            _focusClosenessStatus = FocusClosenessStatus.Poison;
+            _focusEye = FocusEye.None;
+            return;
+        }
+
+        if (leftFood < leftPoison && leftFood < rightFood && leftFood < rightPoison)
+        {
+            _focusObjectType = FocusObjectType.Food;
+            UpdateFocusTransition(leftFOV.closestFood);
+            _focusTransform = leftFOV.closestFood;
+
+            _focusLastDistance = leftEye.LastFoodDistance;
+
+            _focusObjectStatus = _focusChange ? VisionStateStatus.Appear : leftEye.LastFoodStatus;
+            UpdateFocusCloseness(_focusLastDistance, true);
+            _focusEye = FocusEye.Left;
+        }
+        else if (leftPoison < rightFood && leftPoison < rightPoison)
+        {
+            _focusObjectType = FocusObjectType.Poison;
+            UpdateFocusTransition(leftFOV.closestPoison);
+            _focusTransform = leftFOV.closestPoison;
+
+            _focusLastDistance = leftEye.LastPoisonDistance;
+
+            _focusObjectStatus = _focusChange ? VisionStateStatus.Appear : leftEye.LastPoisonStatus;
+            UpdateFocusCloseness(_focusLastDistance, true);
+            _focusEye = FocusEye.Left;
+        }
+        else if (rightFood < rightPoison)
+        {
+            _focusObjectType = FocusObjectType.Food;
+            UpdateFocusTransition(rightFOV.closestFood);
+            _focusTransform = rightFOV.closestFood;
+
+            _focusLastDistance = rightEye.LastFoodDistance;
+
+            _focusObjectStatus = _focusChange ? VisionStateStatus.Appear : rightEye.LastFoodStatus;
+            UpdateFocusCloseness(_focusLastDistance, true);
+            _focusEye = FocusEye.Right;
+        }
+        else if (rightPoison < rightFood)
+        {
+            _focusObjectType = FocusObjectType.Poison;
+            UpdateFocusTransition(rightFOV.closestPoison);
+            _focusTransform = rightFOV.closestPoison;
+
+            _focusLastDistance = rightEye.LastPoisonDistance;
+
+            _focusObjectStatus = _focusChange ? VisionStateStatus.Appear : rightEye.LastPoisonStatus;
+            UpdateFocusCloseness(_focusLastDistance, true);
+            _focusEye = FocusEye.Right;
+        }
+        else
+        {
+            _focusObjectType = FocusObjectType.None;
+            UpdateFocusTransition(null);
+            _focusTransform = null;
+
+            _focusLastDistance = float.PositiveInfinity;
+
+            _focusObjectStatus = VisionStateStatus.Unchanged;
+            UpdateFocusCloseness(_focusLastDistance, false);
+            _focusEye = FocusEye.None;
+        }
+    }
+
+    void UpdateFocusTransition(Transform newFocusTransform)
+    {
+        _focusChange = _focusTransform != newFocusTransform;
+    }
+
+    void UpdateFocusCloseness(float focusDistance, bool targetTrue)
+    {
+        if (targetTrue && focusDistance < _distanceThreshold)
+        {
+            _focusClosenessStatus = FocusClosenessStatus.Closer;
+        }
+        else if (targetTrue)
+        {
+            _focusClosenessStatus = FocusClosenessStatus.Distant;
+        }
+        else
+        {
+            _focusClosenessStatus = FocusClosenessStatus.None;
+        }
+    }
+
 
     char ClosestLeftTarget()
     {
@@ -305,7 +530,7 @@ public class Observation : MonoBehaviour
         rightEye.IsSeeingAnyPoison = isRightPoisonVisible;
     }
 
-    void IsFoodReached()
+    void IsFoodOrPoisonReached()
     {
         if (beakTrigger.lastFruit != 0)
         {
@@ -406,11 +631,11 @@ public class Observation : MonoBehaviour
             case VisionStateStatus.Reached:
                 return 'r';
             case VisionStateStatus.Unchanged:
-                return 'u';
+                return '-';
             case VisionStateStatus.Release:
                 return 'l';
             default:
-                throw new ArgumentOutOfRangeException();
+                throw new ArgumentOutOfRangeException(); 
         }
     }
 

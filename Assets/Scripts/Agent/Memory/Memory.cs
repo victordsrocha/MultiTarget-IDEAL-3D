@@ -142,32 +142,51 @@ public class Memory : MonoBehaviour, IMemory
         sumValence += -1 * source[0].Count(c => c == '>'); // Forward
         sumValence += -1 * source[0].Count(c => c == '<'); // Backward
 
-        sumValence += +15 * source[1].Count(c => c == 'a'); // food appear
-        sumValence += -15 * source[1].Count(c => c == 'd'); // food disappear
-        sumValence += +100 * source[1].Count(c => c == 'r'); // food reached
-        sumValence += +10 * source[1].Count(c => c == 'c'); // food closer
-        sumValence += -10 * source[1].Count(c => c == 'f'); // food further
-        // sumValence += 0 * source[1].Count(c => c == 'u'); // food unchanged
+        bool focusFood = source[1][0] == 'f';
 
-        //sumValence += -10 * source[2].Count(c => c == 'a'); // poison appear
-        //sumValence += +10 * source[2].Count(c => c == 'd'); // poison disappear
-        sumValence += -100 * source[2].Count(c => c == 'r'); // poison reached 
-        //sumValence += -4 * source[2].Count(c => c == 'c'); // poison closer
-        //sumValence += +4 * source[2].Count(c => c == 'f'); // poison further
-        // sumValence += 0 * source[2].Count(c => c == 'u'); // poison unchanged
+        // Food status
+        if (focusFood)
+        {
+            switch (source[1][1])
+            {
+                case 'a':
+                    sumValence += 0;
+                    break;
+                case 'd':
+                    sumValence -= 0;
+                    break;
+                case 'c':
+                    sumValence += 10;
+                    break;
+                case 'f':
+                    sumValence -= 10;
+                    break;
+            }
+        }
 
-        //sumValence += 0 * source[3].Count(c => c == 'a'); // wall appear
-        //sumValence += 0 * source[3].Count(c => c == 'd'); // wall disappear
-        sumValence += -5 * source[3].Count(c => c == 'b'); // wall bump (wall is very close)
-        sumValence += -20 * source[3].Count(c => c == 'B'); // wall bump (real bump)
-        sumValence += +5 * source[3].Count(c => c == 'l'); // wall release
-        //sumValence += 0 * source[3].Count(c => c == 'c'); // wall closer
-        //sumValence += 3 * source[3].Count(c => c == 'f'); // wall further
-        // sumValence += 0 * source[3].Count(c => c == 'u'); // wall unchanged
+        // Reach
+        if (source[1][3] == 'f')
+        {
+            sumValence += 200;
+        }
+        else if (source[1][3] == 'p')
+        {
+            sumValence -= 400;
+        }
 
-        // sumValence += 0 * source[4].Count(c => c == 'f'); // food is closest
-        // sumValence += 0 * source[4].Count(c => c == 'p'); // poison is closest
-        // sumValence += 0 * source[4].Count(c => c == 'n'); // none is closest
+        // Bump
+        switch (source[1][5])
+        {
+            case 'b':
+                sumValence -= 5;
+                break;
+            case 'B':
+                sumValence -= 20;
+                break;
+            case 'l':
+                sumValence += 5;
+                break;
+        }
 
         return sumValence;
     }
@@ -176,15 +195,15 @@ public class Memory : MonoBehaviour, IMemory
     {
         // ▶ ▷ △ ▲ ▼ ▽ ◀ ◁ ◇ ◈ ◆ ← → ↑ ↓
 
-        //AddOrGetPrimitiveInteraction(">^,uu,uu,u,nn");
-        AddOrGetPrimitiveInteraction(">-,uu,uu,u,nn");
-        //AddOrGetPrimitiveInteraction(">v,uu,uu,u,nn");
-        AddOrGetPrimitiveInteraction("-^,uu,uu,u,nn");
-        //AddOrGetPrimitiveInteraction("--,uu,uu,u,nn");
-        AddOrGetPrimitiveInteraction("-v,uu,uu,u,nn");
-        //AddOrGetPrimitiveInteraction("<^,uu,uu,u,nn");
-        //AddOrGetPrimitiveInteraction("<-,uu,uu,u,nn");
-        //AddOrGetPrimitiveInteraction("<v,uu,uu,u,nn");
+        //AddOrGetPrimitiveInteraction(">^,------");
+        AddOrGetPrimitiveInteraction(">-,------");
+        //AddOrGetPrimitiveInteraction(">v,------");
+        AddOrGetPrimitiveInteraction("-^,------");
+        //AddOrGetPrimitiveInteraction("--,------");
+        AddOrGetPrimitiveInteraction("-v,------");
+        //AddOrGetPrimitiveInteraction("<^,------");
+        //AddOrGetPrimitiveInteraction("<-,------");
+        //AddOrGetPrimitiveInteraction("<v,------");
 
         foreach (var knownInteraction in KnownInteractions.Values)
         {

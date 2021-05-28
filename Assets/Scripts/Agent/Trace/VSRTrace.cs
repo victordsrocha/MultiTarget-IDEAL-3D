@@ -72,7 +72,7 @@ public static class VSRTrace
     {
         int IsBump(string label)
         {
-            return label[9] switch
+            return label[8] switch
             {
                 'b' => 1,
                 'B' => 2,
@@ -82,12 +82,12 @@ public static class VSRTrace
 
         int IsFoodReached(string label)
         {
-            return label[3] == 'r' ? 1 : 0;
+            return label[6] == 'f' ? 1 : 0;
         }
 
         int IsPoisonReached(string label)
         {
-            return label[6] == 'r' ? 1 : 0;
+            return label[6] == 'p' ? 1 : 0;
         }
 
         primitiveCycle++;
