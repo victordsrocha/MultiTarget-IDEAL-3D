@@ -66,23 +66,28 @@ public class FieldOfView : MonoBehaviour
     public void FindVisibleTargets()
     {
         visibleTargets.Clear();
-        Collider[] targetsInViewRadius = Physics.OverlapSphere(transform.position, viewRadius, targetMask);
 
-        for (int i = 0; i < targetsInViewRadius.Length; i++)
+        int resolution = 10;
+        float stepAngleSize = viewAngle / resolution;
+        float angle = transform.eulerAngles.y - viewAngle / 2;
+
+        for (int i = 0; i <= resolution; i++)
         {
-            Transform target = targetsInViewRadius[i].transform;
-            Vector3 targetInThePlane = new Vector3(target.position.x, transform.position.y, target.position.z);
+            Vector3 dir = DirFromAngle(angle + stepAngleSize * i, true);
 
-            Vector3 dirToTarget = (targetInThePlane - transform.position).normalized;
-
-            if (Vector3.Angle(transform.forward, dirToTarget) < viewAngle / 2)
+            if (Physics.Raycast(transform.position, dir, out var hit,
+                viewRadius, targetMask))
             {
-                float dstToTarget = Vector3.Distance(transform.position, targetInThePlane);
+                //Debug.DrawRay(transform.position, dir * hit.distance, Color.yellow, 0.2f);
 
-                if (!Physics.Raycast(transform.position, dirToTarget, dstToTarget, obstacleMask))
+                if (!visibleTargets.Contains(hit.transform))
                 {
-                    visibleTargets.Add(target);
+                    visibleTargets.Add(hit.transform);
                 }
+            }
+            else
+            {
+                //Debug.DrawRay(transform.position, dir * viewRadius, Color.blue, 0.2f);
             }
         }
     }

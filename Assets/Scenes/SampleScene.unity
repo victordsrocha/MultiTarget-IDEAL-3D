@@ -3704,6 +3704,10 @@ PrefabInstance:
       propertyPath: stepManager
       value: 
       objectReference: {fileID: 1616866237}
+    - target: {fileID: 9151677410253968288, guid: dbfa5fb95a233344d8fd219eb5e0445b, type: 3}
+      propertyPath: forgettingRate
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dbfa5fb95a233344d8fd219eb5e0445b, type: 3}
 --- !u!1 &2005584881

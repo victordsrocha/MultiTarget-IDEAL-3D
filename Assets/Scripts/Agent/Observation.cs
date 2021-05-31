@@ -39,6 +39,7 @@ public class Observation : MonoBehaviour
     {
         Left,
         Right,
+        Both,
         None
     }
 
@@ -186,6 +187,7 @@ public class Observation : MonoBehaviour
         {
             FocusEye.Left => "l",
             FocusEye.Right => "r",
+            FocusEye.Both => "b",
             FocusEye.None => "-",
             _ => throw new ArgumentOutOfRangeException()
         };
@@ -226,41 +228,44 @@ public class Observation : MonoBehaviour
             return;
         }
 
-        if (leftFood < leftPoison && leftFood < rightFood && leftFood < rightPoison)
+        if (leftFood <= leftPoison && leftFood <= rightFood && leftFood <= rightPoison)
         {
             _focusObjectType = FocusObjectType.Food;
             UpdateFocusTransition(leftFOV.closestFood);
             _focusTransform = leftFOV.closestFood;
 
+            _focusObjectStatus = UpdateFocusObjectStatus(true, leftEye.LastFoodDistance);
             _focusLastDistance = leftEye.LastFoodDistance;
 
-            _focusObjectStatus = _focusChange ? VisionStateStatus.Appear : leftEye.LastFoodStatus;
             UpdateFocusCloseness(_focusLastDistance, true);
-            _focusEye = FocusEye.Left;
-        }
-        else if (leftPoison < rightFood && leftPoison < rightPoison)
-        {
-            _focusObjectType = FocusObjectType.Poison;
-            UpdateFocusTransition(leftFOV.closestPoison);
-            _focusTransform = leftFOV.closestPoison;
 
-            _focusLastDistance = leftEye.LastPoisonDistance;
-
-            _focusObjectStatus = _focusChange ? VisionStateStatus.Appear : leftEye.LastPoisonStatus;
-            UpdateFocusCloseness(_focusLastDistance, true);
-            _focusEye = FocusEye.Left;
+            _focusEye = leftFOV.closestFood == rightFOV.closestFood ? FocusEye.Both : FocusEye.Left;
         }
-        else if (rightFood < rightPoison)
+        else if (rightFood <= rightPoison && rightFood <= leftPoison)
         {
             _focusObjectType = FocusObjectType.Food;
             UpdateFocusTransition(rightFOV.closestFood);
             _focusTransform = rightFOV.closestFood;
 
+            _focusObjectStatus = UpdateFocusObjectStatus(true, rightEye.LastFoodDistance);
             _focusLastDistance = rightEye.LastFoodDistance;
 
-            _focusObjectStatus = _focusChange ? VisionStateStatus.Appear : rightEye.LastFoodStatus;
             UpdateFocusCloseness(_focusLastDistance, true);
-            _focusEye = FocusEye.Right;
+
+            _focusEye = leftFOV.closestFood == rightFOV.closestFood ? FocusEye.Both : FocusEye.Right;
+        }
+        else if (leftPoison <= rightPoison)
+        {
+            _focusObjectType = FocusObjectType.Poison;
+            UpdateFocusTransition(leftFOV.closestPoison);
+            _focusTransform = leftFOV.closestPoison;
+
+            _focusObjectStatus = UpdateFocusObjectStatus(true, leftEye.LastPoisonDistance);
+            _focusLastDistance = leftEye.LastPoisonDistance;
+
+            UpdateFocusCloseness(_focusLastDistance, true);
+
+            _focusEye = leftFOV.closestPoison == rightFOV.closestPoison ? FocusEye.Both : FocusEye.Left;
         }
         else if (rightPoison < rightFood)
         {
@@ -268,11 +273,12 @@ public class Observation : MonoBehaviour
             UpdateFocusTransition(rightFOV.closestPoison);
             _focusTransform = rightFOV.closestPoison;
 
+            _focusObjectStatus = UpdateFocusObjectStatus(true, rightEye.LastPoisonDistance);
             _focusLastDistance = rightEye.LastPoisonDistance;
 
-            _focusObjectStatus = _focusChange ? VisionStateStatus.Appear : rightEye.LastPoisonStatus;
             UpdateFocusCloseness(_focusLastDistance, true);
-            _focusEye = FocusEye.Right;
+
+            _focusEye = leftFOV.closestPoison == rightFOV.closestPoison ? FocusEye.Both : FocusEye.Right;
         }
         else
         {
@@ -280,11 +286,39 @@ public class Observation : MonoBehaviour
             UpdateFocusTransition(null);
             _focusTransform = null;
 
+            _focusObjectStatus = UpdateFocusObjectStatus(false, float.PositiveInfinity);
             _focusLastDistance = float.PositiveInfinity;
 
-            _focusObjectStatus = VisionStateStatus.Unchanged;
+            // TODO incluir Disappear
+
             UpdateFocusCloseness(_focusLastDistance, false);
             _focusEye = FocusEye.None;
+        }
+    }
+
+    VisionStateStatus UpdateFocusObjectStatus(bool targetTrue, float newDistance)
+    {
+        if (_focusChange && targetTrue)
+        {
+            return VisionStateStatus.Appear;
+        }
+
+        if (targetTrue)
+        {
+            if (_focusLastDistance > newDistance)
+            {
+                return VisionStateStatus.Closer;
+            }
+            else if (_focusLastDistance < newDistance)
+            {
+                return VisionStateStatus.Further;
+            }
+
+            return VisionStateStatus.Unchanged;
+        }
+        else
+        {
+            return VisionStateStatus.Unchanged;
         }
     }
 
@@ -635,7 +669,7 @@ public class Observation : MonoBehaviour
             case VisionStateStatus.Release:
                 return 'l';
             default:
-                throw new ArgumentOutOfRangeException(); 
+                throw new ArgumentOutOfRangeException();
         }
     }
 
