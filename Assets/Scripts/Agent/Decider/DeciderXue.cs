@@ -19,6 +19,8 @@ public class DeciderXue : Decider
     public Memory memory;
     public Agent agent;
 
+    private Interaction _selectedInteraction;
+
     private void Start()
     {
         EnactedInteraction = null;
@@ -166,7 +168,8 @@ public class DeciderXue : Decider
         {
             VSRTrace.random = 1;
             //EnactedInteractionText = "*** Random Pick ***";
-            return GetRandomNeutralPrimitiveInteraction();
+            _selectedInteraction = GetRandomNeutralPrimitiveInteraction();
+            return _selectedInteraction;
         }
 
         VSRTrace.random = 0;
@@ -176,21 +179,35 @@ public class DeciderXue : Decider
         
         if (selectedInteraction.Weight >= threshold && selectedAnticipation.Proclivity > 0)
         {
-            return selectedInteraction;
+            _selectedInteraction = selectedInteraction;
         }
         else
         {
             //return selectedAnticipation.GetFirstPrimitiveInteraction();
-            return selectedAnticipation.IntendedInteraction.IsPrimitive()
+            _selectedInteraction = selectedAnticipation.IntendedInteraction.IsPrimitive()
                 ? selectedAnticipation.IntendedInteraction
                 : selectedAnticipation.IntendedInteraction.PreInteraction;
         }
+
+        return _selectedInteraction;
     }
 
-    
+
+    private void DecrementFailureInteraction(Interaction realEnactedInteraction)
+    {
+        if (_selectedInteraction == realEnactedInteraction) return;
+        _selectedInteraction.Weight -= 0.1f;
+        if (_selectedInteraction.Weight < 0f)
+        {
+            _selectedInteraction.Weight = 0f;
+        }
+    }
 
     public override void LearnCompositeInteraction(Interaction newEnactedInteraction)
     {
+
+        DecrementFailureInteraction(newEnactedInteraction);
+        
         var previousInteraction = EnactedInteraction;
         var lastInteraction = newEnactedInteraction;
         var previousSuperInteraction = _superInteraction;
