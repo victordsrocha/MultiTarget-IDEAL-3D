@@ -116,7 +116,7 @@ public class DeciderXue : Decider
         }
         else
         {
-            return valence - agent.happiness;
+            return valence - (agent.happiness/1.2f); // a divisão por um valor pequeno evita deltaValence zero
         }
     }
     
