@@ -7,7 +7,6 @@ using UnityEngine.Profiling;
 
 public class Agent : MonoBehaviour
 {
-    public Memory memory;
     public Decider decider;
     public Enacter enacter;
 
@@ -43,7 +42,7 @@ public class Agent : MonoBehaviour
         {
             stepNumber++;
             stepManager.stepNumberText.text = "Step: " + stepNumber.ToString();
-
+            
             var intendedInteraction = decider.SelectInteraction();
 
             stepManager.intendedInteractionText.text = "Intended Interaction: (" + intendedInteraction.Valence + ") " +

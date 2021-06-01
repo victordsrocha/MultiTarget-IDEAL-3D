@@ -19,6 +19,9 @@ public class DeciderXue : Decider
     public Memory memory;
     public Agent agent;
 
+    public float decrementFailureRate = 0.9f;
+    public float decrementExperimentEnactedInteractionsRate = 0.95f;
+
     private Interaction _selectedInteraction;
 
     private void Start()
@@ -59,9 +62,8 @@ public class DeciderXue : Decider
         }
 
         var activatedInteractions = new List<Interaction>();
-        foreach (var knowInteraction in memory.KnownInteractions.Values)
+        foreach (var knowInteraction in memory.KnownCompositeInteractions.Values)
         {
-            if (knowInteraction.IsPrimitive()) continue;
             if (contextInteractions.Contains(knowInteraction.PreInteraction))
             {
                 activatedInteractions.Add(knowInteraction);
@@ -118,25 +120,22 @@ public class DeciderXue : Decider
         }
         else
         {
-            return valence - (agent.happiness/1.2f); // a divisão por um valor pequeno evita deltaValence zero
+            return valence - (agent.happiness / 1.2f); // a divisão por um valor pequeno evita deltaValence zero
         }
     }
-    
+
     private HashSet<Anticipation> Map(HashSet<Anticipation> proposedAnticipationsSet)
     {
         var defaultSet = new HashSet<Anticipation>();
-        foreach (var interaction in memory.KnownInteractions.Values)
+        foreach (var interaction in memory.KnownPrimitiveInteractions.Values)
         {
-            if (interaction.IsPrimitive())
+            var defaultAnticipation = new Anticipation(interaction.Experiment, 0)
             {
-                var defaultAnticipation = new Anticipation(interaction.Experiment, 0)
-                {
-                    AnticipationsSet = new HashSet<Anticipation>()
-                };
-                defaultSet.Add(defaultAnticipation);
-            }
+                AnticipationsSet = new HashSet<Anticipation>()
+            };
+            defaultSet.Add(defaultAnticipation);
         }
-        
+
         foreach (var defaultAnticipation in defaultSet)
         {
             foreach (var anticipation in proposedAnticipationsSet)
@@ -173,10 +172,10 @@ public class DeciderXue : Decider
         }
 
         VSRTrace.random = 0;
-        
+
         Anticipation selectedAnticipation = selectedDefaultAnticipation.AnticipationsSet.Max();
         Interaction selectedInteraction = selectedAnticipation.IntendedInteraction;
-        
+
         if (selectedInteraction.Weight >= threshold && selectedAnticipation.Proclivity > 0)
         {
             _selectedInteraction = selectedInteraction;
@@ -192,22 +191,41 @@ public class DeciderXue : Decider
         return _selectedInteraction;
     }
 
+    private void DecrementExperimentEnactedInteractions(Interaction realEnactedInteraction)
+    {
+        foreach (var experimentEnactedInteraction in _selectedInteraction.Experiment.EnactedInteractions)
+        {
+            if (experimentEnactedInteraction!=realEnactedInteraction)
+            {
+                experimentEnactedInteraction.Weight -= decrementExperimentEnactedInteractionsRate;
+            }
+        }
+    }
+
 
     private void DecrementFailureInteraction(Interaction realEnactedInteraction)
     {
-        if (_selectedInteraction == realEnactedInteraction) return;
-        _selectedInteraction.Weight -= 0.1f;
-        if (_selectedInteraction.Weight < 0f)
+        if (_selectedInteraction.IsPrimitive() || _selectedInteraction == realEnactedInteraction) return;
+
+
+        if (memory.KnownCompositeInteractions.ContainsKey(_selectedInteraction.Label))
         {
-            _selectedInteraction.Weight = 0f;
+            _selectedInteraction.Weight *= decrementFailureRate;
+
+            if (_selectedInteraction.Weight < 0.01f)
+            {
+                _selectedInteraction.Weight = 0f;
+                memory.ForgottenCompositeInteraction.Add(_selectedInteraction.Label, _selectedInteraction);
+                memory.KnownCompositeInteractions.Remove(_selectedInteraction.Label);
+            }
         }
     }
 
     public override void LearnCompositeInteraction(Interaction newEnactedInteraction)
     {
-
         DecrementFailureInteraction(newEnactedInteraction);
-        
+        DecrementExperimentEnactedInteractions(newEnactedInteraction);
+
         var previousInteraction = EnactedInteraction;
         var lastInteraction = newEnactedInteraction;
         var previousSuperInteraction = _superInteraction;

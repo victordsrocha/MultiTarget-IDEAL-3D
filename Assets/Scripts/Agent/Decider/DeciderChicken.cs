@@ -54,7 +54,7 @@ public class DeciderChicken : Decider
         }
 
         var activatedInteractions = new List<Interaction>();
-        foreach (var knowInteraction in memory.KnownInteractions.Values)
+        foreach (var knowInteraction in memory.KnownCompositeInteractions.Values)
         {
             if (knowInteraction.IsPrimitive()) continue;
             if (contextInteractions.Contains(knowInteraction.PreInteraction))

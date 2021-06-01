@@ -791,7 +791,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1165af1a9caf20546bdeaa09b65740cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  memory: {fileID: 9151677410253968288}
   decider: {fileID: 2711888475866266812}
   enacter: {fileID: 5504472236066268972}
   happiness: 0
@@ -1428,7 +1427,7 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 1
   m_Enabled: 1
-  m_Radius: 0.025
+  m_Radius: 0.035
   m_Height: 1
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}

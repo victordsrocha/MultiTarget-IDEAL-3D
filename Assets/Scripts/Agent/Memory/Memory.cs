@@ -7,14 +7,21 @@ using UnityEngine;
 public class Memory : MonoBehaviour, IMemory
 {
     [SerializeField] private float forgettingRate = 0.05f;
-    public Dictionary<string, Interaction> KnownInteractions { get; private set; }
+    public Dictionary<string, Interaction> KnownCompositeInteractions { get; private set; }
+    public Dictionary<string, Interaction> KnownPrimitiveInteractions { get; private set; }
+    public Dictionary<string, Interaction> ForgottenCompositeInteraction { get; private set; }
     public Dictionary<string, Experiment> KnownExperiments { get; private set; }
 
     public List<Interaction> NeutralInteractions { get; private set; }
 
+    private int primitiveLabelSize;
+
     private void Awake()
     {
-        KnownInteractions = new Dictionary<string, Interaction>();
+        KnownCompositeInteractions = new Dictionary<string, Interaction>();
+        KnownPrimitiveInteractions = new Dictionary<string, Interaction>();
+        ForgottenCompositeInteraction = new Dictionary<string, Interaction>();
+
         KnownExperiments = new Dictionary<string, Experiment>();
 
         NeutralInteractions = new List<Interaction>();
@@ -24,24 +31,47 @@ public class Memory : MonoBehaviour, IMemory
 
     public Interaction AddOrGetInteraction(string label)
     {
-        if (!KnownInteractions.ContainsKey(label))
+        if (label.Length == primitiveLabelSize)
         {
-            Interaction interaction = new Interaction(label);
-            KnownInteractions.Add(label, interaction);
+            if (KnownPrimitiveInteractions.ContainsKey(label))
+            {
+                return KnownPrimitiveInteractions[label];
+            }
+            else
+            {
+                Interaction interaction = new Interaction(label);
+                KnownPrimitiveInteractions.Add(label, interaction);
+                return KnownPrimitiveInteractions[label];
+            }
         }
-
-        return KnownInteractions[label];
+        else
+        {
+            if (KnownCompositeInteractions.ContainsKey(label))
+            {
+                return KnownCompositeInteractions[label];
+            }
+            else if (ForgottenCompositeInteraction.ContainsKey(label))
+            {
+                return ForgottenCompositeInteraction[label];
+            }
+            else
+            {
+                Interaction interaction = new Interaction(label);
+                KnownCompositeInteractions.Add(label, interaction);
+                return KnownCompositeInteractions[label];
+            }
+        }
     }
 
     public Interaction GetPrimitiveInteraction(string label)
     {
-        return KnownInteractions[label];
+        return KnownPrimitiveInteractions[label];
     }
 
     public Interaction AddOrGetPrimitiveInteraction(string label)
     {
         Interaction interaction;
-        if (!KnownInteractions.ContainsKey(label))
+        if (!KnownPrimitiveInteractions.ContainsKey(label))
         {
             interaction = AddOrGetInteraction(label);
             interaction.Valence = CalcValence(label);
@@ -49,7 +79,7 @@ public class Memory : MonoBehaviour, IMemory
         }
         else
         {
-            interaction = KnownInteractions[label];
+            interaction = KnownPrimitiveInteractions[label];
         }
 
         return interaction;
@@ -72,17 +102,25 @@ public class Memory : MonoBehaviour, IMemory
     {
         string label = '(' + preInteraction.Label + ' ' + postInteraction.Label + ')';
         Interaction interaction;
-        if (!KnownInteractions.ContainsKey(label))
+        if (!KnownCompositeInteractions.ContainsKey(label) && !ForgottenCompositeInteraction.ContainsKey(label))
         {
             interaction = AddOrGetInteraction(label);
             interaction.PreInteraction = preInteraction;
             interaction.PostInteraction = postInteraction;
             interaction.Valence = preInteraction.Valence + postInteraction.Valence;
+            interaction.Weight = 1f;
             AddOrGetAbstractExperiment(interaction);
         }
         else
         {
-            interaction = KnownInteractions[label];
+            if (KnownCompositeInteractions.ContainsKey(label))
+            {
+                interaction = KnownCompositeInteractions[label];
+            }
+            else
+            {
+                interaction = ForgottenCompositeInteraction[label];
+            }
         }
 
         return interaction;
@@ -91,39 +129,47 @@ public class Memory : MonoBehaviour, IMemory
     public Interaction AddOrGetAndReinforceCompositeInteraction(Interaction preInteraction, Interaction postInteraction)
     {
         var compositeInteraction = AddOrGetCompositeInteraction(preInteraction, postInteraction);
+
+        if (compositeInteraction.Weight == 0f)
+        {
+            KnownCompositeInteractions.Add(compositeInteraction.Label, compositeInteraction);
+            ForgottenCompositeInteraction.Remove(compositeInteraction.Label);
+        }
+
         compositeInteraction.Weight += 1;
         return compositeInteraction;
     }
 
     public void DecrementAndForgetSchemas(List<Interaction> enactedInteractions)
     {
-        foreach (var knownInteraction in KnownInteractions.Values)
+        List<Interaction> interactionsToForget = new List<Interaction>();
+        foreach (var knownInteraction in KnownCompositeInteractions.Values)
         {
-            if (!knownInteraction.IsPrimitive())
+            if (!enactedInteractions.Contains(knownInteraction))
             {
-                if (!enactedInteractions.Contains(knownInteraction))
+                // estou dividindo pela valencia como uma forma provisoria de garantir que 
+                // memorias muito boas ou muito ruins sejam mais dificilemtne esquecidas
+                if (knownInteraction.Valence > 1 || knownInteraction.Valence < -1)
                 {
-                    // estou dividindo pela valencia como uma forma provisoria de garantir que 
-                    // memorias muito boas ou muito ruins sejam mais dificilemtne esquecidas
-                    if (knownInteraction.Valence > 1 || knownInteraction.Valence < -1)
-                    {
-                        knownInteraction.Weight -= forgettingRate / Mathf.Abs(knownInteraction.Valence);
-                    }
-                    else
-                    {
-                        knownInteraction.Weight -= forgettingRate;
-                    }
+                    knownInteraction.Weight -= forgettingRate / Mathf.Abs(knownInteraction.Valence);
                 }
-
-                // When a schema reaches a weight of 0 it is deleted from memory
-                if (knownInteraction.Weight < 0.01f)
+                else
                 {
-                    // KnownInteractions.Remove(knownInteraction.Label);
-                    knownInteraction.Weight = 0f;
-
-                    /* Não é possível excluir, uma interação esquecida pode ser pré-interação de uma outra */
+                    knownInteraction.Weight -= forgettingRate;
                 }
             }
+
+            if (knownInteraction.Weight < 0.01f)
+            {
+                interactionsToForget.Add(knownInteraction);
+            }
+        }
+
+        foreach (var interaction in interactionsToForget)
+        {
+            interaction.Weight = 0f;
+            ForgottenCompositeInteraction.Add(interaction.Label, interaction);
+            KnownCompositeInteractions.Remove(interaction.Label);
         }
     }
 
@@ -195,6 +241,8 @@ public class Memory : MonoBehaviour, IMemory
     {
         // ▶ ▷ △ ▲ ▼ ▽ ◀ ◁ ◇ ◈ ◆ ← → ↑ ↓
 
+        primitiveLabelSize = ">-,------".Length;
+
         //AddOrGetPrimitiveInteraction(">^,------");
         AddOrGetPrimitiveInteraction(">-,------");
         //AddOrGetPrimitiveInteraction(">v,------");
@@ -205,7 +253,7 @@ public class Memory : MonoBehaviour, IMemory
         //AddOrGetPrimitiveInteraction("<-,------");
         //AddOrGetPrimitiveInteraction("<v,------");
 
-        foreach (var knownInteraction in KnownInteractions.Values)
+        foreach (var knownInteraction in KnownPrimitiveInteractions.Values)
         {
             NeutralInteractions.Add(knownInteraction);
         }
