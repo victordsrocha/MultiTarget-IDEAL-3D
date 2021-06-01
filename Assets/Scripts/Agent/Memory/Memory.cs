@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class Memory : MonoBehaviour, IMemory
 {
-    [SerializeField] private float forgettingRate = 0.05f;
+    public float forgettingRate = 0.05f;
     public Dictionary<string, Interaction> KnownCompositeInteractions { get; private set; }
     public Dictionary<string, Interaction> KnownPrimitiveInteractions { get; private set; }
     public Dictionary<string, Interaction> ForgottenCompositeInteraction { get; private set; }

@@ -19,13 +19,17 @@ public class DeciderXue : Decider
     public Memory memory;
     public Agent agent;
 
-    public float decrementFailureRate = 0.9f;
-    public float decrementExperimentEnactedInteractionsRate = 0.95f;
+    public float decrementFailureRate = 0.05f;
+    public float decrementExperimentEnactedInteractionsRate = 0.01f;
+
+    private List<Interaction> activatedInteractionsList;
 
     private Interaction _selectedInteraction;
 
     private void Start()
     {
+        activatedInteractionsList = new List<Interaction>();
+
         EnactedInteraction = null;
         _superInteraction = null;
     }
@@ -75,11 +79,11 @@ public class DeciderXue : Decider
 
     private HashSet<Anticipation> Anticipate()
     {
-        var activatedInteractions = GetActivatedInteractions();
+        activatedInteractionsList = GetActivatedInteractions();
 
         var proposedAnticipationsSet = new HashSet<Anticipation>();
 
-        foreach (var activatedInteraction in activatedInteractions)
+        foreach (var activatedInteraction in activatedInteractionsList)
         {
             var deltaValence = DeltaValence(activatedInteraction.PostInteraction.Valence);
 
@@ -97,7 +101,7 @@ public class DeciderXue : Decider
         {
             foreach (var experimentEnactedInteraction in anticipation.Experiment.EnactedInteractions)
             {
-                foreach (var activatedInteraction in activatedInteractions)
+                foreach (var activatedInteraction in activatedInteractionsList)
                 {
                     if (experimentEnactedInteraction == activatedInteraction.PostInteraction)
                     {
@@ -195,9 +199,29 @@ public class DeciderXue : Decider
     {
         foreach (var experimentEnactedInteraction in _selectedInteraction.Experiment.EnactedInteractions)
         {
-            if (experimentEnactedInteraction!=realEnactedInteraction)
+            foreach (var activatedInteraction in activatedInteractionsList)
             {
-                experimentEnactedInteraction.Weight -= decrementExperimentEnactedInteractionsRate;
+                if (experimentEnactedInteraction == activatedInteraction.PostInteraction)
+                {
+                    if (activatedInteraction != realEnactedInteraction)
+                    {
+                        if (memory.KnownCompositeInteractions.ContainsKey(activatedInteraction.Label))
+                        {
+                            var dec = Mathf.Max(
+                                activatedInteraction.Weight * decrementExperimentEnactedInteractionsRate,
+                                memory.forgettingRate / activatedInteraction.Valence);
+                            activatedInteraction.Weight -= dec;
+
+                            if (activatedInteraction.Weight < 0.01f)
+                            {
+                                _selectedInteraction.Weight = 0f;
+                                memory.ForgottenCompositeInteraction.Add(_selectedInteraction.Label,
+                                    _selectedInteraction);
+                                memory.KnownCompositeInteractions.Remove(_selectedInteraction.Label);
+                            }
+                        }
+                    }
+                }
             }
         }
     }
@@ -210,7 +234,11 @@ public class DeciderXue : Decider
 
         if (memory.KnownCompositeInteractions.ContainsKey(_selectedInteraction.Label))
         {
-            _selectedInteraction.Weight *= decrementFailureRate;
+            var dec = Mathf.Max(
+                _selectedInteraction.Weight * decrementFailureRate,
+                memory.forgettingRate / _selectedInteraction.Valence);
+
+            _selectedInteraction.Weight -= dec;
 
             if (_selectedInteraction.Weight < 0.01f)
             {
