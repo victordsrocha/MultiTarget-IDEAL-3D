@@ -645,7 +645,7 @@ public class Observation : MonoBehaviour
             else if (wallEye.IsBumping)
             {
                 wallEye.IsBumping = false;
-                wallEye.LastWallStatus = VisionStateStatus.Release;
+                // wallEye.LastWallStatus = VisionStateStatus.Release;
             }
         }
 
