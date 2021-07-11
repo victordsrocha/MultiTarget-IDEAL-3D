@@ -221,6 +221,60 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4732096922847744924, guid: 7d25490501930bf4eab92b9e16e0e6c6, type: 3}
   m_PrefabInstance: {fileID: 108297674}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &148120289
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 148120291}
+  - component: {fileID: 148120290}
+  m_Layer: 0
+  m_Name: Flock Poison
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &148120290
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 148120289}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb957307bef6b0d45a31542a42403ae4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  obstacleMask:
+    serializedVersion: 2
+    m_Bits: 2816
+  fruitPrefab: {fileID: -6881583378604306951, guid: 57d4bdc270f8fe0448bc275259da36d0, type: 3}
+  fruitListGameObject: {fileID: 744939361}
+  behavior: {fileID: 11400000, guid: cb1a5abe8ce3aea46b06b23f5d08bef0, type: 2}
+  startingCount: 15
+  driveFactor: 10
+  maxSpeed: 1
+  neighborRadius: 1.5
+  avoidanceRadiusMultiplier: 0.5
+--- !u!4 &148120291
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 148120289}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 17
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &178140462
 GameObject:
   m_ObjectHideFlags: 0
@@ -249,7 +303,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &178843054
 GameObject:
@@ -494,6 +548,36 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 199626910}
   m_CullTransparentMesh: 1
+--- !u!1 &237179883
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 237179884}
+  m_Layer: 0
+  m_Name: Food List
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &237179884
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 237179883}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 16
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &264397971
 GameObject:
   m_ObjectHideFlags: 0
@@ -523,6 +607,36 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 14
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &330801904
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 330801905}
+  m_Layer: 0
+  m_Name: '==================== '
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &330801905
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 330801904}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 19
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &437206984
 GameObject:
@@ -997,7 +1111,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 948999094114844149, guid: dbfa5fb95a233344d8fd219eb5e0445b, type: 3}
       propertyPath: m_RootOrder
-      value: 8
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 948999094114844149, guid: dbfa5fb95a233344d8fd219eb5e0445b, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1382,7 +1496,7 @@ RectTransform:
   - {fileID: 197202333}
   - {fileID: 2005584882}
   m_Father: {fileID: 0}
-  m_RootOrder: 15
+  m_RootOrder: 20
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -1575,7 +1689,7 @@ Transform:
   - {fileID: 929158152}
   - {fileID: 437206988}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &731979143
 GameObject:
@@ -1592,7 +1706,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &731979144
 Transform:
   m_ObjectHideFlags: 0
@@ -1606,6 +1720,36 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 12
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &744939361
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 744939362}
+  m_Layer: 0
+  m_Name: Poison List
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &744939362
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 744939361}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 18
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &759696023 stripped
 Transform:
@@ -1723,7 +1867,7 @@ Transform:
   - {fileID: 1568828475}
   - {fileID: 108297675}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &796020700
 GameObject:
@@ -2204,7 +2348,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 17
+  m_RootOrder: 22
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1088454346
 PrefabInstance:
@@ -2349,7 +2493,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1183944294
 Transform:
   m_ObjectHideFlags: 0
@@ -2795,7 +2939,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 16
+  m_RootOrder: 21
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1522525180
 GameObject:
@@ -3192,6 +3336,60 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8aeb5bf866fc9a44b8379d2be3cc063, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1592930391
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1592930393}
+  - component: {fileID: 1592930392}
+  m_Layer: 0
+  m_Name: Flock Food
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1592930392
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1592930391}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb957307bef6b0d45a31542a42403ae4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  obstacleMask:
+    serializedVersion: 2
+    m_Bits: 2816
+  fruitPrefab: {fileID: -6881583378604306951, guid: 4c463dc3a9d11374c93e068299abba04, type: 3}
+  fruitListGameObject: {fileID: 237179883}
+  behavior: {fileID: 11400000, guid: cb1a5abe8ce3aea46b06b23f5d08bef0, type: 2}
+  startingCount: 15
+  driveFactor: 10
+  maxSpeed: 1
+  neighborRadius: 1.5
+  avoidanceRadiusMultiplier: 0.5
+--- !u!4 &1592930393
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1592930391}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 15
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1616866236
 GameObject:
   m_ObjectHideFlags: 0
@@ -3225,7 +3423,7 @@ MonoBehaviour:
   enactedInteractionText: {fileID: 796020701}
   stepNumberText: {fileID: 539919460}
   stepByStep: 0
-  frozen: 1
+  frozen: 0
   stepButton: {fileID: 1565950938}
   runButton: {fileID: 444113455}
 --- !u!4 &1616866238
@@ -3240,7 +3438,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 20
+  m_RootOrder: 25
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1645371900
 GameObject:
@@ -3704,18 +3902,6 @@ PrefabInstance:
       propertyPath: stepManager
       value: 
       objectReference: {fileID: 1616866237}
-    - target: {fileID: 2711888475866266812, guid: dbfa5fb95a233344d8fd219eb5e0445b, type: 3}
-      propertyPath: decrementFailureRate
-      value: 0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2711888475866266812, guid: dbfa5fb95a233344d8fd219eb5e0445b, type: 3}
-      propertyPath: decrementExperimentEnactedInteractionsRate
-      value: 0.05
-      objectReference: {fileID: 0}
-    - target: {fileID: 9151677410253968288, guid: dbfa5fb95a233344d8fd219eb5e0445b, type: 3}
-      propertyPath: forgettingRate
-      value: 0.025
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dbfa5fb95a233344d8fd219eb5e0445b, type: 3}
 --- !u!1 &2005584881
@@ -3853,7 +4039,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2012657464
 GameObject:
@@ -3944,13 +4130,14 @@ GameObject:
   m_Component:
   - component: {fileID: 2047416119}
   - component: {fileID: 2047416120}
+  - component: {fileID: 2047416121}
   m_Layer: 0
   m_Name: Fruits Manager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2047416119
 Transform:
   m_ObjectHideFlags: 0
@@ -3972,7 +4159,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2047416118}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 150131c4a8e03df45863444ff80c4190, type: 3}
   m_Name: 
@@ -3982,10 +4169,32 @@ MonoBehaviour:
     m_Bits: 2816
   fruitPrefab: {fileID: 4042373863318507645, guid: 3761eccccd3fa4f478f20037355e2015, type: 3}
   poisonPrefab: {fileID: 9012357032979139792, guid: 858fef354cb41ab4b82e9f060aba6678, type: 3}
-  fruitMaxQuantity: 20
+  fruitMaxQuantity: 25
   foodListGameObject: {fileID: 1183944293}
   poisonListGameObject: {fileID: 731979143}
   resetToggle: {fileID: 1307657850}
+  agent: {fileID: 1885685649}
+--- !u!114 &2047416121
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2047416118}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0d11e7403c927a43817f1de340eb5c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  obstacleMask:
+    serializedVersion: 2
+    m_Bits: 2816
+  fruitPrefab: {fileID: 4042373863318507645, guid: 3761eccccd3fa4f478f20037355e2015, type: 3}
+  poisonPrefab: {fileID: 9012357032979139792, guid: 858fef354cb41ab4b82e9f060aba6678, type: 3}
+  fruitQuantity: 20
+  poisonQuantity: 20
+  foodListGameObject: {fileID: 1183944293}
+  poisonListGameObject: {fileID: 731979143}
   agent: {fileID: 1885685649}
 --- !u!1 &2085786839
 GameObject:
@@ -4115,7 +4324,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 19
+  m_RootOrder: 24
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2119142796
 GameObject:
@@ -4211,7 +4420,7 @@ Transform:
   m_LocalScale: {x: 50, y: 1, z: 50}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 18
+  m_RootOrder: 23
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2130337380
 GameObject:
@@ -4307,7 +4516,7 @@ Transform:
   m_LocalScale: {x: 5, y: 1, z: 5}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &4732096922499094795
 PrefabInstance:

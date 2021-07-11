@@ -829,7 +829,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50881163943d52a48ad2731caa904311, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  forgettingRate: 0.1
+  forgettingRate: 0.01
 --- !u!114 &5504472236066268972
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -861,6 +861,8 @@ MonoBehaviour:
   threshold: 4
   memory: {fileID: 9151677410253968288}
   agent: {fileID: 1595044469257280632}
+  decrementFailureRate: 0
+  decrementExperimentEnactedInteractionsRate: 0.025
 --- !u!1 &945886514643667921
 GameObject:
   m_ObjectHideFlags: 0

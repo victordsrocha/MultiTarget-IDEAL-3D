@@ -17,7 +17,7 @@ public static class VSRTrace
         {
             using (System.IO.StreamWriter file = new System.IO.StreamWriter(@filepath, true))
             {
-                file.WriteLine("Decision Cycle" + "," + "Valence" + "," + "Success" + "," + "Random");
+                file.WriteLine("Decision Cycle" + ";" + "Valence" + ";" + "Success" + ";" + "Random" + ";" + "Scheme Size" + ";" + "Scheme");
             }
         }
         catch (Exception e)
@@ -32,8 +32,8 @@ public static class VSRTrace
         {
             using (System.IO.StreamWriter file = new System.IO.StreamWriter(@filepath, true))
             {
-                file.WriteLine("Primitive Cycle" + "," + "Valence" + "," + "Success" + "," + "Food" + "," + "Poison" +
-                               "," + "Bump" + "," + "Random");
+                file.WriteLine("Primitive Cycle" + ";" + "Valence" + ";" + "Success" + ";" + "Food" + ";" + "Poison" +
+                               ";" + "Bump" + ";" + "Random");
             }
         }
         catch (Exception e)
@@ -50,6 +50,7 @@ public static class VSRTrace
         string filepath = "recordFile_decisionCycle.csv";
         string valence = enactedInteraction.Valence.ToString();
         string scheme = enactedInteraction.Label;
+        string schemeSize = enactedInteraction.InteractionsList.Count.ToString();
 
         string predictionSuccess = (intendedInteraction == enactedInteraction ? 1 : 0).ToString();
 
@@ -57,7 +58,7 @@ public static class VSRTrace
         {
             using (System.IO.StreamWriter file = new System.IO.StreamWriter(@filepath, true))
             {
-                file.WriteLine(decisionCycle + "," + valence + "," + predictionSuccess + "," + random.ToString());
+                file.WriteLine(decisionCycle + ";" + valence + ";" + predictionSuccess + ";" + random.ToString() + ";" + schemeSize + ";" + scheme);
             }
         }
         catch (Exception e)
@@ -105,8 +106,8 @@ public static class VSRTrace
         {
             using (System.IO.StreamWriter file = new System.IO.StreamWriter(@filepath, true))
             {
-                file.WriteLine(primitiveCycle + "," + valence + "," + predictionSuccess + "," + food + "," + poison +
-                               "," + bump + "," + random.ToString());
+                file.WriteLine(primitiveCycle + ";" + valence + ";" + predictionSuccess + ";" + food + ";" + poison +
+                               ";" + bump + ";" + random.ToString());
             }
         }
         catch (Exception e)

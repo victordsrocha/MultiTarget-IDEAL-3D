@@ -15,6 +15,7 @@ public class FruitsManager : MonoBehaviour
 
     public int fruitMaxQuantity;
 
+
     public GameObject foodListGameObject;
     public GameObject poisonListGameObject;
 

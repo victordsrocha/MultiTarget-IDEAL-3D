@@ -77,6 +77,7 @@ public class Observation : MonoBehaviour
     private bool forward;
 
     // Focus
+    private FocusObjectType _previousFocusObjectType; // atualizar previous focus para conseguir utilizar o disappear
     private FocusObjectType _focusObjectType;
     private VisionStateStatus _focusObjectStatus;
     private bool _focusChange;
@@ -107,6 +108,7 @@ public class Observation : MonoBehaviour
 
     public void ObservationResult(bool isForward)
     {
+        _previousFocusObjectType = _focusObjectType;
         forward = isForward;
 
         UpdateVisionState();
@@ -166,7 +168,12 @@ public class Observation : MonoBehaviour
 
         if (_focusChange)
         {
-            result += "*";
+            result += _previousFocusObjectType switch
+            {
+                FocusObjectType.Food => "f",
+                FocusObjectType.Poison => "p",
+                _ => "*"
+            };
         }
         else
         {

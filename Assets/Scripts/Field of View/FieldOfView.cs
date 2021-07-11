@@ -78,7 +78,7 @@ public class FieldOfView : MonoBehaviour
             if (Physics.Raycast(transform.position, dir, out var hit,
                 viewRadius, targetMask))
             {
-                //Debug.DrawRay(transform.position, dir * hit.distance, Color.yellow, 0.2f);
+                Debug.DrawRay(transform.position, dir * hit.distance, Color.yellow, 0.02f);
 
                 if (!visibleTargets.Contains(hit.transform))
                 {
@@ -87,7 +87,7 @@ public class FieldOfView : MonoBehaviour
             }
             else
             {
-                //Debug.DrawRay(transform.position, dir * viewRadius, Color.blue, 0.2f);
+                Debug.DrawRay(transform.position, dir * viewRadius, Color.blue, 0.02f);
             }
         }
     }
