@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Gizmos = Popcron.Gizmos;
 
-[ExecuteAlways]
+
 public class GizmoDrawVisionState : MonoBehaviour
 {
     public Material material = null;
