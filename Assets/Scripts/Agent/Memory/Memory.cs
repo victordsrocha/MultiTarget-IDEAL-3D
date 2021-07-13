@@ -194,9 +194,9 @@ public class Memory : MonoBehaviour, IMemory
         int sumValence = 0;
 
         // sumValence += -1 * source[0].Count(c => c == '-'); // Nothing
-        // sumValence += -1 * source[0].Count(c => c == '^'); // Rotate Left
-        // sumValence += -1 * source[0].Count(c => c == 'v'); // Rotate Right
-        // sumValence += -1 * source[0].Count(c => c == '>'); // Forward
+        sumValence += -1 * source[0].Count(c => c == '^'); // Rotate Left
+        sumValence += -1 * source[0].Count(c => c == 'v'); // Rotate Right
+        sumValence += -1 * source[0].Count(c => c == '>'); // Forward
         // sumValence += -1 * source[0].Count(c => c == '<'); // Backward
 
         bool focusFood = source[1][0] == 'f';
@@ -208,13 +208,13 @@ public class Memory : MonoBehaviour, IMemory
             switch (source[1][1])
             {
                 case 'a':
-                    sumValence += +5;
+                    sumValence += 0;
                     break;
                 case 'd':
                     sumValence += 0;
                     break;
                 case 'c':
-                    sumValence += +10;
+                    sumValence += +5;
                     break;
                 case 'f':
                     sumValence += 0;
@@ -228,7 +228,7 @@ public class Memory : MonoBehaviour, IMemory
             switch (source[1][1])
             {
                 case 'a':
-                    sumValence += -5;
+                    sumValence += 0;
                     break;
                 case 'd':
                     sumValence += 0;
@@ -249,7 +249,7 @@ public class Memory : MonoBehaviour, IMemory
         }
         else if (source[1][2] == 'f')
         {
-            sumValence += -15; // food disappear
+            sumValence += +0; // food disappear
         }
         else if (source[1][2] == 'p')
         {
@@ -273,7 +273,7 @@ public class Memory : MonoBehaviour, IMemory
                 sumValence -= 5;
                 break;
             case 'B':
-                sumValence -= 20;
+                sumValence -= 10;
                 break;
             case 'l':
                 sumValence += 0;

@@ -41,7 +41,7 @@ public class Agent : MonoBehaviour
         while (true)
         {
             stepNumber++;
-            stepManager.stepNumberText.text = "Step: " + stepNumber.ToString();
+            stepManager.stepNumberText.text = "Decision cycle: " + stepNumber.ToString();
             
             var intendedInteraction = decider.SelectInteraction();
 

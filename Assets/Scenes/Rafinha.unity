@@ -1450,6 +1450,17 @@ RectTransform:
   m_AnchoredPosition: {x: 10, y: 134}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &677426370 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7392341149699849917, guid: dbfa5fb95a233344d8fd219eb5e0445b, type: 3}
+  m_PrefabInstance: {fileID: 1998269269}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8552f9b9daa97f94bac12489ffcb22ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &687407996
 GameObject:
   m_ObjectHideFlags: 0
@@ -2212,6 +2223,37 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: New Text
+--- !u!1 &948848932 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2076269788, guid: dbfa5fb95a233344d8fd219eb5e0445b, type: 3}
+  m_PrefabInstance: {fileID: 1998269269}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &948848935 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1577593375, guid: dbfa5fb95a233344d8fd219eb5e0445b, type: 3}
+  m_PrefabInstance: {fileID: 1998269269}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 948848932}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 774092ea9723e6441bdfc6f7fb914ae7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &948848936
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 948848932}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7e862378d9d94a46bd54b3df74c18a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  material: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  observation: {fileID: 677426370}
+  visionState: {fileID: 948848935}
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -3423,7 +3465,7 @@ MonoBehaviour:
   enactedInteractionText: {fileID: 796020701}
   stepNumberText: {fileID: 539919460}
   stepByStep: 0
-  frozen: 0
+  frozen: 1
   stepButton: {fileID: 1565950938}
   runButton: {fileID: 444113455}
 --- !u!4 &1616866238
@@ -3850,6 +3892,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1577593376, guid: dbfa5fb95a233344d8fd219eb5e0445b, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 945869633907177723, guid: dbfa5fb95a233344d8fd219eb5e0445b, type: 3}
       propertyPath: m_Name
       value: Chicken
@@ -3902,6 +3948,14 @@ PrefabInstance:
       propertyPath: stepManager
       value: 
       objectReference: {fileID: 1616866237}
+    - target: {fileID: 2711888475866266812, guid: dbfa5fb95a233344d8fd219eb5e0445b, type: 3}
+      propertyPath: decrementExperimentEnactedInteractionsRate
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9151677410253968288, guid: dbfa5fb95a233344d8fd219eb5e0445b, type: 3}
+      propertyPath: forgettingRate
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dbfa5fb95a233344d8fd219eb5e0445b, type: 3}
 --- !u!1 &2005584881
