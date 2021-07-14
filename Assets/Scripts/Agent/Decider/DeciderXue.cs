@@ -195,6 +195,39 @@ public class DeciderXue : Decider
         return _selectedInteraction;
     }
 
+    private void DecrementFailureActivations(Interaction realEnactedInteraction)
+    {
+        List<Interaction> usedActivations = new List<Interaction>();
+        foreach (Interaction activatedInteraction in activatedInteractionsList)
+        {
+            if (activatedInteraction.PostInteraction == _selectedInteraction)
+            {
+                usedActivations.Add(activatedInteraction);
+            }
+        }
+
+        foreach (Interaction usedActivation in usedActivations)
+        {
+            // TODO otimizar utilizando uma flag para sucesso ou falha
+            if (usedActivation.PostInteraction != realEnactedInteraction)
+            {
+                if (memory.KnownCompositeInteractions.ContainsKey(usedActivation.Label))
+                {
+                    var dec = Mathf.Max(usedActivation.Weight * decrementWrongProposition, 0.1f);
+                    usedActivation.Weight -= dec;
+
+                    if (usedActivation.Weight < 0.01f)
+                    {
+                        usedActivation.Weight = 0f;
+                        memory.ForgottenCompositeInteraction.Add(usedActivation.Label,
+                            usedActivation);
+                        memory.KnownCompositeInteractions.Remove(usedActivation.Label);
+                    }
+                }
+            }
+        }
+    }
+
     private void DecrementExperimentEnactedInteractions(Interaction realEnactedInteraction)
     {
         /*
@@ -261,8 +294,9 @@ public class DeciderXue : Decider
 
     public override void LearnCompositeInteraction(Interaction newEnactedInteraction)
     {
-        DecrementFailureInteraction(newEnactedInteraction);
-        DecrementExperimentEnactedInteractions(newEnactedInteraction);
+        //DecrementFailureInteraction(newEnactedInteraction);
+        //DecrementExperimentEnactedInteractions(newEnactedInteraction);
+        DecrementFailureActivations(newEnactedInteraction);
 
         var previousInteraction = EnactedInteraction;
         var lastInteraction = newEnactedInteraction;
