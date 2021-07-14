@@ -3944,17 +3944,25 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1170395647871696899, guid: dbfa5fb95a233344d8fd219eb5e0445b, type: 3}
+      propertyPath: rotationSpeed
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 1595044469257280632, guid: dbfa5fb95a233344d8fd219eb5e0445b, type: 3}
       propertyPath: stepManager
       value: 
       objectReference: {fileID: 1616866237}
+    - target: {fileID: 2711888475866266812, guid: dbfa5fb95a233344d8fd219eb5e0445b, type: 3}
+      propertyPath: decrementWrongProposition
+      value: 0.05
+      objectReference: {fileID: 0}
     - target: {fileID: 2711888475866266812, guid: dbfa5fb95a233344d8fd219eb5e0445b, type: 3}
       propertyPath: decrementExperimentEnactedInteractionsRate
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9151677410253968288, guid: dbfa5fb95a233344d8fd219eb5e0445b, type: 3}
       propertyPath: forgettingRate
-      value: 0
+      value: 0.001
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dbfa5fb95a233344d8fd219eb5e0445b, type: 3}

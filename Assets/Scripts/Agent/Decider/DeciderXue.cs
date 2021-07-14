@@ -20,7 +20,7 @@ public class DeciderXue : Decider
     public Agent agent;
 
     public float decrementFailureRate = 0.05f;
-    public float decrementExperimentEnactedInteractionsRate = 0.01f;
+    public float decrementWrongProposition = 0.01f;
 
     private List<Interaction> activatedInteractionsList;
 
@@ -198,40 +198,32 @@ public class DeciderXue : Decider
     private void DecrementExperimentEnactedInteractions(Interaction realEnactedInteraction)
     {
         /*
-         * Toda interaction tem uma lista de enactedInteractions armazenada em seu respectivo experiment
-         * Quando uma interaction é executada, este método diminui a crença em toda a lista de enacted interactions
-         * menos na interaction que realmente foi feedback do ultimo experimento realizado
-         * este decremento de crença é feito reduzindo o peso da activatedInteraction relacionada
-         *
-         * Na prática este método decrementa todas as propositions com primeira ação igual ao intendedInteraction
+         * este método decrementa todas as activatedInteraction com primeira ação igual ao intendedInteraction
          * e feedback diferente do realEnactedInteraction
+         *
+         * quando aactivatedInteraction tem ação igual a realizada
          */
-        foreach (var experimentEnactedInteraction in _selectedInteraction.Experiment.EnactedInteractions)
-        {
-            foreach (var activatedInteraction in activatedInteractionsList)
-            {
-                if (experimentEnactedInteraction == activatedInteraction.PostInteraction)
-                {
-                    if (activatedInteraction.PostInteraction.GetActionsCode() ==
-                        realEnactedInteraction.GetActionsCode())
-                    {
-                        if (activatedInteraction.PostInteraction != realEnactedInteraction)
-                        {
-                            if (memory.KnownCompositeInteractions.ContainsKey(activatedInteraction.Label))
-                            {
-                                var dec = Mathf.Max(
-                                    activatedInteraction.Weight * decrementExperimentEnactedInteractionsRate,
-                                    Mathf.Abs(memory.forgettingRate / activatedInteraction.Valence));
-                                activatedInteraction.Weight -= dec;
 
-                                if (activatedInteraction.Weight < 0.01f)
-                                {
-                                    activatedInteraction.Weight = 0f;
-                                    memory.ForgottenCompositeInteraction.Add(activatedInteraction.Label,
-                                        activatedInteraction);
-                                    memory.KnownCompositeInteractions.Remove(activatedInteraction.Label);
-                                }
-                            }
+        foreach (var activatedInteraction in activatedInteractionsList)
+        {
+            if (activatedInteraction.PostInteraction.GetActionsCode() ==
+                realEnactedInteraction.GetActionsCode())
+            {
+                if (activatedInteraction.PostInteraction != realEnactedInteraction)
+                {
+                    if (memory.KnownCompositeInteractions.ContainsKey(activatedInteraction.Label))
+                    {
+                        var dec = Mathf.Max(
+                            activatedInteraction.Weight * decrementWrongProposition,
+                            Mathf.Abs(memory.forgettingRate / activatedInteraction.Valence));
+                        activatedInteraction.Weight -= dec;
+
+                        if (activatedInteraction.Weight < 0.01f)
+                        {
+                            activatedInteraction.Weight = 0f;
+                            memory.ForgottenCompositeInteraction.Add(activatedInteraction.Label,
+                                activatedInteraction);
+                            memory.KnownCompositeInteractions.Remove(activatedInteraction.Label);
                         }
                     }
                 }
