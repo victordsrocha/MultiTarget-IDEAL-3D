@@ -9,6 +9,7 @@ public class Anticipation : IComparable<Anticipation>, IEquatable<Anticipation>
     public Experiment Experiment;
     public float Proclivity;
     public HashSet<Anticipation> AnticipationsSet;
+    public Interaction ActivationInteraction;
 
     public Anticipation(Experiment experiment, float proclivity)
     {

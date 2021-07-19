@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 public class Flock : MonoBehaviour
@@ -11,6 +12,8 @@ public class Flock : MonoBehaviour
 
     public LayerMask obstacleMask;
     public FlockAgent fruitPrefab;
+
+    public Toggle frozenToggle;
 
     public GameObject fruitListGameObject;
 
@@ -85,6 +88,7 @@ public class Flock : MonoBehaviour
         {
             newTarget.flock = this;
             newTarget.behavior = behavior;
+            newTarget.frozenToggle = frozenToggle;
         }
 
         return newTarget;

@@ -779,6 +779,7 @@ MonoBehaviour:
   isWallVisible: 0
   closestWallPoint: {x: 0, y: 0, z: 0}
   wallDstNormalized: 0
+  focusTransform: {fileID: 0}
 --- !u!114 &1595044469257280632
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -862,7 +863,7 @@ MonoBehaviour:
   memory: {fileID: 9151677410253968288}
   agent: {fileID: 1595044469257280632}
   decrementFailureRate: 0
-  decrementExperimentEnactedInteractionsRate: 0.025
+  decrementWrongProposition: 0.01
 --- !u!1 &945886514643667921
 GameObject:
   m_ObjectHideFlags: 0

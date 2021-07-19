@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(Collider))]
 public class FlockAgent : MonoBehaviour
@@ -21,6 +22,8 @@ public class FlockAgent : MonoBehaviour
     private float _squareNeighborRadius;
     private float _squareAvoidanceRadius;
 
+    public Toggle frozenToggle;
+
     public float SquareAvoidanceRadius => _squareAvoidanceRadius;
 
 
@@ -39,19 +42,26 @@ public class FlockAgent : MonoBehaviour
 
     private void Update()
     {
-        List<Transform> context = GetNearbyObjects(this);
-
-        Vector3 move = behavior.CalculateMove(this, context, flock);
-
-        move.y = 0;
-            
-        move *= driveFactor;
-        if (move.sqrMagnitude > _squareMaxSpeed)
+        if (!frozenToggle.isOn)
         {
-            move = move.normalized * maxSpeed;
+            List<Transform> context = GetNearbyObjects(this);
+
+            Vector3 move = behavior.CalculateMove(this, context, flock);
+
+            move.y = 0;
+
+            move *= driveFactor;
+            if (move.sqrMagnitude > _squareMaxSpeed)
+            {
+                move = move.normalized * maxSpeed;
+            }
+
+            Move(move);
         }
-        
-        Move(move);
+        else
+        {
+            _rigidbody.velocity = Vector3.zero;
+        }
     }
 
     public void Initialize(Flock flock)

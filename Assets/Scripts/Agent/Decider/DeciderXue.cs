@@ -2,8 +2,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using System.Linq;
+using System.Runtime.InteropServices;
 using UnityEngine;
+using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 public class DeciderXue : Decider
@@ -25,6 +28,12 @@ public class DeciderXue : Decider
     private List<Interaction> activatedInteractionsList;
 
     private Interaction _selectedInteraction;
+
+    private Interaction _realIntention;
+
+    public Text proclivityText;
+    public Text activationWeightText;
+    public Text activationText;
 
     private void Start()
     {
@@ -85,11 +94,20 @@ public class DeciderXue : Decider
 
         foreach (var activatedInteraction in activatedInteractionsList)
         {
+            Interaction propose = activatedInteraction.PostInteraction;
+            
+            if (propose.Weight < threshold)
+            {
+                propose = propose.PreInteraction;
+            }
+
+
             var deltaValence = DeltaValence(activatedInteraction.PostInteraction.Valence);
 
             float proclivity = activatedInteraction.Weight * deltaValence;
 
             var anticipation = new Anticipation(activatedInteraction.PostInteraction.Experiment, proclivity);
+            anticipation.ActivationInteraction = activatedInteraction;
 
             if (!proposedAnticipationsSet.Contains(anticipation))
             {
@@ -172,6 +190,11 @@ public class DeciderXue : Decider
             VSRTrace.random = 1;
             //EnactedInteractionText = "*** Random Pick ***";
             _selectedInteraction = GetRandomNeutralPrimitiveInteraction();
+
+            proclivityText.text = "Proclivity = -";
+            activationWeightText.text = "Activation weight = -";
+            activationText.text = "Activation = -";
+
             return _selectedInteraction;
         }
 
@@ -180,6 +203,17 @@ public class DeciderXue : Decider
         Anticipation selectedAnticipation = selectedDefaultAnticipation.AnticipationsSet.Max();
         Interaction selectedInteraction = selectedAnticipation.IntendedInteraction;
 
+        proclivityText.text = "Proclivity = " + selectedAnticipation.Proclivity.ToString(CultureInfo.InvariantCulture);
+        activationWeightText.text = "Activation weight = " +
+                                    selectedAnticipation.ActivationInteraction.Weight
+                                        .ToString(CultureInfo.InvariantCulture);
+        activationText.text = "Activation = [" + selectedAnticipation.ActivationInteraction.PreInteraction.Label +
+                              "] <color=lime> [" + selectedAnticipation.ActivationInteraction.PostInteraction.Label + "]</color>";
+
+        _realIntention = selectedInteraction; // realIntention serve somente para guardar a intenção antes do filtro
+        _selectedInteraction = selectedInteraction; // retirar quando voltar a utilizar um filtro
+
+        /* TODO este filtro cria um bug na metodo de seleção de contradições!
         if (selectedInteraction.Weight >= threshold && selectedAnticipation.Proclivity > 0)
         {
             _selectedInteraction = selectedInteraction;
@@ -191,6 +225,7 @@ public class DeciderXue : Decider
                 ? selectedAnticipation.IntendedInteraction
                 : selectedAnticipation.IntendedInteraction.PreInteraction;
         }
+        */
 
         return _selectedInteraction;
     }
@@ -200,7 +235,7 @@ public class DeciderXue : Decider
         List<Interaction> usedActivations = new List<Interaction>();
         foreach (Interaction activatedInteraction in activatedInteractionsList)
         {
-            if (activatedInteraction.PostInteraction == _selectedInteraction)
+            if (activatedInteraction.PostInteraction.GetActionsCode() == _selectedInteraction.GetActionsCode())
             {
                 usedActivations.Add(activatedInteraction);
             }
