@@ -28,6 +28,7 @@ public class DeciderXue : Decider
     private List<Interaction> activatedInteractionsList;
 
     private Interaction _selectedInteraction;
+    private Anticipation _selectedAnticipation;
 
     private Interaction _realIntention;
 
@@ -94,14 +95,6 @@ public class DeciderXue : Decider
 
         foreach (var activatedInteraction in activatedInteractionsList)
         {
-            Interaction propose = activatedInteraction.PostInteraction;
-            
-            if (propose.Weight < threshold)
-            {
-                propose = propose.PreInteraction;
-            }
-
-
             var deltaValence = DeltaValence(activatedInteraction.PostInteraction.Valence);
 
             float proclivity = activatedInteraction.Weight * deltaValence;
@@ -127,6 +120,7 @@ public class DeciderXue : Decider
                         var proclivity = activatedInteraction.Weight * deltaValence;
                         anticipation.AddProclivity(proclivity);
                     }
+                    
                 }
             }
         }
@@ -181,6 +175,7 @@ public class DeciderXue : Decider
 
     public override Interaction SelectInteraction()
     {
+        _selectedAnticipation = null;
         EnactedInteractionText = "";
         HashSet<Anticipation> proposedAnticipationsSet = Anticipate();
         HashSet<Anticipation> proposedAnticipationsSetMapped = Map(proposedAnticipationsSet);
@@ -208,12 +203,15 @@ public class DeciderXue : Decider
                                     selectedAnticipation.ActivationInteraction.Weight
                                         .ToString(CultureInfo.InvariantCulture);
         activationText.text = "Activation = [" + selectedAnticipation.ActivationInteraction.PreInteraction.Label +
-                              "] <color=lime> [" + selectedAnticipation.ActivationInteraction.PostInteraction.Label + "]</color>";
+                              "] <color=lime> [" + selectedAnticipation.ActivationInteraction.PostInteraction.Label +
+                              "]</color>";
 
-        _realIntention = selectedInteraction; // realIntention serve somente para guardar a intenção antes do filtro
-        _selectedInteraction = selectedInteraction; // retirar quando voltar a utilizar um filtro
+        _selectedAnticipation = selectedAnticipation; // quando não for possível rastrear e penalizar as anticipations
+        // em contradição, vou penalizar ao menos a ativação armazenada na antecipação principal
 
-        /* TODO este filtro cria um bug na metodo de seleção de contradições!
+        // com esta mudança a antecipação principal pode acabar sendo penalziada duas vezes!
+
+
         if (selectedInteraction.Weight >= threshold && selectedAnticipation.Proclivity > 0)
         {
             _selectedInteraction = selectedInteraction;
@@ -225,7 +223,7 @@ public class DeciderXue : Decider
                 ? selectedAnticipation.IntendedInteraction
                 : selectedAnticipation.IntendedInteraction.PreInteraction;
         }
-        */
+
 
         return _selectedInteraction;
     }
@@ -258,6 +256,27 @@ public class DeciderXue : Decider
                             usedActivation);
                         memory.KnownCompositeInteractions.Remove(usedActivation.Label);
                     }
+                }
+            }
+        }
+
+
+        // main activation
+        if (_selectedInteraction != realEnactedInteraction && _selectedAnticipation != null)
+        {
+            // independente de filtro: penalizar antecipação principal em caso de falha
+            var mainActivation = _selectedAnticipation.ActivationInteraction;
+            if (memory.KnownCompositeInteractions.ContainsKey(mainActivation.Label))
+            {
+                var dec = Mathf.Max(mainActivation.Weight * decrementWrongProposition, 0.1f);
+                mainActivation.Weight -= dec;
+
+                if (mainActivation.Weight < 0.01f)
+                {
+                    mainActivation.Weight = 0f;
+                    memory.ForgottenCompositeInteraction.Add(mainActivation.Label,
+                        mainActivation);
+                    memory.KnownCompositeInteractions.Remove(mainActivation.Label);
                 }
             }
         }

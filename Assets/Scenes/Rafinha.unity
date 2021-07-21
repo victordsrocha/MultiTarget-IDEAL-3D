@@ -4518,7 +4518,7 @@ PrefabInstance:
       objectReference: {fileID: 1616866237}
     - target: {fileID: 2711888475866266812, guid: dbfa5fb95a233344d8fd219eb5e0445b, type: 3}
       propertyPath: threshold
-      value: 0
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 2711888475866266812, guid: dbfa5fb95a233344d8fd219eb5e0445b, type: 3}
       propertyPath: activationText
@@ -4538,7 +4538,7 @@ PrefabInstance:
       objectReference: {fileID: 223974228}
     - target: {fileID: 2711888475866266812, guid: dbfa5fb95a233344d8fd219eb5e0445b, type: 3}
       propertyPath: decrementWrongProposition
-      value: 0.2
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 2711888475866266812, guid: dbfa5fb95a233344d8fd219eb5e0445b, type: 3}
       propertyPath: decrementExperimentEnactedInteractionsRate

@@ -194,9 +194,9 @@ public class Memory : MonoBehaviour, IMemory
         int sumValence = 0;
 
         // sumValence += -1 * source[0].Count(c => c == '-'); // Nothing
-        sumValence += -1 * source[0].Count(c => c == '^'); // Rotate Left
-        sumValence += -1 * source[0].Count(c => c == 'v'); // Rotate Right
-        sumValence += -1 * source[0].Count(c => c == '>'); // Forward
+        //sumValence += 0 * source[0].Count(c => c == '^'); // Rotate Left
+        //sumValence += -1 * source[0].Count(c => c == 'v'); // Rotate Right
+        //sumValence += +1 * source[0].Count(c => c == '>'); // Forward
         // sumValence += -1 * source[0].Count(c => c == '<'); // Backward
 
         bool focusFood = source[1][0] == 'f';
@@ -249,7 +249,10 @@ public class Memory : MonoBehaviour, IMemory
         }
         else if (source[1][2] == 'f')
         {
-            sumValence += +0; // food disappear
+            if (!focusFood)
+            {
+                sumValence += -1; // food disappear (sem aparecer outra em seguida)
+            }
         }
         else if (source[1][2] == 'p')
         {
@@ -275,8 +278,8 @@ public class Memory : MonoBehaviour, IMemory
             case 'B':
                 sumValence -= 10;
                 break;
-            case 'l':
-                sumValence += 0;
+            case 'c':
+                sumValence += -2;
                 break;
         }
 
