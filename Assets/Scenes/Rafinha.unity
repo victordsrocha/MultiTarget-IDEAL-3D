@@ -4470,7 +4470,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 948999094114844149, guid: dbfa5fb95a233344d8fd219eb5e0445b, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -22.47
       objectReference: {fileID: 0}
     - target: {fileID: 948999094114844149, guid: dbfa5fb95a233344d8fd219eb5e0445b, type: 3}
       propertyPath: m_LocalPosition.y
@@ -4478,11 +4478,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 948999094114844149, guid: dbfa5fb95a233344d8fd219eb5e0445b, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 22.13
       objectReference: {fileID: 0}
     - target: {fileID: 948999094114844149, guid: dbfa5fb95a233344d8fd219eb5e0445b, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.9334553
       objectReference: {fileID: 0}
     - target: {fileID: 948999094114844149, guid: dbfa5fb95a233344d8fd219eb5e0445b, type: 3}
       propertyPath: m_LocalRotation.x
@@ -4490,7 +4490,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 948999094114844149, guid: dbfa5fb95a233344d8fd219eb5e0445b, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0.3586938
       objectReference: {fileID: 0}
     - target: {fileID: 948999094114844149, guid: dbfa5fb95a233344d8fd219eb5e0445b, type: 3}
       propertyPath: m_LocalRotation.z
@@ -4502,7 +4502,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 948999094114844149, guid: dbfa5fb95a233344d8fd219eb5e0445b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: -42.04
       objectReference: {fileID: 0}
     - target: {fileID: 948999094114844149, guid: dbfa5fb95a233344d8fd219eb5e0445b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
@@ -4538,11 +4538,15 @@ PrefabInstance:
       objectReference: {fileID: 223974228}
     - target: {fileID: 2711888475866266812, guid: dbfa5fb95a233344d8fd219eb5e0445b, type: 3}
       propertyPath: decrementWrongProposition
-      value: 0.1
+      value: 0.25
       objectReference: {fileID: 0}
     - target: {fileID: 2711888475866266812, guid: dbfa5fb95a233344d8fd219eb5e0445b, type: 3}
       propertyPath: decrementExperimentEnactedInteractionsRate
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6205481178590146021, guid: dbfa5fb95a233344d8fd219eb5e0445b, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 9151677410253968288, guid: dbfa5fb95a233344d8fd219eb5e0445b, type: 3}
       propertyPath: forgettingRate

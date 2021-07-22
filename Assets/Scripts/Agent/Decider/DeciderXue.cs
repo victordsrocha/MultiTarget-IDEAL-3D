@@ -32,6 +32,8 @@ public class DeciderXue : Decider
 
     private Interaction _realIntention;
 
+    private float epsilon;
+
     public Text proclivityText;
     public Text activationWeightText;
     public Text activationText;
@@ -42,6 +44,7 @@ public class DeciderXue : Decider
 
         EnactedInteraction = null;
         _superInteraction = null;
+        epsilon = 1;
     }
 
     /// <summary>
@@ -120,7 +123,6 @@ public class DeciderXue : Decider
                         var proclivity = activatedInteraction.Weight * deltaValence;
                         anticipation.AddProclivity(proclivity);
                     }
-                    
                 }
             }
         }
@@ -230,6 +232,7 @@ public class DeciderXue : Decider
 
     private void DecrementFailureActivations(Interaction realEnactedInteraction)
     {
+        /*
         List<Interaction> usedActivations = new List<Interaction>();
         foreach (Interaction activatedInteraction in activatedInteractionsList)
         {
@@ -259,7 +262,7 @@ public class DeciderXue : Decider
                 }
             }
         }
-
+        */
 
         // main activation
         if (_selectedInteraction != realEnactedInteraction && _selectedAnticipation != null)

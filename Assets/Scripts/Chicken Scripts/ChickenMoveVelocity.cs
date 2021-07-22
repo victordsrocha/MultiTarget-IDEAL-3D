@@ -31,7 +31,7 @@ public class ChickenMoveVelocity : MonoBehaviour
         _characterBaseAnimation = GetComponent<ICharacterBaseAnimation>();
         _observation = GetComponent<Observation>();
         _interface = GetComponent<AgentEnvironmentInterface>();
-        SetInitialPosition();
+        //SetInitialPosition();
     }
 
     private void SetInitialPosition()

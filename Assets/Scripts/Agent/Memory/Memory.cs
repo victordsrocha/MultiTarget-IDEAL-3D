@@ -194,9 +194,9 @@ public class Memory : MonoBehaviour, IMemory
         int sumValence = 0;
 
         // sumValence += -1 * source[0].Count(c => c == '-'); // Nothing
-        //sumValence += 0 * source[0].Count(c => c == '^'); // Rotate Left
+        //sumValence += -1 * source[0].Count(c => c == '^'); // Rotate Left
         //sumValence += -1 * source[0].Count(c => c == 'v'); // Rotate Right
-        //sumValence += +1 * source[0].Count(c => c == '>'); // Forward
+        //sumValence += -1 * source[0].Count(c => c == '>'); // Forward
         // sumValence += -1 * source[0].Count(c => c == '<'); // Backward
 
         bool focusFood = source[1][0] == 'f';
@@ -228,7 +228,7 @@ public class Memory : MonoBehaviour, IMemory
             switch (source[1][1])
             {
                 case 'a':
-                    sumValence += 0;
+                    sumValence += -5;
                     break;
                 case 'd':
                     sumValence += 0;
@@ -249,14 +249,11 @@ public class Memory : MonoBehaviour, IMemory
         }
         else if (source[1][2] == 'f')
         {
-            if (!focusFood)
-            {
-                sumValence += -1; // food disappear (sem aparecer outra em seguida)
-            }
+            sumValence += -5; // food disappear 
         }
         else if (source[1][2] == 'p')
         {
-            sumValence += 0; // poison disappear
+            sumValence += 5; // poison disappear
         }
 
         // Reach
@@ -273,13 +270,16 @@ public class Memory : MonoBehaviour, IMemory
         switch (source[1][5])
         {
             case 'b':
-                sumValence -= 5;
+                sumValence += -3;
                 break;
             case 'B':
-                sumValence -= 10;
+                sumValence += -5;
                 break;
             case 'c':
-                sumValence += -2;
+                sumValence += -1;
+                break;
+            case 'l':
+                sumValence += +3;
                 break;
         }
 
