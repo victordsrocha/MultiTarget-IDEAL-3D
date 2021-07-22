@@ -20,7 +20,7 @@ public class BodyCollider : MonoBehaviour
 
     public bool IsCollidingCheck()
     {
-        Collider[] overlapSphere = Physics.OverlapSphere(transform.position, 1f, wallMask);
+        Collider[] overlapSphere = Physics.OverlapSphere(transform.position, 0.2f, wallMask);
         return overlapSphere.Length != 0;
     }
 }

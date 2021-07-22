@@ -269,17 +269,26 @@ public class Memory : MonoBehaviour, IMemory
         // Bump
         switch (source[1][5])
         {
-            case 'b':
-                sumValence += -3;
+            case 'l':
+                sumValence += -1; // super left bump
+                break;
+            case 'L':
+                sumValence += -3; // left bump
+                break;
+            case 'r':
+                sumValence += -1; // super right bump
+                break;
+            case 'R':
+                sumValence += -3; // right bump
                 break;
             case 'B':
-                sumValence += -5;
+                sumValence += -5; // both bump (left and right)
                 break;
             case 'c':
-                sumValence += -1;
+                sumValence += -1; // closer
                 break;
-            case 'l':
-                sumValence += +3;
+            case 'f':
+                sumValence += +1; // free
                 break;
         }
 

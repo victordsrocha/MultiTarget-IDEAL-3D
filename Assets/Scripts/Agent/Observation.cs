@@ -13,7 +13,11 @@ public class Observation : MonoBehaviour
         Closer,
         Further,
         Reached,
-        Bump,
+        LeftBump,
+        SuperLeftBump,
+        RightBump,
+        SuperRightBump,
+        BothBump,
         BumpForward,
         Release,
         Unchanged
@@ -44,7 +48,15 @@ public class Observation : MonoBehaviour
     }
 
     public BeakTrigger beakTrigger;
-    public BodyCollider bodyCollider;
+    public BodyCollider leftBodyCollider;
+    public BodyCollider rightBodyCollider;
+    public BodyCollider superLeftBodyCollider;
+    public BodyCollider superRightBodyCollider;
+
+    public bool isSuperLeftBodyCollider;
+    public bool isLeftBodyCollider;
+    public bool isRightBodyCollider;
+    public bool isSuperRightBodyCollider;
 
     public FieldOfView leftFOV;
     public FieldOfView rightFOV;
@@ -104,6 +116,14 @@ public class Observation : MonoBehaviour
         focusTransform = null;
         _focusLastDistance = float.PositiveInfinity;
         _distanceThreshold = 0.28f;
+    }
+
+    private void Update()
+    {
+        isSuperLeftBodyCollider = superLeftBodyCollider.isColliding;
+        isLeftBodyCollider = leftBodyCollider.isColliding;
+        isRightBodyCollider = rightBodyCollider.isColliding;
+        isSuperRightBodyCollider = superRightBodyCollider.isColliding;
     }
 
     public void ObservationResult(bool isForward)
@@ -629,18 +649,23 @@ public class Observation : MonoBehaviour
         //bump?
         if (wallEye.IsSeeingWall)
         {
-            if (bodyCollider.isColliding)
+            if (leftBodyCollider.isColliding)
             {
-                if (forward)
-                {
-                    wallEye.LastWallStatus = VisionStateStatus.BumpForward;
-                    wallEye.IsBumping = true;
-                }
-                else
-                {
-                    wallEye.LastWallStatus = VisionStateStatus.Bump;
-                    wallEye.IsBumping = true;
-                }
+                wallEye.LastWallStatus = rightBodyCollider.isColliding
+                    ? VisionStateStatus.BothBump
+                    : VisionStateStatus.LeftBump;
+            }
+            else if (rightBodyCollider.isColliding)
+            {
+                wallEye.LastWallStatus = VisionStateStatus.RightBump;
+            }
+            else if (superLeftBodyCollider.isColliding)
+            {
+                wallEye.LastWallStatus = VisionStateStatus.SuperLeftBump;
+            }
+            else if (superRightBodyCollider.isColliding)
+            {
+                wallEye.LastWallStatus = VisionStateStatus.SuperRightBump;
             }
             else if (wallEye.IsBumping)
             {
@@ -665,16 +690,22 @@ public class Observation : MonoBehaviour
                 return 'c';
             case VisionStateStatus.Further:
                 return 'f';
-            case VisionStateStatus.Bump:
-                return 'b';
-            case VisionStateStatus.BumpForward:
-                return 'B';
+            case VisionStateStatus.BothBump:
+                return 'L';
+            case VisionStateStatus.LeftBump:
+                return 'L';
+            case VisionStateStatus.SuperLeftBump:
+                return 'l';
+            case VisionStateStatus.SuperRightBump:
+                return 'r';
+            case VisionStateStatus.RightBump:
+                return 'R';
             case VisionStateStatus.Reached:
                 return 'r';
             case VisionStateStatus.Unchanged:
                 return '-';
             case VisionStateStatus.Release:
-                return 'l';
+                return 'f';
             default:
                 throw new ArgumentOutOfRangeException();
         }
