@@ -984,7 +984,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &490448545
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1007,10 +1007,10 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 25
+    m_FontSize: 15
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 2
+    m_MinSize: 1
     m_MaxSize: 40
     m_Alignment: 0
     m_AlignByGeometry: 0
@@ -4545,7 +4545,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 948999094114844149, guid: dbfa5fb95a233344d8fd219eb5e0445b, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -21.9
+      value: -18.1
       objectReference: {fileID: 0}
     - target: {fileID: 948999094114844149, guid: dbfa5fb95a233344d8fd219eb5e0445b, type: 3}
       propertyPath: m_LocalPosition.y
@@ -4553,7 +4553,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 948999094114844149, guid: dbfa5fb95a233344d8fd219eb5e0445b, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 22.13
+      value: 19.4
       objectReference: {fileID: 0}
     - target: {fileID: 948999094114844149, guid: dbfa5fb95a233344d8fd219eb5e0445b, type: 3}
       propertyPath: m_LocalRotation.w
@@ -4584,9 +4584,17 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1595044469257280632, guid: dbfa5fb95a233344d8fd219eb5e0445b, type: 3}
+      propertyPath: queueSize
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 1595044469257280632, guid: dbfa5fb95a233344d8fd219eb5e0445b, type: 3}
       propertyPath: stepManager
       value: 
       objectReference: {fileID: 1616866237}
+    - target: {fileID: 2711888475866266812, guid: dbfa5fb95a233344d8fd219eb5e0445b, type: 3}
+      propertyPath: threshold
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2711888475866266812, guid: dbfa5fb95a233344d8fd219eb5e0445b, type: 3}
       propertyPath: activationText
       value: 
@@ -4599,6 +4607,10 @@ PrefabInstance:
       propertyPath: activationWeightText
       value: 
       objectReference: {fileID: 223974228}
+    - target: {fileID: 2711888475866266812, guid: dbfa5fb95a233344d8fd219eb5e0445b, type: 3}
+      propertyPath: decrementWrongProposition
+      value: 0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 6071747956111520838, guid: dbfa5fb95a233344d8fd219eb5e0445b, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.045

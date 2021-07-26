@@ -48,6 +48,8 @@ public class AgentEnvironmentInterface : MonoBehaviour
         {
             "v" => 1,
             "^" => -1,
+            "R" => 2,
+            "L" => -2,
             _ => rotate
         };
 

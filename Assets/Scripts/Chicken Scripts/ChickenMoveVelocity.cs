@@ -78,6 +78,14 @@ public class ChickenMoveVelocity : MonoBehaviour
             case -1:
                 dot = transform.DORotate(new Vector3(0.0f, rotationVector - rotationSpeed, 0.0f), timeBetweenActions);
                 break;
+            case 2:
+                dot = transform.DORotate(new Vector3(0.0f, rotationVector + (rotationSpeed * 3), 0.0f),
+                    timeBetweenActions * 2);
+                break;
+            case -2:
+                dot = transform.DORotate(new Vector3(0.0f, rotationVector - (rotationSpeed * 3), 0.0f),
+                    timeBetweenActions * 2);
+                break;
         }
 
         if (dot != null) yield return dot;
@@ -94,6 +102,12 @@ public class ChickenMoveVelocity : MonoBehaviour
                 break;
             case -1:
                 _rigidbody.angularVelocity = rotationVector * rotationSpeed;
+                break;
+            case 2:
+                _rigidbody.angularVelocity = -rotationVector * rotationSpeed * 6;
+                break;
+            case -2:
+                _rigidbody.angularVelocity = rotationVector * rotationSpeed * 6;
                 break;
         }
     }

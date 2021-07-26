@@ -194,9 +194,11 @@ public class Memory : MonoBehaviour, IMemory
         int sumValence = 0;
 
         // sumValence += -1 * source[0].Count(c => c == '-'); // Nothing
-        //sumValence += -1 * source[0].Count(c => c == '^'); // Rotate Left
-        //sumValence += -1 * source[0].Count(c => c == 'v'); // Rotate Right
-        //sumValence += -1 * source[0].Count(c => c == '>'); // Forward
+        sumValence += -1 * source[0].Count(c => c == '^'); // Rotate Left
+        sumValence += -1 * source[0].Count(c => c == 'v'); // Rotate Right
+        sumValence += -1 * source[0].Count(c => c == '>'); // Forward
+        sumValence += -1 * source[0].Count(c => c == 'L'); // Forward
+        sumValence += -1 * source[0].Count(c => c == 'R'); // Forward
         // sumValence += -1 * source[0].Count(c => c == '<'); // Backward
 
         bool focusFood = source[1][0] == 'f';
@@ -228,7 +230,7 @@ public class Memory : MonoBehaviour, IMemory
             switch (source[1][1])
             {
                 case 'a':
-                    sumValence += -5;
+                    sumValence += 0;
                     break;
                 case 'd':
                     sumValence += 0;
@@ -249,11 +251,11 @@ public class Memory : MonoBehaviour, IMemory
         }
         else if (source[1][2] == 'f')
         {
-            sumValence += -5; // food disappear 
+            sumValence += 0; // food disappear 
         }
         else if (source[1][2] == 'p')
         {
-            sumValence += 5; // poison disappear
+            sumValence += 0; // poison disappear
         }
 
         // Reach
@@ -270,16 +272,16 @@ public class Memory : MonoBehaviour, IMemory
         switch (source[1][5])
         {
             case 'l':
-                sumValence += -1; // super left bump
+                sumValence += -3; // super left bump
                 break;
             case 'L':
-                sumValence += -3; // left bump
+                sumValence += -5; // left bump
                 break;
             case 'r':
-                sumValence += -1; // super right bump
+                sumValence += -3; // super right bump
                 break;
             case 'R':
-                sumValence += -3; // right bump
+                sumValence += -5; // right bump
                 break;
             case 'B':
                 sumValence += -5; // both bump (left and right)
@@ -287,8 +289,8 @@ public class Memory : MonoBehaviour, IMemory
             case 'c':
                 sumValence += -1; // closer
                 break;
-            case 'f':
-                sumValence += +1; // free
+            case 'e':
+                sumValence += +1; // release
                 break;
         }
 
@@ -310,6 +312,9 @@ public class Memory : MonoBehaviour, IMemory
         //AddOrGetPrimitiveInteraction("<^,------");
         //AddOrGetPrimitiveInteraction("<-,------");
         //AddOrGetPrimitiveInteraction("<v,------");
+        
+        //AddOrGetPrimitiveInteraction("-L,------");
+        //AddOrGetPrimitiveInteraction("-R,------");
 
         foreach (var knownInteraction in KnownPrimitiveInteractions.Values)
         {

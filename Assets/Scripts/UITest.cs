@@ -27,7 +27,7 @@ public class UITest : MonoBehaviour
 
     private void LateUpdate()
     {
-        hapinessText.text = "Happiness: " + agent.happiness.ToString("F",
+        hapinessText.text = "Mood: " + agent.happiness.ToString("F",
             CultureInfo.CreateSpecificCulture("en-US"));
 
         fruitsQuantityText.text = "Fruits: " + fruits.transform.childCount.ToString();

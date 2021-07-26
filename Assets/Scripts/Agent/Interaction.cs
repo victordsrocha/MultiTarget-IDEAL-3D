@@ -57,4 +57,33 @@ public class Interaction
 
         return actions;
     }
+
+    public Interaction GetFinalResult()
+    {
+        Interaction finalResult = this;
+        while (finalResult.PostInteraction != null)
+        {
+            finalResult = finalResult.PostInteraction;
+        }
+
+        return finalResult;
+    }
+
+    public float GetCompositeDeltaValence(float happiness)
+    {
+        float sum = 0f;
+        foreach (var pi in InteractionsList)
+        {
+            if (happiness>0)
+            {
+                sum += pi.Valence;
+            }
+            else
+            {
+                sum += pi.Valence - happiness - 0.05f;
+            }
+        }
+
+        return sum;
+    }
 }

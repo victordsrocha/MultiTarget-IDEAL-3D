@@ -93,7 +93,7 @@ public class Agent : MonoBehaviour
 
         //Debug.Log(enactedInteraction.Label);
         Debug.Log(decider.EnactedInteractionText);
-        UpdateHapiness(enactedInteraction.Valence);
+        UpdateHapiness(enactedInteraction.InteractionsList);
     }
 
     float CalcGamaHappinessWeight()
@@ -108,25 +108,26 @@ public class Agent : MonoBehaviour
     }
 
 
-    void UpdateHapiness(int valence)
+    void UpdateHapiness(List<Interaction> enactedList)
     {
-        //Profiler.BeginSample("My Sample Happiness");
-        if (_lastValences.Count() == queueSize)
+        foreach (Interaction pi in enactedList)
         {
-            _lastValences.Dequeue();
+            if (_lastValences.Count() == queueSize)
+            {
+                _lastValences.Dequeue();
+            }
+
+            _lastValences.Enqueue(pi.Valence);
+
+            float sum = 0;
+            int p = 0;
+            for (int i = _lastValences.Count; i > 0; i--)
+            {
+                sum += (float) (_lastValences.ElementAt(i - 1) * (Mathf.Pow(gamaHappiness, p) / gamaHappinessWeight));
+                p++;
+            }
+
+            happiness = sum;
         }
-
-        _lastValences.Enqueue(valence);
-
-        float sum = 0;
-        int p = 0;
-        for (int i = _lastValences.Count; i > 0; i--)
-        {
-            sum += (float) (_lastValences.ElementAt(i - 1) * (Mathf.Pow(gamaHappiness, p) / gamaHappinessWeight));
-            p++;
-        }
-
-        happiness = sum;
-        //Profiler.EndSample();
     }
 }

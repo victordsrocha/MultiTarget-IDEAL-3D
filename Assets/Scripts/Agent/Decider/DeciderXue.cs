@@ -9,6 +9,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
+// ReSharper disable InconsistentNaming
+
 public class DeciderXue : Decider
 {
     [SerializeField] private int threshold;
@@ -38,13 +40,27 @@ public class DeciderXue : Decider
     public Text activationWeightText;
     public Text activationText;
 
+    private Queue<Interaction> lastEnactedInteractions;
+    private int lastEnactedInteractionsSize;
+
+    private int decisionCycle;
+    public bool isRelativeValenceOn;
+
     private void Start()
     {
+        decisionCycle = 0;
         activatedInteractionsList = new List<Interaction>();
 
         EnactedInteraction = null;
         _superInteraction = null;
-        epsilon = 1;
+        epsilon = 0.95f;
+
+        lastEnactedInteractions = new Queue<Interaction>();
+        lastEnactedInteractionsSize = 20;
+        for (int i = 0; i < lastEnactedInteractionsSize; i++)
+        {
+            lastEnactedInteractions.Enqueue(GetRandomNeutralPrimitiveInteraction());
+        }
     }
 
     /// <summary>
@@ -98,7 +114,7 @@ public class DeciderXue : Decider
 
         foreach (var activatedInteraction in activatedInteractionsList)
         {
-            var deltaValence = DeltaValence(activatedInteraction.PostInteraction.Valence);
+            var deltaValence = DeltaValence(activatedInteraction.PostInteraction);
 
             float proclivity = activatedInteraction.Weight * deltaValence;
 
@@ -119,7 +135,7 @@ public class DeciderXue : Decider
                 {
                     if (experimentEnactedInteraction == activatedInteraction.PostInteraction)
                     {
-                        var deltaValence = DeltaValence(experimentEnactedInteraction.Valence);
+                        var deltaValence = DeltaValence(experimentEnactedInteraction);
                         var proclivity = activatedInteraction.Weight * deltaValence;
                         anticipation.AddProclivity(proclivity);
                     }
@@ -131,15 +147,55 @@ public class DeciderXue : Decider
         return proposedAnticipationsSet;
     }
 
-    private float DeltaValence(int valence)
+    private float DeltaValence(Interaction suggestedInteraction)
     {
+        /*
+        int valence = suggestedInteraction.Valence;
+        bool frustrated = true;
+        for (int i = 0; i < lastEnactedInteractionsSize; i++)
+        {
+            if (lastEnactedInteractions.ElementAt(i).Valence > 0)
+            {
+                frustrated = false;
+            }
+        }
+
+        if (frustrated)
+        {
+            valence = suggestedInteraction.GetFinalResult().Valence;
+        }
+
         if (agent.happiness > 0)
         {
             return valence;
         }
         else
         {
-            return valence - (agent.happiness / 1.2f); // a divisão por um valor pequeno evita deltaValence zero
+            return valence -
+                   (agent.happiness / 1.2f); // a divisão por um valor pequeno evita deltaValence zero
+        }
+        */
+
+        if (isRelativeValenceOn)
+        {
+            if (!suggestedInteraction.IsPrimitive())
+            {
+                return suggestedInteraction.GetCompositeDeltaValence(agent.happiness);
+            }
+
+            if (agent.happiness > 0)
+            {
+                return suggestedInteraction.Valence;
+            }
+            else
+            {
+                return suggestedInteraction.Valence -
+                       (agent.happiness); // a divisão por um valor pequeno evita deltaValence zero
+            }
+        }
+        else
+        {
+            return suggestedInteraction.Valence;
         }
     }
 
@@ -347,6 +403,81 @@ public class DeciderXue : Decider
                 memory.ForgottenCompositeInteraction.Add(_selectedInteraction.Label, _selectedInteraction);
                 memory.KnownCompositeInteractions.Remove(_selectedInteraction.Label);
             }
+        }
+    }
+
+    public void LearnAlternative(Interaction newEnactedInteraction)
+    {
+        DecrementFailureActivations(newEnactedInteraction);
+
+        var previousInteraction = EnactedInteraction;
+        var lastInteraction = newEnactedInteraction;
+        var previousSuperInteraction = _superInteraction;
+        Interaction lastSuperInteraction = null;
+
+        if (lastEnactedInteractions.Count() == lastEnactedInteractionsSize)
+        {
+            lastEnactedInteractions.Dequeue();
+        }
+
+        lastEnactedInteractions.Enqueue(newEnactedInteraction);
+
+        var l1 = lastEnactedInteractions.ElementAt(lastEnactedInteractionsSize - 1);
+        var l2 = lastEnactedInteractions.ElementAt(lastEnactedInteractionsSize - 2);
+        var l3 = lastEnactedInteractions.ElementAt(lastEnactedInteractionsSize - 3);
+        var l4 = lastEnactedInteractions.ElementAt(lastEnactedInteractionsSize - 4);
+        var l5 = lastEnactedInteractions.ElementAt(lastEnactedInteractionsSize - 5);
+
+
+        // II
+
+        var abs21 = memory.AddOrGetAndReinforceCompositeInteraction(l2, l1);
+
+        // III
+
+        var abs32 = memory.AddOrGetCompositeInteraction(l3, l2);
+
+        var abs32_1 = memory.AddOrGetAndReinforceCompositeInteraction(abs32, l1);
+        var abs3_21 = memory.AddOrGetAndReinforceCompositeInteraction(l3, abs21);
+
+        // IV
+
+        var abs43 = memory.AddOrGetCompositeInteraction(l4, l3);
+        var abs43_2 = memory.AddOrGetCompositeInteraction(abs43, l2);
+        var abs4_32 = memory.AddOrGetCompositeInteraction(l4, abs32);
+
+
+        var abs4_3_21 = memory.AddOrGetAndReinforceCompositeInteraction(l4, abs3_21);
+        var abs4_32_1 = memory.AddOrGetAndReinforceCompositeInteraction(l4, abs32_1);
+        var abs43_21 = memory.AddOrGetAndReinforceCompositeInteraction(abs43, abs21);
+        var abs43_2_1 = memory.AddOrGetAndReinforceCompositeInteraction(abs43_2, l1);
+        var abs_4_32_1 = memory.AddOrGetAndReinforceCompositeInteraction(abs4_32, l1);
+
+
+        // V
+
+        //memory.AddOrGetAndReinforceCompositeInteraction(l5, abs4_3_21);
+        //memory.AddOrGetAndReinforceCompositeInteraction(l5, abs4_32_1);
+        //memory.AddOrGetAndReinforceCompositeInteraction(l5, abs43_21);
+        //memory.AddOrGetAndReinforceCompositeInteraction(l5, abs43_2_1);
+        //memory.AddOrGetAndReinforceCompositeInteraction(l5, abs_4_32_1);
+
+        //////
+        lastSuperInteraction = abs21;
+        _higherLevelSuperInteraction1 = abs3_21;
+        _higherLevelSuperInteraction2 = abs32_1;
+        this._superInteraction = lastSuperInteraction;
+
+        // When a schema reaches a weight of 0 it is deleted from memory
+        memory.DecrementAndForgetSchemas(new List<Interaction>()
+        {
+            previousInteraction, lastInteraction, previousSuperInteraction, lastSuperInteraction,
+            _higherLevelSuperInteraction1, _higherLevelSuperInteraction2
+        });
+
+        if (EnactedInteractionText != "*** Random Pick ***")
+        {
+            EnactedInteractionText = newEnactedInteraction.Label;
         }
     }
 

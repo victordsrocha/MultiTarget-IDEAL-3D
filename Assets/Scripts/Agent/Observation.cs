@@ -255,7 +255,7 @@ public class Observation : MonoBehaviour
             return;
         }
 
-        if (leftFood <= leftPoison && leftFood <= rightFood && leftFood <= rightPoison)
+        if (leftFood <= leftPoison && leftFood <= rightFood && leftFood <= rightPoison && !float.IsPositiveInfinity(leftFood))
         {
             _focusObjectType = FocusObjectType.Food;
             UpdateFocusTransition(leftFOV.closestFood);
@@ -268,7 +268,7 @@ public class Observation : MonoBehaviour
 
             _focusEye = leftFOV.closestFood == rightFOV.closestFood ? FocusEye.Both : FocusEye.Left;
         }
-        else if (rightFood <= rightPoison && rightFood <= leftPoison)
+        else if (rightFood <= rightPoison && rightFood <= leftPoison && !float.IsPositiveInfinity(rightFood))
         {
             _focusObjectType = FocusObjectType.Food;
             UpdateFocusTransition(rightFOV.closestFood);
@@ -281,7 +281,7 @@ public class Observation : MonoBehaviour
 
             _focusEye = leftFOV.closestFood == rightFOV.closestFood ? FocusEye.Both : FocusEye.Right;
         }
-        else if (leftPoison <= rightPoison)
+        else if (leftPoison <= rightPoison && !float.IsPositiveInfinity(leftPoison))
         {
             _focusObjectType = FocusObjectType.Poison;
             UpdateFocusTransition(leftFOV.closestPoison);
@@ -294,7 +294,7 @@ public class Observation : MonoBehaviour
 
             _focusEye = leftFOV.closestPoison == rightFOV.closestPoison ? FocusEye.Both : FocusEye.Left;
         }
-        else if (rightPoison < rightFood)
+        else if (rightPoison < rightFood && !float.IsPositiveInfinity(rightPoison))
         {
             _focusObjectType = FocusObjectType.Poison;
             UpdateFocusTransition(rightFOV.closestPoison);
@@ -705,7 +705,7 @@ public class Observation : MonoBehaviour
             case VisionStateStatus.Unchanged:
                 return '-';
             case VisionStateStatus.Release:
-                return 'f';
+                return 'e';
             default:
                 throw new ArgumentOutOfRangeException();
         }

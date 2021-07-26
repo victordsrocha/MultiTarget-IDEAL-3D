@@ -75,8 +75,10 @@ public static class VSRTrace
         {
             return label[8] switch
             {
-                'b' => 1,
-                'B' => 2,
+                'r' => 0,
+                'R' => 1,
+                'l' => 0,
+                'L' => 1,
                 _ => 0
             };
         }
